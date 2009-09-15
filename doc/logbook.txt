@@ -1,0 +1,51 @@
+2009-1-2
+当Window被释放时，应当从Application中注销，for future ...
+
+Node的setActive应当声明为protected, 见SScene::SScene()
+
+2009-1-5
+Entity 的各种计算如中心点、法向的时机需要更多的考虑
+
+对于Entity，事先给定正确的顶点数、对边形类型、多边形数似乎要求十分得苛刻，应该提供更加灵活的机制
+
+2009-1-5
+共享vertex buffer的想法
+
+					SVertexData					SBuffer					SIndexData
+												  /|\
+												  ---
+												   |
+												   |
+	SVertexBufferElement				  --------------------
+										  |					 |
+									SVertexBuffer		SIndexBuffer
+									
+SVertexData包含多个SVertexBuffer和相应的SVertexBufferElement，由SVertexBufferElement标识类别、offset等
+一个SVertexBuffer可以包含整个场景所有的vertices，各个Entity通过自己SVertexData内的SVertexBufferElement从中找到自己的vertices。
+
+2009-1-7
+SListener::sendEvent还有问题，应当交由系统去触发对应的消息。
+
+2009-1-8
+未测试：SScene, SCMPMapIterator
+
+SWindow, SNode等对象不应该作为局部对象创建
+并且不应该主动delete
+对于SNode，当其不在任何scene中时，可以delete
+
+2009-1-9
+SResource中的m_pDelegate应该使用智能指针对象
+
+2008-1-10
+文件数据也许可以通过stringstream存下
+	
+新的需求：
+					---------> SMesh
+			SScene 	---------> SKeleton
+					---------> SAnimation
+	Scene拥有三种Resource的ownership		
+	
+2008-1-11
+SAnimaJoint 目前继承自SObject
+
+SResourceManager目前的Singleton有待改进

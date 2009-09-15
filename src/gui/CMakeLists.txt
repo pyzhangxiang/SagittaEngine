@@ -1,0 +1,42 @@
+#include_directories(${SAGITTA_ROOT}/src/engine ${SAGITTA_ROOT}/src/math)
+
+set(Header)
+set(Source)
+file(GLOB Header *.h)
+file(GLOB Source *.cpp)
+
+set(SubHeader)
+set(SubSource)
+if(APPLE)
+	file(GLOB_RECURSE SubHeader ${CMAKE_CURRENT_SOURCE_DIR}/mac/*.h)
+	file(GLOB_RECURSE SubSource ${CMAKE_CURRENT_SOURCE_DIR}/mac/*.cpp)
+elseif(WIN32)
+	file(GLOB_RECURSE SubHeader ${CMAKE_CURRENT_SOURCE_DIR}/win32/*.h)
+	file(GLOB_RECURSE SubSource ${CMAKE_CURRENT_SOURCE_DIR}/win32/*.cpp)
+else(APPLE)
+	message("No implement in this platform. Mac OS X and Win32 are supported.")
+	return()
+endif(APPLE)
+
+
+set(Source_File ${Header} ${Source} ${SubHeader} ${SubSource})
+source_group_by_dir(Source_File)
+
+if(Static)
+	add_library(SagiGui STATIC ${Source_File})
+else(Static)
+	add_library(SagiGui SHARED ${Source_File})
+endif(Static)
+
+if(APPLE)
+	find_library(Carbon_Library Carbon)
+	mark_as_advanced(Carbon_Library)	
+endif(APPLE)
+
+if(WIN32)
+	target_link_libraries(SagiGui ${OPENGL_glew_LIBRARY} Sagitta)
+elseif(APPLE)
+	target_link_libraries(SagiGui ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${Carbon_Library} Sagitta)
+else(WIN32)
+	target_link_libraries(SagiGui ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} Sagitta)
+endif(WIN32)

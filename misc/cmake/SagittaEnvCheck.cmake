@@ -1,0 +1,10 @@
+if(WIN32)
+    set(Sagitta_BASE_DIR $ENV{Sagitta_BASE_DIR})
+    if(Sagitta_BASE_DIR)
+        include_directories(${Sagitta_BASE_DIR}/include)
+        link_directories(${Sagitta_BASE_DIR}/lib)
+    else(Sagitta_BASE_DIR)
+        message("Sagitta Development Basic Libriry not installed.")
+    endif(Sagitta_BASE_DIR)
+endif(WIN32)
+

@@ -1,0 +1,5 @@
+include(SagittaSourceGrouping)
+include(SagittaQtSupport)
+include(SagittaLibsSupport)
+include(SagittaEnvCheck)
+include(SagittaInstall)

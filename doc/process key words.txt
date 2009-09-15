@@ -1,0 +1,6 @@
+// maybe a bug...               ！！some places may be bugs
+// add error code...　　　　　　！！need to add error code
+/* for future... */             ！！interface for future to implement
+// ???... //////////						
+//               ///		！！do not understand the code
+////////////////////

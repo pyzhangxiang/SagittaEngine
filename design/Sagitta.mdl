@@ -1,0 +1,4679 @@
+
+(object Petal
+    version    	47
+    _written   	"Rose 8.0.0303.1400"
+    charSet    	134)
+
+(object Design "Logical View"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    quid       	"484D404C02F1"
+    defaults   	(object defaults
+	rightMargin 	0.250000
+	leftMargin 	0.250000
+	topMargin  	0.250000
+	bottomMargin 	0.500000
+	pageOverlap 	0.250000
+	clipIconLabels 	TRUE
+	autoResize 	TRUE
+	snapToGrid 	TRUE
+	gridX      	0
+	gridY      	0
+	defaultFont 	(object Font
+	    size       	12
+	    face       	"Arial"
+	    bold       	FALSE
+	    italics    	FALSE
+	    underline  	FALSE
+	    strike     	FALSE
+	    color      	0
+	    default_color 	TRUE)
+	showMessageNum 	3
+	showClassOfObject 	TRUE
+	notation   	"Unified")
+    root_usecase_package 	(object Class_Category "Use Case View"
+	quid       	"484D404C02F3"
+	exportControl 	"Public"
+	global     	TRUE
+	logical_models 	(list unit_reference_list)
+	logical_presentations 	(list unit_reference_list
+	    (object UseCaseDiagram "Main"
+		quid       	"484D404D02F2"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    root_category 	(object Class_Category "Logical View"
+	quid       	"484D404C02F2"
+	exportControl 	"Public"
+	global     	TRUE
+	subsystem  	"Component View"
+	quidu      	"484D404C02F4"
+	logical_models 	(list unit_reference_list
+	    (object Class "SSceneObject"
+		quid       	"484D43FB014B"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854D839009C"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		operations 	(list Operations
+		    (object Operation "SSceneObject"
+			quid       	"48CC8B8A01F4"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "SSceneObject"
+			quid       	"48CC8BC2009C"
+			parameters 	(list Parameters
+			    (object Parameter "const std"
+				quid       	"48CC8BD90242"
+				type       	":wstring asName"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "~SSceneObject"
+			quid       	"48CC8DE2038A"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "clone"
+			quid       	"48CC8E7501A5"
+			result     	"SSceneObject"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"484D43FB014B")
+		    (object Operation "name"
+			quid       	"48CC8E9B0148"
+			result     	"std::wstring"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "position"
+			quid       	"48CC8EAB0213"
+			result     	"Vector3"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D88C000F")
+		    (object Operation "isAttached"
+			quid       	"48CC8ED3036B"
+			result     	"Boolean"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "attachedNode"
+			quid       	"48CC8EE900FA"
+			result     	"SNode"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D9720157")
+		    (object Operation "setAttachedNode"
+			quid       	"48CC93CB03A9"
+			parameters 	(list Parameters
+			    (object Parameter "SNode *apAttachedNode"
+				quid       	"48CC93F70109"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "getSceneManager"
+			quid       	"48CC93F700DA"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_sName"
+			quid       	"484D45E403BC"
+			type       	"std::wstring"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_pAttachedNode"
+			quid       	"484D45F60264"
+			type       	"SNode"
+			quidu      	"4854D9720157"
+			exportControl 	"Protected"
+			Containment 	"By Reference")))
+	    (object Class "SRenderable"
+		quid       	"484D496D039D"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"484D497C039D"
+			supplier   	"Logical View::SSceneObject"
+			quidu      	"484D43FB014B"))
+		operations 	(list Operations
+		    (object Operation "color"
+			quid       	"484D4AC402C2"
+			parameters 	(list Parameters
+			    (object Parameter "void"
+				quid       	"484D4AD50284"))
+			result     	"Vector4"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D892009C")
+		    (object Operation "alpha"
+			quid       	"484D4AD50264"
+			parameters 	(list Parameters
+			    (object Parameter "void"
+				quid       	"484D4AE5035E"))
+			result     	"Double"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setColor"
+			quid       	"484D4AE5033F"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector4 &"
+				quid       	"484D4B3902D2"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setColor"
+			quid       	"484D4B230003"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"484D4B30017A"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setAlpha"
+			quid       	"484D4B30015B"
+			parameters 	(list Parameters
+			    (object Parameter "const float"
+				quid       	"484D4B4D010D"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "render"
+			quid       	"484D4B4D00ED"
+			parameters 	(list Parameters
+			    (object Parameter "void"
+				quid       	"484D4B5C00BF"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_vColor"
+			quid       	"484D498D02D2"
+			type       	"Vector4"
+			quidu      	"4854D892009C"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bRenderMyself"
+			quid       	"484D499E00ED"
+			type       	"Boolean"
+			exportControl 	"Protected")))
+	    (object Class "SObject"
+		quid       	"4854ACF6001F"
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_iOId"
+			quid       	"4854AD4F0000"
+			type       	"Long"
+			exportControl 	"Protected")))
+	    (object Class "SListener"
+		quid       	"4854AD2500CB"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854AD7002BF"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "NewClass"
+		quid       	"4854AD310138")
+	    (object Class "SApplication"
+		quid       	"4854AD8600DA"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854AD900196"
+			supplier   	"Logical View::SListener"
+			quidu      	"4854AD2500CB")
+		    (object Inheritance_Relationship
+			quid       	"4854B795037A"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_pMainWindow"
+			quid       	"4854AE74000F"
+			type       	"SWindow"
+			quidu      	"4854ADA1030D")))
+	    (object Class "SWindow"
+		quid       	"4854ADA1030D"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854ADA7029F"
+			supplier   	"Logical View::SListener"
+			quidu      	"4854AD2500CB")))
+	    (object Class "SGuiFrame"
+		quid       	"4854B12701E4"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854B136038A"
+			supplier   	"Logical View::SWindow"
+			quidu      	"4854ADA1030D")))
+	    (object Class "SGraphicsFrame"
+		quid       	"4854B13A007D"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854B14C005D"
+			supplier   	"Logical View::SWindow"
+			quidu      	"4854ADA1030D")))
+	    (object Class "Vector2"
+		quid       	"4854D883036B")
+	    (object Class "Vector3"
+		quid       	"4854D88C000F")
+	    (object Class "Vector4"
+		quid       	"4854D892009C")
+	    (object Class "Matrix3"
+		quid       	"4854D89B00FA")
+	    (object Class "Matrix4"
+		quid       	"4854D8B203B9")
+	    (object Class "Quaternion"
+		quid       	"4854D8C40109")
+	    (object Class "Plane"
+		quid       	"4854D8D0033C")
+	    (object Class "AxisAlignedBox"
+		quid       	"4854D8E301D4")
+	    (object Class "SNode"
+		quid       	"4854D9720157"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854DA6B029F"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		operations 	(list Operations
+		    (object Operation "SNode"
+			quid       	"48CC99850148"
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0)
+		    (object Operation "SNode"
+			quid       	"48CC99AC0196"
+			parameters 	(list Parameters
+			    (object Parameter "SSceneManager *apSceneManager"
+				quid       	"48CC99D301F4"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "SNode"
+			quid       	"48CC99B700AB"
+			parameters 	(list Parameters
+			    (object Parameter "SSceneManager *apSceneManager"
+				quid       	"48CC99F20128")
+			    (object Parameter "const std"
+				quid       	"48CC99F20177"
+				type       	":wstring &asName"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "~SNode"
+			quid       	"48CC99FF033C"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setParent"
+			quid       	"48CC88840271"
+			parameters 	(list Parameters
+			    (object Parameter "SNode *apParent"
+				quid       	"48CC9F5601C5"))
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0)
+		    (object Operation "setSceneManager"
+			quid       	"48CC9EB5002E"
+			parameters 	(list Parameters
+			    (object Parameter "SSceneManager *apSM"
+				quid       	"48CC9ECB0196"))
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0)
+		    (object Operation "_updateFromParent"
+			quid       	"48CC9AD203C8"
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0)
+		    (object Operation "_getDerivedOrientation"
+			quid       	"48CC9AE602AF"
+			result     	"Quaternion"
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0
+			quidu      	"4854D8C40109")
+		    (object Operation "_getDerivedPosition"
+			quid       	"48CC9B0A002E"
+			result     	"Vector3"
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0
+			quidu      	"4854D88C000F")
+		    (object Operation "name"
+			quid       	"48CC9EFF0196"
+			result     	"const std::wstring&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "parent"
+			quid       	"48CC9F0A0203"
+			result     	"SNode*"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D9720157")
+		    (object Operation "getSceneManager"
+			quid       	"48CC9F7A034B"
+			result     	"SSceneManager*"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854E3DC00BB")
+		    (object Operation "isNeedUpdate"
+			quid       	"48CC9F9D0399"
+			result     	"Boolean"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "relativeOrientation"
+			quid       	"48CC9FC901D4"
+			result     	"const Logical View::Quaternion&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setRelativeOrientation"
+			quid       	"48CCA01B02EE"
+			parameters 	(list Parameters
+			    (object Parameter "const Quaternion &aq"
+				quid       	"48CCA0310271"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "resetRelativeOrientation"
+			quid       	"48CCA0610399"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "absoluteOrientation"
+			quid       	"48CCA072002E"
+			result     	"const Logical View::Quaternion&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "orientation"
+			quid       	"48CCA65D00BB"
+			result     	"const Logical View::Quaternion&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "relativePosition"
+			quid       	"48CCA5C602AF"
+			result     	"const Logical View::Vector3&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setRelativePosition"
+			quid       	"48CCA5E001F4"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48CCA5F402FD"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "absolutePosition"
+			quid       	"48CCA5FE002E"
+			result     	"const Logical View::Vector3&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "position"
+			quid       	"48CCA63E01A5"
+			result     	"const Logical View::Vector3&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setAbsolutePosition"
+			quid       	"48CCA61B01C5"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48CCA6300213"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "localScale"
+			quid       	"48CCA68F01C5"
+			result     	"const Logical View::Vector3&"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setLocalScale"
+			quid       	"48CCA6AB0109"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48CCA6C90213"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "scale"
+			quid       	"48D13812038A"
+			result     	"const Logical View::Vector3 &"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "isScaleInherited"
+			quid       	"48D1465602BF"
+			result     	"Boolean"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setScaleInherited"
+			quid       	"48D146A5037A"
+			parameters 	(list Parameters
+			    (object Parameter "bool"
+				quid       	"48D146BB01A5"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "scale"
+			quid       	"48D146ED0290"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48D146FB01A5"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "translate"
+			quid       	"48D146FF031C"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48D147170222")
+			    (object Parameter "int"
+				quid       	"48D1477B001F"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "translate"
+			quid       	"48D147CB033C"
+			parameters 	(list Parameters
+			    (object Parameter "const Matrix3 &"
+				quid       	"48D147E80128")
+			    (object Parameter "const Vector3 &"
+				quid       	"48D147E80177")
+			    (object Parameter "int"
+				quid       	"48D147E801D4"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "roll"
+			quid       	"48D148080128"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D1485A0000")
+			    (object Parameter "int"
+				quid       	"48D1485A002E"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "rotationZ"
+			quid       	"48D1485D000F"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D1486F0280")
+			    (object Parameter "int"
+				quid       	"48D1486F02AF"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "pitch"
+			quid       	"48D1486F0251"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D14881035B")
+			    (object Parameter "int"
+				quid       	"48D14881038A"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "rotationX"
+			quid       	"48D14881033C"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D1488C0138")
+			    (object Parameter "int"
+				quid       	"48D1488C0177"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "yaw"
+			quid       	"48D1488C0119"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D14895000F")
+			    (object Parameter "int"
+				quid       	"48D14895004E"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "rotationY"
+			quid       	"48D1489403D8"
+			parameters 	(list Parameters
+			    (object Parameter "const Degree &"
+				quid       	"48D148A0037A")
+			    (object Parameter "int"
+				quid       	"48D148A003B9"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "rotate"
+			quid       	"48D148A0034B"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48D148BF0196")
+			    (object Parameter "const Degree &"
+				quid       	"48D148BF01C5")
+			    (object Parameter "int"
+				quid       	"48D148DA00AB"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "rotate"
+			quid       	"48D148BF0167"
+			parameters 	(list Parameters
+			    (object Parameter "const Quaternion &"
+				quid       	"48D148D5009C")
+			    (object Parameter "int"
+				quid       	"48D148D500DA"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "getLocalAxes"
+			quid       	"48D148F500DA"
+			result     	"Matrix3"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D89B00FA")
+		    (object Operation "createChild"
+			quid       	"48D1490A035B"
+			parameters 	(list Parameters
+			    (object Parameter "const Vector3 &"
+				quid       	"48D149450177")
+			    (object Parameter "const Quaternion &"
+				quid       	"48D1494501B5"))
+			result     	"SNode*"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D9720157")
+		    (object Operation "createChild"
+			quid       	"48D1495B005D"
+			parameters 	(list Parameters
+			    (object Parameter "const std"
+				quid       	"48D149920119"
+				type       	":wstring &")
+			    (object Parameter "const Vector3 &"
+				quid       	"48D149920177")
+			    (object Parameter "const Quaternion &"
+				quid       	"48D1499201B5"))
+			result     	"SNode*"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0
+			quidu      	"4854D9720157"))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_sName"
+			quid       	"48CC945A01B5"
+			type       	"std::wstring"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_pSceneManager"
+			quid       	"48CC949C00CB"
+			type       	"SSceneManager"
+			quidu      	"4854E3DC00BB"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_Children"
+			quid       	"48CC953100DA"
+			type       	"ChildNodeMap"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_RenderableMap"
+			quid       	"48CC94D40280"
+			type       	"RenderableMap"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_CameraMap"
+			quid       	"48CC94E9003E"
+			type       	"CameraMap"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_LightMap"
+			quid       	"48CC9503002E"
+			type       	"LightMap"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_pParent"
+			quid       	"48CC951001A5"
+			type       	"SNode"
+			quidu      	"4854D9720157"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_ChildrenToUpdate"
+			quid       	"48CC95E00128"
+			type       	"ChildUpdateSet"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bNeedParentUpdate"
+			quid       	"48CC960700CB"
+			type       	"Boolean"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bNeedChildUpdate"
+			quid       	"48CC962000BB"
+			type       	"Boolean"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bParentNotified"
+			quid       	"48CC962F01F4"
+			type       	"Boolean"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_RelativeOrientation"
+			quid       	"48CC9654006D"
+			type       	"Quaternion"
+			quidu      	"4854D8C40109"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_RelativePosition"
+			quid       	"48CC968D005D"
+			type       	"Vector3"
+			quidu      	"4854D88C000F"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_LocalScale"
+			quid       	"48CC96A70203"
+			type       	"Vector3"
+			quidu      	"4854D88C000F"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bInheritOrientation"
+			quid       	"48CC96D300EA"
+			type       	"Boolean"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bInheritScale"
+			quid       	"48CC96E9036B"
+			type       	"Boolean"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_DerivedOrientation"
+			quid       	"48CC972901D4"
+			type       	"Quaternion"
+			quidu      	"4854D8C40109"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_DerivedPosition"
+			quid       	"48CC974D002E"
+			type       	"Vector3"
+			quidu      	"4854D88C000F"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_DerivedScale"
+			quid       	"48CC976800FA"
+			type       	"Vector3"
+			quidu      	"4854D88C000F"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_CachedTransform"
+			quid       	"48CC977D02BF"
+			type       	"Matrix4"
+			quidu      	"4854D8B203B9"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_bCachedTransformOutOfDate"
+			quid       	"48CC97910000"
+			type       	"Boolean"
+			exportControl 	"Protected")))
+	    (object Class "SEntity"
+		quid       	"4854E21B03D8"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E2BF03A9"
+			supplier   	"Logical View::SRenderable"
+			quidu      	"484D496D039D")))
+	    (object Class "SLine"
+		quid       	"4854E226003E"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E2C2036B"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "SPolygon"
+		quid       	"4854E2650222"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E2C402FD"
+			supplier   	"Logical View::SRenderable"
+			quidu      	"484D496D039D")))
+	    (object Class "STerrain"
+		quid       	"4854E26E0203"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E2C7009C"
+			supplier   	"Logical View::SRenderable"
+			quidu      	"484D496D039D")))
+	    (object Class "SPlanePolygon"
+		quid       	"4854E3160261"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E35C02CE"
+			supplier   	"Logical View::SPolygon"
+			quidu      	"4854E2650222")))
+	    (object Class "STriangle"
+		quid       	"4854E327034B"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E35F01E4"
+			supplier   	"Logical View::SPlanePolygon"
+			quidu      	"4854E3160261")
+		    (object Inheritance_Relationship
+			quid       	"488FBF4C02DE"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "SCamera"
+		quid       	"4854E3AA00AB"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E3C5001F"
+			supplier   	"Logical View::SSceneObject"
+			quidu      	"484D43FB014B")))
+	    (object Class "SLight"
+		quid       	"4854E3BB038A"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E3C702AF"
+			supplier   	"Logical View::SSceneObject"
+			quidu      	"484D43FB014B")))
+	    (object Class "SSceneManager"
+		quid       	"4854E3DC00BB"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E3ED033C"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "SViewport"
+		quid       	"4854E41D0148"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E430006D"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "SRenderQueue"
+		quid       	"4854E4630261"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E48E01F4"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "SVertex"
+		quid       	"4854E575001F"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4854E57E03A9"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "SAttribute"
+		quid       	"488FBED00177")
+	    (object Class "SSceneNode"
+		quid       	"488FBEE1030D"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"488FBF1800EA"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157")))
+	    (object Class "SBoneNode"
+		quid       	"488FBEFE009C"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"488FBF1B000F"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157")
+		    (object Inheritance_Relationship
+			quid       	"488FBF1D00FA"
+			supplier   	"Logical View::SSphere"
+			quidu      	"48B573460126")))
+	    (object Class "SScene"
+		quid       	"489011E90167"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"489011F70186"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "SCone"
+		quid       	"48B5733602BC"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48B573990388"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "SSphere"
+		quid       	"48B573460126"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48B573970194"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "SCube"
+		quid       	"48B573580174"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48B5739D01E2"
+			supplier   	"Logical View::SEntity"
+			quidu      	"4854E21B03D8")))
+	    (object Class "Radian"
+		quid       	"48D148190138")
+	    (object Class "Degree"
+		quid       	"48D148210242")
+	    (object Class "SRenderSystem"
+		quid       	"48EB890001F5"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48EB8C6D0139"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Class "SVertexBuffer"
+		quid       	"48EB89FA034C"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48EB8C6F0197"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		operations 	(list Operations
+		    (object Operation "SVertexBuffer"
+			quid       	"48EBA7A903D9"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "~SVertexBuffer"
+			quid       	"48EBA7B902CF"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "vertexNum"
+			quid       	"48EBA7C8006E"
+			result     	"unsinged long"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setVertexNum"
+			quid       	"48EBA7DF011A"
+			parameters 	(list Parameters
+			    (object Parameter "aNum"
+				quid       	"48EBA7EF01D5"
+				type       	"unsinged long"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "clear"
+			quid       	"48EBA82601A6"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "addElement"
+			quid       	"48EBA82B00CC"
+			parameters 	(list Parameters
+			    (object Parameter "aElement"
+				quid       	"48EBA8450149"
+				type       	"SVertexElement*"
+				quidu      	"48EB8A3F034C"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "getIterator"
+			quid       	"48EBA873011A"
+			result     	"SVertexBuffer::Iterator"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "getConstIterator"
+			quid       	"48EBA88D0001"
+			result     	"SVertexBuffer::ConstIterator"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_ElementList"
+			quid       	"48EBA0C60020"
+			type       	"std::vector<SVertexElemnt *>"
+			exportControl 	"Protected")
+		    (object ClassAttribute "m_iVertexNum"
+			quid       	"48EBA1BD00EB"
+			type       	"unsigned long"
+			exportControl 	"Protected")))
+	    (object Class "SVertexIndexBuffer"
+		quid       	"48EB8A0602B0"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48EB8C7302EF"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		operations 	(list Operations
+		    (object Operation "SVertexIndexBuffer"
+			quid       	"48EC25DE0203"
+			parameters 	(list Parameters
+			    (object Parameter "aiNum"
+				quid       	"48EC266100DA"
+				type       	"unsigned int")
+			    (object Parameter "aiType"
+				quid       	"48EC2675000F"
+				type       	"unsinged short"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "SVertexIndexBuffer"
+			quid       	"48EC26FA0157"
+			parameters 	(list Parameters
+			    (object Parameter "apIndexBuffer"
+				quid       	"48EC27090213"
+				type       	"unsinged long *"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "~SVertexIndexBuffer"
+			quid       	"48EC279B0157"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "buffer"
+			quid       	"48EC27830000"
+			result     	"const unsinged long *"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "polyType"
+			quid       	"48EC27A9009C"
+			result     	"unsigned short"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "polyNum"
+			quid       	"48EC27DB0000"
+			result     	"unsigned long"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "size"
+			quid       	"48EC284F03C8"
+			result     	"unsinged long"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "setIndex"
+			quid       	"48EC28600203"
+			parameters 	(list Parameters
+			    (object Parameter "aiIndexValue"
+				quid       	"48EC289802FD"
+				type       	"unsigned long")
+			    (object Parameter "aiIndex"
+				quid       	"48EC28B1032C"
+				type       	"unsinged long"))
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_pBuffer"
+			quid       	"48EC24B103A9"
+			type       	"unsinged long *")
+		    (object ClassAttribute "m_iPolygonType"
+			quid       	"48EC25A2030D"
+			type       	"unsinged short")
+		    (object ClassAttribute "m_iPolygonNum"
+			quid       	"48EC25BA0222"
+			type       	"unsinged long")
+		    (object ClassAttribute "m_iDataCount"
+			quid       	"48EC28250251"
+			type       	"unsigned long")))
+	    (object Class "SVertexElement"
+		quid       	"48EB8A3F034C"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48EB8C7101E5"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		operations 	(list Operations
+		    (object Operation "SVertexElement"
+			quid       	"48EB9A640197"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "~SVertexElement"
+			quid       	"48EB9A9900BC"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "data"
+			quid       	"48EB99C900FB"
+			result     	"Byte *"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "elementType"
+			quid       	"48EB99F50187"
+			result     	"VertexElementType"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "coordNum"
+			quid       	"48EB9A0900EB"
+			result     	"unsigned short"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "getTypeCount"
+			quid       	"48EB9F9E02A0"
+			result     	"unsinged long"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_pData"
+			quid       	"48EB8E130223"
+			type       	"Byte *")
+		    (object ClassAttribute "m_Type"
+			quid       	"48EB92EE008D"
+			type       	"VertexElementType")
+		    (object ClassAttribute "m_iCoordNum"
+			quid       	"48EB986302FE"
+			type       	"unsigned short")
+		    (object ClassAttribute "m_iVertexCount"
+			quid       	"48EC4F2B00BB"
+			type       	"unsigned long")))
+	    (object Class "SRenderOption"
+		quid       	"48EC28F90203"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"48EC293702EE"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F"))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_ElementType"
+			quid       	"48EC2AE6009C"
+			type       	"ElementType")
+		    (object ClassAttribute "m_bLight"
+			quid       	"48EC2B050222"
+			type       	"Boolean")
+		    (object ClassAttribute "m_bAlpha"
+			quid       	"48EC2B150271"
+			type       	"Boolean")
+		    (object ClassAttribute "m_bFog"
+			quid       	"48EC2C4201E4")
+		    (object ClassAttribute "m_bDepth"
+			quid       	"48EC2C4901D4")
+		    (object ClassAttribute "m_bCull"
+			quid       	"48EC2C590203")))
+	    (object Association "$UNNAMED$0"
+		quid       	"4854B10500BB"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$1"
+			quid       	"4854B10600DA"
+			supplier   	"Logical View::SWindow"
+			quidu      	"4854ADA1030D"
+			client_cardinality 	(value cardinality "1..n")
+			is_navigable 	TRUE)
+		    (object Role "owner"
+			quid       	"4854B10600DC"
+			label      	"owner"
+			supplier   	"Logical View::SApplication"
+			quidu      	"4854AD8600DA"
+			client_cardinality 	(value cardinality "1"))))
+	    (object Association "$UNNAMED$2"
+		quid       	"4854DA9E034B"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$3"
+			quid       	"4854DA9F0203"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$4"
+			quid       	"4854DA9F0205"
+			supplier   	"Logical View::SObject"
+			quidu      	"4854ACF6001F")))
+	    (object Association "$UNNAMED$5"
+		quid       	"48B572F101B3"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$6"
+			quid       	"48B572F103E5"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$7"
+			quid       	"48B572F103E7"
+			supplier   	"Logical View::SScene"
+			quidu      	"489011E90167")))
+	    (object Association "$UNNAMED$8"
+		quid       	"48CC8783006D"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$9"
+			quid       	"48CC87840177"
+			supplier   	"Logical View::SSphere"
+			quidu      	"48B573460126"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$10"
+			quid       	"48CC87840179"
+			supplier   	"Logical View::SBoneNode"
+			quidu      	"488FBEFE009C")))
+	    (object Association "$UNNAMED$11"
+		quid       	"48CC88210119"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$12"
+			quid       	"48CC88220177"
+			supplier   	"Logical View::SScene"
+			quidu      	"489011E90167"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$13"
+			quid       	"48CC88220179"
+			supplier   	"Logical View::SSceneManager"
+			quidu      	"4854E3DC00BB")))
+	    (object Association "$UNNAMED$14"
+		quid       	"48CC94390167"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$15"
+			quid       	"48CC943A0196"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$16"
+			quid       	"48CC943A0198"
+			supplier   	"Logical View::SSceneObject"
+			quidu      	"484D43FB014B")))
+	    (object Association "$UNNAMED$17"
+		quid       	"48CC944102FD"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$18"
+			quid       	"48CC944200DA"
+			supplier   	"Logical View::SNode"
+			quidu      	"4854D9720157"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$19"
+			quid       	"48CC944200EB"
+			supplier   	"Logical View::SSceneManager"
+			quidu      	"4854E3DC00BB")))
+	    (object Association "$UNNAMED$20"
+		quid       	"48EB8D6701C6"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$21"
+			quid       	"48EB8D68007E"
+			supplier   	"Logical View::SVertexElement"
+			quidu      	"48EB8A3F034C"
+			is_navigable 	TRUE)
+		    (object Role "$UNNAMED$22"
+			quid       	"48EB8D68008D"
+			supplier   	"Logical View::SVertexBuffer"
+			quidu      	"48EB89FA034C"
+			is_navigable 	TRUE
+			is_aggregate 	TRUE))))
+	logical_presentations 	(list unit_reference_list
+	    (object ClassDiagram "Main"
+		quid       	"484D404D02F3"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Logical View::SObject" @1
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(406, 344)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@1
+			    location   	(226, 261)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	360
+			    justify    	0
+			    label      	"SObject")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854ACF6001F"
+			compartment 	(object Compartment
+			    Parent_View 	@1
+			    location   	(226, 328)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	2
+			    max_width  	312)
+			width      	378
+			height     	194
+			annotation 	8
+			autoResize 	TRUE)))
+	    (object ClassDiagram "SceneManager"
+		quid       	"484D43190003"
+		title      	"SceneManager"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	344
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Logical View::SRenderable" @2
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1532, 2160)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@2
+			    location   	(1141, 1875)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	782
+			    justify    	0
+			    label      	"SRenderable")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"484D496D039D"
+			compartment 	(object Compartment
+			    Parent_View 	@2
+			    location   	(1141, 1942)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	9
+			    max_width  	663)
+			width      	800
+			height     	598
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SEntity" @3
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1505, 2613)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@3
+			    location   	(1398, 2556)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	214
+			    justify    	0
+			    label      	"SEntity")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E21B03D8"
+			width      	232
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SLine" @4
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1163, 3049)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@4
+			    location   	(1061, 2992)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	204
+			    justify    	0
+			    label      	"SLine")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E226003E"
+			width      	222
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::STerrain" @5
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(655, 2619)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@5
+			    location   	(524, 2562)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	262
+			    justify    	0
+			    label      	"STerrain")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E26E0203"
+			width      	280
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @6
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E2BF03A9"
+			client     	@3
+			supplier   	@2
+			line_style 	0)
+		    (object InheritView "" @7
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E2C7009C"
+			client     	@5
+			supplier   	@2
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::STriangle" @8
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1524, 3061)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@8
+			    location   	(1377, 3004)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	294
+			    justify    	0
+			    label      	"STriangle")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E327034B"
+			width      	312
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SCamera" @9
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(962, 1912)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@9
+			    location   	(815, 1855)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	294
+			    justify    	0
+			    label      	"SCamera")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E3AA00AB"
+			width      	312
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SLight" @10
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(333, 1865)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@10
+			    location   	(227, 1808)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	212
+			    justify    	0
+			    label      	"SLight")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E3BB038A"
+			width      	230
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SViewport" @11
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(3640, 603)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@11
+			    location   	(3483, 546)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	314
+			    justify    	0
+			    label      	"SViewport")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E41D0148"
+			width      	332
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SRenderQueue" @12
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(4255, 600)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@12
+			    location   	(4038, 543)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	434
+			    justify    	0
+			    label      	"SRenderQueue")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E4630261"
+			width      	452
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SVertex" @13
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(810, 3049)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@13
+			    location   	(689, 2992)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	242
+			    justify    	0
+			    label      	"SVertex")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E575001F"
+			width      	260
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SAttribute" @14
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(3098, 2565)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@14
+			    location   	(2946, 2508)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	304
+			    justify    	0
+			    label      	"SAttribute")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"488FBED00177"
+			width      	322
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @15
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E2C2036B"
+			client     	@4
+			supplier   	@3
+			line_style 	0)
+		    (object InheritView "" @16
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E57E03A9"
+			client     	@13
+			supplier   	@3
+			line_style 	0)
+		    (object InheritView "" @17
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"488FBF4C02DE"
+			client     	@8
+			supplier   	@3
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SCone" @18
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1996, 3064)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@18
+			    location   	(1889, 3007)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	214
+			    justify    	0
+			    label      	"SCone")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48B5733602BC"
+			width      	232
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SCube" @19
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(2381, 3057)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@19
+			    location   	(2274, 3000)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	214
+			    justify    	0
+			    label      	"SCube")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48B573580174"
+			width      	232
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @20
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48B573990388"
+			client     	@18
+			supplier   	@3
+			line_style 	0)
+		    (object InheritView "" @21
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48B5739D01E2"
+			client     	@19
+			supplier   	@3
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SSphere" @22
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(2775, 3064)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@22
+			    location   	(2634, 3007)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	282
+			    justify    	0
+			    label      	"SSphere")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48B573460126"
+			width      	300
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @23
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48B573970194"
+			client     	@22
+			supplier   	@3
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SBoneNode" @24
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(2515, 2160)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@24
+			    location   	(2330, 2103)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	370
+			    justify    	0
+			    label      	"SBoneNode")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"488FBEFE009C"
+			width      	388
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object AssociationViewNew "$UNNAMED$8" @25
+			location   	(2644, 2611)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48CC8783006D"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$9" @26
+				Parent_View 	@25
+				location   	(125, 1053)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC87840177"
+				client     	@25
+				supplier   	@22
+				line_style 	0)
+			    (object RoleView "$UNNAMED$10" @27
+				Parent_View 	@25
+				location   	(125, 1053)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC87840179"
+				client     	@25
+				supplier   	@24
+				line_style 	0)))
+		    (object ClassView "Class" "Logical View::SObject" @28
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1818, 153)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@28
+			    location   	(1609, 64)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	418
+			    justify    	0
+			    label      	"SObject")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854ACF6001F"
+			compartment 	(object Compartment
+			    Parent_View 	@28
+			    location   	(1609, 131)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	2
+			    max_width  	353)
+			width      	436
+			height     	206
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @29
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E430006D"
+			client     	@11
+			supplier   	@28
+			line_style 	0)
+		    (object InheritView "" @30
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E48E01F4"
+			client     	@12
+			supplier   	@28
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SScene" @31
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1246, 619)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@31
+			    location   	(1126, 562)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	240
+			    justify    	0
+			    label      	"SScene")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"489011E90167"
+			width      	258
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @32
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"489011F70186"
+			client     	@31
+			supplier   	@28
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SSceneObject" @33
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(586, 653)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@33
+			    location   	(203, 256)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	766
+			    justify    	0
+			    label      	"SSceneObject")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"484D43FB014B"
+			compartment 	(object Compartment
+			    Parent_View 	@33
+			    location   	(203, 323)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	13
+			    max_width  	650)
+			width      	784
+			height     	822
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @34
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"484D497C039D"
+			client     	@2
+			supplier   	@33
+			line_style 	0)
+		    (object InheritView "" @35
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854D839009C"
+			client     	@33
+			supplier   	@28
+			line_style 	0)
+		    (object InheritView "" @36
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E3C5001F"
+			client     	@9
+			supplier   	@33
+			line_style 	0)
+		    (object InheritView "" @37
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E3C702AF"
+			client     	@10
+			supplier   	@33
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SNode" @38
+			IncludeOperation 	TRUE
+			location   	(1993, 1475)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@38
+			    location   	(1637, 238)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	712
+			    justify    	0
+			    label      	"SNode")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D9720157"
+			compartment 	(object Compartment
+			    Parent_View 	@38
+			    location   	(1637, 305)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	43
+			    max_width  	603)
+			width      	730
+			height     	2502
+			annotation 	8
+			autoResize 	TRUE)
+		    (object AssociationViewNew "$UNNAMED$5" @39
+			location   	(1467, 873)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48B572F101B3"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$6" @40
+				Parent_View 	@39
+				location   	(-418, 189)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48B572F103E5"
+				client     	@39
+				supplier   	@38
+				line_style 	0)
+			    (object RoleView "$UNNAMED$7" @41
+				Parent_View 	@39
+				location   	(-418, 189)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48B572F103E7"
+				client     	@39
+				supplier   	@31
+				line_style 	0)))
+		    (object InheritView "" @42
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"488FBF1B000F"
+			client     	@24
+			supplier   	@38
+			line_style 	0)
+		    (object InheritView "" @43
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854DA6B029F"
+			client     	@38
+			supplier   	@28
+			line_style 	0)
+		    (object AssociationViewNew "$UNNAMED$14" @44
+			location   	(1302, 1070)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48CC94390167"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$15" @45
+				Parent_View 	@44
+				location   	(438, 423)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC943A0196"
+				client     	@44
+				supplier   	@38
+				line_style 	0)
+			    (object RoleView "$UNNAMED$16" @46
+				Parent_View 	@44
+				location   	(438, 423)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC943A0198"
+				client     	@44
+				supplier   	@33
+				line_style 	0)))
+		    (object ClassView "Class" "Logical View::SSceneManager" @47
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(3165, 637)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@47
+			    location   	(2930, 580)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	470
+			    justify    	0
+			    label      	"SSceneManager")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854E3DC00BB"
+			width      	488
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @48
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854E3ED033C"
+			client     	@47
+			supplier   	@28
+			line_style 	0)
+		    (object AssociationViewNew "$UNNAMED$17" @49
+			location   	(2710, 960)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48CC944102FD"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$18" @50
+				Parent_View 	@49
+				location   	(75, 357)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC944200DA"
+				client     	@49
+				supplier   	@38
+				line_style 	0)
+			    (object RoleView "$UNNAMED$19" @51
+				Parent_View 	@49
+				location   	(75, 357)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48CC944200EB"
+				client     	@49
+				supplier   	@47
+				line_style 	0)))))
+	    (object ClassDiagram "Gui"
+		quid       	"4854AC480222"
+		title      	"Gui"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Logical View::SListener" @52
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(737, 655)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@52
+			    location   	(589, 598)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	296
+			    justify    	0
+			    label      	"SListener")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854AD2500CB"
+			width      	314
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SObject" @53
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(742, 291)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@53
+			    location   	(533, 202)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	418
+			    justify    	0
+			    label      	"SObject")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854ACF6001F"
+			width      	436
+			height     	206
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @54
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854AD7002BF"
+			client     	@52
+			supplier   	@53
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SWindow" @55
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1559, 1012)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@55
+			    location   	(1411, 955)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	296
+			    justify    	0
+			    label      	"SWindow")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854ADA1030D"
+			width      	314
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @56
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854ADA7029F"
+			client     	@55
+			supplier   	@52
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SApplication" @57
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(407, 1012)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@57
+			    location   	(9, 923)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	796
+			    justify    	0
+			    label      	"SApplication")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854AD8600DA"
+			width      	814
+			height     	206
+			annotation 	8
+			autoResize 	TRUE)
+		    (object AssociationViewNew "$UNNAMED$0" @58
+			location   	(1107, 1012)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854B10500BB"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$1" @59
+				Parent_View 	@58
+				location   	(715, -4)
+				font       	(object Font
+				    size       	12
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				label      	(object SegLabel @60
+				    Parent_View 	@59
+				    location   	(1342, 971)
+				    font       	(object Font
+					size       	12
+					face       	"Arial"
+					bold       	FALSE
+					italics    	FALSE
+					underline  	FALSE
+					strike     	FALSE
+					color      	0
+					default_color 	TRUE)
+				    hidden     	TRUE
+				    anchor     	1
+				    anchor_loc 	1
+				    nlines     	1
+				    max_width  	165
+				    justify    	0
+				    label      	""
+				    pctDist    	0.800000
+				    height     	42
+				    orientation 	0)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"4854B10600DA"
+				client     	@58
+				supplier   	@55
+				line_style 	0
+				label      	(object SegLabel @61
+				    Parent_View 	@59
+				    location   	(1372, 1066)
+				    font       	(object Font
+					size       	10
+					face       	"Arial"
+					bold       	FALSE
+					italics    	FALSE
+					underline  	FALSE
+					strike     	FALSE
+					color      	0
+					default_color 	TRUE)
+				    anchor     	2
+				    anchor_loc 	1
+				    nlines     	1
+				    max_width  	15
+				    justify    	0
+				    label      	"1..n"
+				    pctDist    	0.900000
+				    height     	54
+				    orientation 	1))
+			    (object RoleView "owner" @62
+				Parent_View 	@58
+				location   	(715, -4)
+				font       	(object Font
+				    size       	12
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				label      	(object SegLabel @63
+				    Parent_View 	@62
+				    location   	(873, 971)
+				    font       	(object Font
+					size       	12
+					face       	"Arial"
+					bold       	FALSE
+					italics    	FALSE
+					underline  	FALSE
+					strike     	FALSE
+					color      	0
+					default_color 	TRUE)
+				    anchor     	1
+				    anchor_loc 	1
+				    nlines     	1
+				    max_width  	165
+				    justify    	0
+				    label      	"+owner"
+				    pctDist    	0.800000
+				    height     	42
+				    orientation 	1)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"4854B10600DC"
+				client     	@58
+				supplier   	@57
+				line_style 	0
+				label      	(object SegLabel @64
+				    Parent_View 	@62
+				    location   	(844, 1066)
+				    font       	(object Font
+					size       	10
+					face       	"Arial"
+					bold       	FALSE
+					italics    	FALSE
+					underline  	FALSE
+					strike     	FALSE
+					color      	0
+					default_color 	TRUE)
+				    anchor     	2
+				    anchor_loc 	1
+				    nlines     	1
+				    max_width  	15
+				    justify    	0
+				    label      	"1"
+				    pctDist    	0.900000
+				    height     	54
+				    orientation 	0))))
+		    (object ClassView "Class" "Logical View::SGuiFrame" @65
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(825, 1486)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@65
+			    location   	(655, 1429)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	340
+			    justify    	0
+			    label      	"SGuiFrame")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854B12701E4"
+			width      	358
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @66
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854B136038A"
+			client     	@65
+			supplier   	@55
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SGraphicsFrame" @67
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1575, 1484)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@67
+			    location   	(1338, 1427)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	474
+			    justify    	0
+			    label      	"SGraphicsFrame")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854B13A007D"
+			width      	492
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @68
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854B14C005D"
+			client     	@67
+			supplier   	@55
+			line_style 	0)
+		    (object InheritView "" @69
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4854AD900196"
+			client     	@57
+			supplier   	@52
+			line_style 	0)))
+	    (object ClassDiagram "Math"
+		quid       	"4854D86B006D"
+		title      	"Math"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Logical View::Vector2" @70
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(331, 300)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@70
+			    location   	(211, 243)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	240
+			    justify    	0
+			    label      	"Vector2")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D883036B"
+			width      	258
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Vector3" @71
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(897, 372)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@71
+			    location   	(777, 315)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	240
+			    justify    	0
+			    label      	"Vector3")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D88C000F"
+			width      	258
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Vector4" @72
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(528, 716)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@72
+			    location   	(408, 659)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	240
+			    justify    	0
+			    label      	"Vector4")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D892009C"
+			width      	258
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Matrix3" @73
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1028, 919)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@73
+			    location   	(907, 862)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	242
+			    justify    	0
+			    label      	"Matrix3")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D89B00FA"
+			width      	260
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Matrix4" @74
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1366, 884)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@74
+			    location   	(1245, 827)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	242
+			    justify    	0
+			    label      	"Matrix4")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D8B203B9"
+			width      	260
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Quaternion" @75
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(325, 978)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@75
+			    location   	(158, 921)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	334
+			    justify    	0
+			    label      	"Quaternion")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D8C40109"
+			width      	352
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Plane" @76
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(934, 1141)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@76
+			    location   	(835, 1084)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	198
+			    justify    	0
+			    label      	"Plane")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D8D0033C"
+			width      	216
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::AxisAlignedBox" @77
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1456, 509)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@77
+			    location   	(1232, 452)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	448
+			    justify    	0
+			    label      	"AxisAlignedBox")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854D8E301D4"
+			width      	466
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Radian" @78
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(438, 1309)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@78
+			    location   	(322, 1255)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	232
+			    justify    	0
+			    label      	"Radian")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48D148190138"
+			width      	250
+			height     	136
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::Degree" @79
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(981, 1528)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@79
+			    location   	(864, 1474)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	234
+			    justify    	0
+			    label      	"Degree")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48D148210242"
+			width      	252
+			height     	136
+			annotation 	8
+			autoResize 	TRUE)))
+	    (object ClassDiagram "RenderSystem"
+		quid       	"48EB87D4006E"
+		title      	"RenderSystem"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	2194
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Logical View::SObject" @80
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1646, 234)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@80
+			    location   	(1466, 151)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	360
+			    justify    	0
+			    label      	"SObject")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4854ACF6001F"
+			compartment 	(object Compartment
+			    Parent_View 	@80
+			    location   	(1466, 218)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	2
+			    max_width  	312)
+			width      	378
+			height     	194
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SRenderSystem" @81
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(459, 525)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@81
+			    location   	(228, 414)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	463
+			    justify    	0
+			    label      	"SRenderSystem")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48EB890001F5"
+			width      	481
+			height     	250
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::SVertexIndexBuffer" @82
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(3611, 642)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@82
+			    location   	(3160, 245)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	902
+			    justify    	0
+			    label      	"SVertexIndexBuffer")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48EB8A0602B0"
+			compartment 	(object Compartment
+			    Parent_View 	@82
+			    location   	(3160, 312)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	13
+			    max_width  	766)
+			width      	920
+			height     	822
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @83
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EB8C6D0139"
+			client     	@81
+			supplier   	@80
+			line_style 	0)
+		    (object InheritView "" @84
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EB8C7302EF"
+			client     	@82
+			supplier   	@80
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SVertexElement" @85
+			ShowCompartmentStereotypes 	TRUE
+			location   	(3034, 1308)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@85
+			    location   	(2806, 1251)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	456
+			    justify    	0
+			    label      	"SVertexElement")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48EB8A3F034C"
+			width      	474
+			height     	142
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @86
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EB8C7101E5"
+			client     	@85
+			supplier   	@80
+			line_style 	0)
+		    (object ClassView "Class" "Logical View::SVertexBuffer" @87
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1641, 1314)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@87
+			    location   	(1025, 973)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	1232
+			    justify    	0
+			    label      	"SVertexBuffer")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48EB89FA034C"
+			compartment 	(object Compartment
+			    Parent_View 	@87
+			    location   	(1025, 1040)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	16777215
+			    anchor     	2
+			    nlines     	11
+			    max_width  	1048)
+			width      	1250
+			height     	710
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @88
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EB8C6F0197"
+			client     	@87
+			supplier   	@80
+			line_style 	0)
+		    (object AssociationViewNew "$UNNAMED$20" @89
+			location   	(2531, 1309)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EB8D6701C6"
+			roleview_list 	(list RoleViews
+			    (object RoleView "$UNNAMED$21" @90
+				Parent_View 	@89
+				location   	(1624, 694)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48EB8D68007E"
+				client     	@89
+				supplier   	@85
+				line_style 	0)
+			    (object RoleView "$UNNAMED$22" @91
+				Parent_View 	@89
+				location   	(1624, 694)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"48EB8D68008D"
+				client     	@89
+				supplier   	@87
+				line_style 	0)))
+		    (object ClassView "Class" "Logical View::SRenderOption" @92
+			ShowCompartmentStereotypes 	TRUE
+			IncludeOperation 	TRUE
+			location   	(1306, 634)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@92
+			    location   	(1083, 580)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	446
+			    justify    	0
+			    label      	"SRenderOption")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"48EC28F90203"
+			width      	464
+			height     	136
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritView "" @93
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"48EC293702EE"
+			client     	@92
+			supplier   	@80
+			line_style 	0)))))
+    root_subsystem 	(object SubSystem "Component View"
+	quid       	"484D404C02F4"
+	physical_models 	(list unit_reference_list)
+	physical_presentations 	(list unit_reference_list
+	    (object Module_Diagram "Main"
+		quid       	"484D404D02F1"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    process_structure 	(object Processes
+	quid       	"484D404C02F5"
+	ProcsNDevs 	(list
+	    (object Process_Diagram "Deployment View"
+		quid       	"484D404C02F7"
+		title      	"Deployment View"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    properties 	(object Properties
+	attributes 	(list Attribute_Set
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"propertyId"
+		value      	"809135966")
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Role"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialValue"
+			value      	"")))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Inherit"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Module-Spec"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RevEngRootDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RootPackage"
+			value      	"C++ Reverse Engineered")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RevEngDirectoriesAsPackages"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"HeaderFileExtension"
+			value      	".h")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ImplementationFileExtension"
+			value      	".cpp")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NewHeaderFileDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NewImplementationFileDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FileCapitalization"
+			value      	("FileCapitalizationSet" 0))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeGenExtraDirectories"
+			value      	("CodeGenExtraDirectoriesSet" 0))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"StripClassPrefix"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"UseTabs"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"TabWidth"
+			value      	8)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"IndentWidth"
+			value      	4)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"AccessIndentation"
+			value      	-2)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CreateBackupFiles"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ModelIdCommentRules"
+			value      	("ModelIdCommentRulesSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CommentRules"
+			value      	("CommentRulesSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"PageWidth"
+			value      	80)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ClassMemberOrder"
+			value      	("MemberOrderSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"OneParameterPerLine"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NamespaceBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ClassBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FunctionBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Copyright"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialHeaderIncludes"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialBodyIncludes"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeGenExtraDirectoriesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"None"
+				value      	0)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Namespaces"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Packages"
+				value      	2)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FileCapitalizationSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Same as model"
+				value      	0)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Lower case"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Upper case"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Lower case with underscores"
+				value      	3)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"BraceStyleSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B1"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B2"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B3"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B4"
+				value      	4)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B5"
+				value      	5)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"MemberOrderSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Public First"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Private First"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Order by kind"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Unordered"
+				value      	4)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ModelIdCommentRulesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation only"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation and reverse engineering"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Never generate model IDs"
+				value      	3)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CommentRulesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Always synchronize"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation only"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Reverse engineering only"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Never synchronize"
+				value      	4)))))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Module-Body"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RevEngRootDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RootPackage"
+			value      	"C++ Reverse Engineered")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"RevEngDirectoriesAsPackages"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"HeaderFileExtension"
+			value      	".h")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ImplementationFileExtension"
+			value      	".cpp")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NewHeaderFileDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NewImplementationFileDirectory"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FileCapitalization"
+			value      	("FileCapitalizationSet" 0))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeGenExtraDirectories"
+			value      	("CodeGenExtraDirectoriesSet" 0))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"StripClassPrefix"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"UseTabs"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"TabWidth"
+			value      	8)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"IndentWidth"
+			value      	4)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"AccessIndentation"
+			value      	-2)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CreateBackupFiles"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ModelIdCommentRules"
+			value      	("ModelIdCommentRulesSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CommentRules"
+			value      	("CommentRulesSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"PageWidth"
+			value      	80)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ClassMemberOrder"
+			value      	("MemberOrderSet" 1))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"OneParameterPerLine"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"NamespaceBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ClassBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FunctionBraceStyle"
+			value      	("BraceStyleSet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Copyright"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialHeaderIncludes"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialBodyIncludes"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeGenExtraDirectoriesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"None"
+				value      	0)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Namespaces"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Packages"
+				value      	2)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"FileCapitalizationSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Same as model"
+				value      	0)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Lower case"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Upper case"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Lower case with underscores"
+				value      	3)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"BraceStyleSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B1"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B2"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B3"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B4"
+				value      	4)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"B5"
+				value      	5)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"MemberOrderSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Public First"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Private First"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Order by kind"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Unordered"
+				value      	4)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ModelIdCommentRulesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation only"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation and reverse engineering"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Never generate model IDs"
+				value      	3)))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CommentRulesSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Always synchronize"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Code generation only"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Reverse engineering only"
+				value      	3)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Never synchronize"
+				value      	4)))))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Param"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"InitialCodeBody"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Inline"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"GenerateFunctionBody"
+			value      	("GenerateFunctionBodySet" 2))
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"GenerateFunctionBodySet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"Default"
+				value      	2)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"True"
+				value      	1)
+			    (object Attribute
+				tool       	"Cplusplus"
+				name       	"False"
+				value      	0)))))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"Synchronize"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"ImplementationType"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"HeaderSourceFile"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"BodySourceFile"
+			value      	"")))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Category"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"CodeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"IsNamespace"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"default__Uses"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Cplusplus"
+			name       	"BodyReferenceOnly"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Cplusplus"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"ANSIConvert"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"framework"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Rose Model Integrator"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Rose Web Publisher"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"COM"
+		name       	"propertyId"
+		value      	"783606378")
+	    (object Attribute
+		tool       	"COM"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"COM"
+			name       	"TypeKinds"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"COM"
+				name       	"enum"
+				value      	100)
+			    (object Attribute
+				tool       	"COM"
+				name       	"record"
+				value      	101)
+			    (object Attribute
+				tool       	"COM"
+				name       	"module"
+				value      	102)
+			    (object Attribute
+				tool       	"COM"
+				name       	"interface"
+				value      	103)
+			    (object Attribute
+				tool       	"COM"
+				name       	"dispinterface"
+				value      	104)
+			    (object Attribute
+				tool       	"COM"
+				name       	"coclass"
+				value      	105)
+			    (object Attribute
+				tool       	"COM"
+				name       	"alias"
+				value      	106)
+			    (object Attribute
+				tool       	"COM"
+				name       	"union"
+				value      	107)
+			    (object Attribute
+				tool       	"COM"
+				name       	"max"
+				value      	108)
+			    (object Attribute
+				tool       	"COM"
+				name       	"(none)"
+				value      	109)))
+		    (object Attribute
+			tool       	"COM"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"COM"
+			name       	"kind"
+			value      	("TypeKinds" 109))
+		    (object Attribute
+			tool       	"COM"
+			name       	"uuid"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"version"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpstring"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpcontext"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"attributes"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"dllname"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"alias"
+			value      	"")))
+	    (object Attribute
+		tool       	"COM"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"COM"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"COM"
+			name       	"id"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpstring"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"attributes"
+			value      	"")))
+	    (object Attribute
+		tool       	"COM"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"COM"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"COM"
+			name       	"id"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpstring"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"attributes"
+			value      	"")))
+	    (object Attribute
+		tool       	"COM"
+		name       	"default__Module-Spec"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"COM"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"COM"
+			name       	"filename"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"library"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"uuid"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"version"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpstring"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpfile"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"helpcontext"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"lcid"
+			value      	"")
+		    (object Attribute
+			tool       	"COM"
+			name       	"attributes"
+			value      	"")))
+	    (object Attribute
+		tool       	"COM"
+		name       	"default__Param"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"COM"
+			name       	"attributes"
+			value      	"")))
+	    (object Attribute
+		tool       	"COM"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"VC++"
+		name       	"propertyId"
+		value      	"809135966")
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Project"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"UpdateATL"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"SmartPointersOnAssoc"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"GenerateImports"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"PutImportsIn"
+			value      	"stdafx.h")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"FullPathInImports"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"UseImportAttributes"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ImportAttributes"
+			value      	"no_namespace named_guids")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ImportProjTypeLib"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DefaultTypeLib"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"TypeLibLocation"
+			value      	"")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"CompileProjTypeLib"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlInterfaceAttributes"
+			value      	(value Text 
+|endpoint("")
+|local
+|object
+|pointer_default()
+|uuid("")
+|version("")
+|encode
+|decode
+|auto_handle
+|implicit_handle("")
+|code
+|nocode
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlCoClassAttributes"
+			value      	(value Text 
+|uuid("")
+|helpstring("")
+|helpcontext("")
+|licensed
+|version("")
+|control
+|hidden
+|appobject
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlCoClassInterfaceAttributes"
+			value      	(value Text 
+|default
+|source
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlParameterAttributes"
+			value      	(value Text 
+|in
+|out
+|retval
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlMethodAttributes"
+			value      	(value Text 
+|id(1)
+|helpstring("")
+|call_as("")
+|callback
+|helpcontext("")
+|hidden
+|local
+|restricted
+|source
+|vararg
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IdlPropertyAttributes"
+			value      	(value Text 
+|id()
+|helpstring("")
+|call_as("")
+|helpcontext("")
+|hidden
+|local
+|restricted
+|source
+|vararg
+|bindable
+|defaultbind
+|defaultcallelem
+|displaybind
+|immediatebind
+|nonbrowseable
+|requestedit
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"RvcPtyVersion"
+			value      	"1.4")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ModelIDStyle"
+			value      	2)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DocStyle"
+			value      	1)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"GenerateIncludes"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ApplyPattern"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"CreateBackupFiles"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"SupportCodeName"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DocRevEngineer"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"CreateOverviewDiagrams"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"UpdateModelIDsInCode"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"AttributeTypes"
+			value      	(value Text 
+|attr1=bool
+|attr2=short
+|attr3=int
+|attr4=long
+|attr5=char
+|attr6=float
+|attr7=double
+|attr8=void
+|attr9=clock_t
+|attr10=_complex
+|attr11=_dev_t
+|attr12=div_t
+|attr13=_exception
+|attr14=FILE
+|attr15=_finddata_t
+|attr16=_FPIEEE_RECORD
+|attr17=fpos_t
+|attr18=_HEAPINFO
+|attr19=jmp_buf
+|attr20=lconv
+|attr21=ldiv_t
+|attr22=_off_t
+|attr23=_onexit_t
+|attr24=_PNH
+|attr25=ptrdiff_t
+|attr26=sig_atomic_t
+|attr27=size_t
+|attr28=_stat
+|attr29=time_t
+|attr30=_timeb
+|attr31=tm
+|attr32=_utimbuf
+|attr33=va_list
+|attr34=wchar_t
+|attr35=wctrans_t
+|attr36=wctype_t
+|attr37=_wfinddata_t
+|attr38=_wfinddatai64_t
+|attr39=wint_t
+|attr40=ABORTPROC
+|attr41=ACMDRIVERENUMCB
+|attr42=ACMDRIVERPROC
+|attr43=ACMFILTERCHOOSEHOOKPROC
+|attr44=ACMFILTERENUMCB
+|attr45=ACMFILTERTAGENUMCB
+|attr46=ACMFORMATCHOOSEHOOKPROC
+|attr47=ACMFORMATENUMCB
+|attr48=ACMFORMATTAGENUMCB
+|attr49=APPLET_PROC
+|attr50=ATOM
+|attr51=BOOL
+|attr52=BOOLEAN
+|attr53=BYTE
+|attr54=CALINFO_ENUMPROC
+|attr55=CALLBACK
+|attr56=CHAR
+|attr57=COLORREF
+|attr58=CONST
+|attr59=CRITICAL_SECTION
+|attr60=CTRYID
+|attr61=DATEFMT_ENUMPROC
+|attr62=DESKTOPENUMPROC
+|attr63=DLGPROC
+|attr64=DRAWSTATEPROC
+|attr65=DWORD
+|attr66=EDITWORDBREAKPROC
+|attr67=ENHMFENUMPROC
+|attr68=ENUMRESLANGPROC
+|attr69=ENUMRESNAMEPROC
+|attr70=ENUMRESTYPEPROC
+|attr71=FARPROC
+|attr72=FILE_SEGMENT_ELEMENT
+|attr73=FLOAT
+|attr74=FONTENUMPROC
+|attr75=GOBJENUMPROC
+|attr76=GRAYSTRINGPROC
+|attr77=HACCEL
+|attr78=HANDLE
+|attr79=HBITMAP
+|attr80=HBRUSH
+|attr81=HCOLORSPACE
+|attr82=HCONV
+|attr83=HCONVLIST
+|attr84=HCURSOR
+|attr85=HDC
+|attr86=HDDEDATA
+|attr87=HDESK
+|attr88=HDROP
+|attr89=HDWP
+|attr90=HENHMETAFILE
+|attr91=HFILE
+|attr92=HFONT
+|attr93=HGDIOBJ
+|attr94=HGLOBAL
+|attr95=HHOOK
+|attr96=HICON
+|attr97=HIMAGELIST
+|attr98=HIMC
+|attr99=HINSTANCE
+|attr100=HKEY
+|attr101=HKL
+|attr102=HLOCAL
+|attr103=HMENU
+|attr104=HMETAFILE
+|attr105=HMODULE
+|attr106=HMONITOR
+|attr107=HOOKPROC
+|attr108=HPALETTE
+|attr109=HPEN
+|attr110=HRGN
+|attr111=HRSRC
+|attr112=HSZ
+|attr113=HTREEITEM
+|attr114=HWINSTA
+|attr115=HWND
+|attr116=INT
+|attr117=IPADDR
+|attr118=LANGID
+|attr119=LCID
+|attr120=LCSCSTYPE
+|attr121=LCSGAMUTMATCH
+|attr122=LCTYPE
+|attr123=LINEDDAPROC
+|attr124=LOCALE_ENUMPROC
+|attr125=LONG
+|attr126=LONGLONG
+|attr127=LPARAM
+|attr128=LPBOOL
+|attr129=LPBYTE
+|attr130=LPCCHOOKPROC
+|attr131=LPCFHOOKPROC
+|attr132=LPCOLORREF
+|attr133=LPCRITICAL_SECTION
+|attr134=LPCSTR
+|attr135=LPCTSTR
+|attr136=LPCVOID
+|attr137=LPCWSTR
+|attr138=LPDWORD
+|attr139=LPFIBER_START_ROUTINE
+|attr140=LPFRHOOKPROC
+|attr141=LPHANDLE
+|attr142=LPHANDLER_FUNCTION
+|attr143=LPINT
+|attr144=LPLONG
+|attr145=LPOFNHOOKPROC
+|attr146=LPPAGEPAINTHOOK
+|attr147=LPPAGESETUPHOOK
+|attr148=LPPRINTHOOKPROC
+|attr149=LPPROGRESS_ROUTINE
+|attr150=LPSETUPHOOKPROC
+|attr151=LPSTR
+|attr152=LPSTREAM
+|attr153=LPTHREAD_START_ROUTINE
+|attr154=LPTSTR
+|attr155=LPVOID
+|attr156=LPWORD
+|attr157=LPWSTR
+|attr158=LRESULT
+|attr159=LUID
+|attr160=PBOOL
+|attr161=PBOOLEAN
+|attr162=PBYTE
+|attr163=PCHAR
+|attr164=PCRITICAL_SECTION
+|attr165=PCSTR
+|attr166=PCTSTR
+|attr167=PCWCH
+|attr168=PCWSTR
+|attr169=PDWORD
+|attr170=PFLOAT
+|attr171=PFNCALLBACK
+|attr172=PHANDLE
+|attr173=PHANDLER_ROUTINE
+|attr174=PHKEY
+|attr175=PINT
+|attr176=PLCID
+|attr177=PLONG
+|attr178=PLUID
+|attr179=PROPENUMPROC
+|attr180=PROPENUMPROCEX
+|attr181=PSHORT
+|attr182=PSTR
+|attr183=PTBYTE
+|attr184=PTCHAR
+|attr185=PTIMERAPCROUTINE
+|attr186=PTSTR
+|attr187=PUCHAR
+|attr188=PUINT
+|attr189=PULONG
+|attr190=PUSHORT
+|attr191=PVOID
+|attr192=PWCHAR
+|attr193=PWORD
+|attr194=PWSTR
+|attr195=REGISTERWORDENUMPROC
+|attr196=REGSAM
+|attr197=SC_HANDLE
+|attr198=SC_LOCK
+|attr199=SENDASYNCPROC
+|attr200=SERVICE_STATUS_HANDLE
+|attr201=SHORT
+|attr202=TBYTE
+|attr203=TCHAR
+|attr204=TIMEFMT_ENUMPROC
+|attr205=TIMERPROC
+|attr206=UCHAR
+|attr207=UINT
+|attr208=ULONG
+|attr209=ULONGLONG
+|attr210=UNSIGNED
+|attr211=USHORT
+|attr212=VOID
+|attr213=WCHAR
+|attr214=WINAPI
+|attr215=WINSTAENUMPROC
+|attr216=WNDENUMPROC
+|attr217=WNDPROC
+|attr218=WORD
+|attr219=WPARAM
+|attr220=YIELDPROC
+|attr221=CPoint
+|attr222=CRect
+|attr223=CSize
+|attr224=CString
+|attr225=CTime
+|attr226=CTimeSpan
+|attr227=CCreateContext
+|attr228=CMemoryState
+|attr229=COleSafeArray
+|attr230=CPrintInfo
+|attr231=HRESULT
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Containers"
+			value      	(value Text 
+|cont1=CArray<$TYPE, $TYPE&>
+|cont2=CByteArray
+|cont3=CDWordArray
+|cont4=CObArray
+|cont5=CPtrArray
+|cont6=CStringArray
+|cont7=CUIntArray
+|cont8=CWordArray
+|cont9=CList<$TYPE, $TYPE&>
+|cont10=CPtrList
+|cont11=CObList
+|cont12=CStringList
+|cont13=CMapWordToPtr
+|cont14=CMapPtrToWord
+|cont15=CMapPtrToPtr
+|cont16=CMapWordToOb
+|cont17=CMapStringToPtr
+|cont18=CMapStringToOb
+|cont19=CMapStringToString
+|cont20=CTypedPtrArray<CPtrArray, $TYPE*>
+|cont21=CTypedPtrArray<CObArray, $TYPE*>
+|cont22=CTypedPtrList<CObList, $TYPE*>
+|cont23=CTypedPtrList<CPtrList, $TYPE*>
+|cont24=CComObject<$TYPE>
+|cont25=CComPtr<$TYPE>
+|cont26=CComQIPtr<$TYPE>
+|cont27=CComQIPtr<$TYPE, IID*>
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ClassMethods"
+			value      	(value Text 
+|*_body=// ToDo: Add your specialized code here and/or call the base class
+|cm1=$NAME()
+|cm2=$NAME(orig:const $NAME&)
+|cm3=<<virtual>> ~$NAME()
+|cm4=operator=(rhs:$NAME&):$NAME&
+|cm4_body=// ToDo: Add your specialized code here and/or call the base class||return rhs;
+|cm5=<<const>> operator==(rhs:const $NAME&):bool
+|cm5_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm6=<<const>> operator!=(rhs:$NAME&):bool
+|cm6_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm7=<<const>> operator<(rhs:$NAME&):bool
+|cm7_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm8=<<const>> operator>(rhs:$NAME&):bool
+|cm8_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm9=<<const>> operator<=(rhs:$NAME&):bool
+|cm9_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm10=<<const>> operator>=(rhs:$NAME&):bool
+|cm10_body=// ToDo: Add your specialized code here and/or call the base class||return false;
+|cm11=<<friend>> operator>>(i:istream&, rhs:$NAME&):istream&
+|cm11_body=// ToDo: Add your specialized code here and/or call the base class||return i;
+|cm12=<<friend>> operator<<(o:ostream&, rhs:const $NAME&):ostream&
+|cm12_body=// ToDo: Add your specialized code here and/or call the base class||return o;
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Accessors"
+			value      	(value Text 
+|agf=<<const>> get_$BASICNAME():const $TYPE
+|agf_body=return $NAME;
+|asf=set_$BASICNAME(value:$TYPE):void
+|asf_body=$NAME = value;|return;
+|agv=<<const>> get_$BASICNAME():const $TYPE&
+|agv_body=return $NAME;
+|asv=set_$BASICNAME(value:$TYPE&):void
+|asv_body=$NAME = value;|return;
+|agp=<<const>> get_$BASICNAME():const $TYPE
+|agp_body=return $NAME;
+|asp=set_$BASICNAME(value:$TYPE):void
+|asp_body=$NAME = value;|return;
+|agr=<<const>> get_$BASICNAME():const $TYPE
+|agr_body=return $NAME;
+|asr=set_$BASICNAME(value:$TYPE):void
+|asr_body=$NAME = value;|return;
+|aga=<<const>> get_$BASICNAME(index:int):const $TYPE
+|aga_body=return $NAME[index];
+|asa=set_$BASICNAME(index:int, value:$TYPE):void
+|asa_body=$NAME[index] = value;|return;
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Conditionals"
+			value      	(value Text 
+|*_decl=#ifdef _DEBUG
+|*_base=CObject
+|cond1=<<virtual, const>> AssertValid():void
+|cond1_body=$SUPERNAME::AssertValid();
+|cond2=<<virtual, const>> Dump(dc:CDumpContext&):void
+|cond2_body=$SUPERNAME::Dump(dc);
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Patterns"
+			value      	(value Text 
+|patrn1=cm1,cm3,cond1,cond2
+|Patrn1_name=Default
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"AtlClassPrefix"
+			value      	"C")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"AtlInterfacePrefix"
+			value      	"I")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"AtlTypeDescription"
+			value      	"Class")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DefaultLogicalPackage"
+			value      	"$language Reverse Engineered/$component")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DefaultComponentPackage"
+			value      	"")))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"HeaderFileName"
+			value      	"")
+		    (object Attribute
+			tool       	"VC++"
+			name       	"CodeFileName"
+			value      	"")))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Module-Spec"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"InternalMap"
+			value      	(value Text 
+|*:AUTO:AUTO
+|
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ExportMap"
+			value      	(value Text 
+|*:AUTO:AUTO
+|
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"InitialSourceIncludes"
+			value      	(value Text 
+|"stdafx.h"
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"InitialHeaderIncludes"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Copyright"
+			value      	(value Text "Copyright (C) 1991 - 1999 Rational Software Corporation"))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"KindSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"VC++"
+				name       	"(none)"
+				value      	300)
+			    (object Attribute
+				tool       	"VC++"
+				name       	"DLL"
+				value      	301)
+			    (object Attribute
+				tool       	"VC++"
+				name       	"EXE"
+				value      	302)
+			    (object Attribute
+				tool       	"VC++"
+				name       	"MIDL"
+				value      	303)))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Kind"
+			value      	("KindSet" 300))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"BodyExtensions"
+			value      	(value Text 
+|.cpp
+|.cxx
+|.inl
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"HeaderExtensions"
+			value      	(value Text 
+|.h
+|.hpp
+|.hxx
+|inl
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"ProjectFolders"
+			value      	(value Text 
+|Source Files
+|Header Files
+			))
+		    (object Attribute
+			tool       	"VC++"
+			name       	"UsePathMap"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Role"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Const"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"InitialValue"
+			value      	"")))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Uses"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Generate"
+			value      	TRUE)))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Category"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"IsDirectory"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Directory"
+			value      	"")))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Generate"
+			value      	TRUE)))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Generate"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"Inline"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"VC++"
+			name       	"DefaultBody"
+			value      	(value Text ""))))
+	    (object Attribute
+		tool       	"VC++"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Version Control"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"VisualStudio"
+		name       	"HiddenTool"
+		value      	FALSE))
+	quid       	"484D404C02F6"))
