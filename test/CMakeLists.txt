@@ -1,0 +1,1 @@
+include_directories(${SAGITTA_ROOT}/src)
