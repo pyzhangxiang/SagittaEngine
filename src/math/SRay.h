@@ -28,7 +28,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport Ray{
+	class _MathExport Ray{
 	// member variables
 	private:
 		Vector3 m_Origin;

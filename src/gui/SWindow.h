@@ -26,7 +26,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SWindow : public SListener{
+	class _GuiExport SWindow : public SListener{
 	// type defines
 	protected:
 		typedef std::set<SWidget*> ChildList;

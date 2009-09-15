@@ -52,7 +52,7 @@ namespace Sagitta{
                 [ m[3][0]  m[3][1]  m[3][2]  m[3][3] ]   {1}
             </pre>
     */
-	class _SagittaExport Matrix4{
+	class _MathExport Matrix4{
 	// member variables
 	private:
 		/// The matrix entries, indexed by [row][col].
@@ -443,7 +443,7 @@ namespace Sagitta{
 		}
 
 		/** Function for writing to a stream. */
-		inline _SagittaExport friend std::ostream& operator << (std::ostream& o, const Matrix4& m){
+		inline _MathExport friend std::ostream& operator << (std::ostream& o, const Matrix4& m){
 			o << "Matrix4(";
 			for(size_t i=0; i<4; i++){
 				o << " row" << (unsigned)i << "{";

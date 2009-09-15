@@ -22,7 +22,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport Vector4{
+	class _MathExport Vector4{
 		// member variables
 	private:
 		union{
@@ -580,7 +580,7 @@ namespace Sagitta{
 		//}
 
 		/** function for writing to a stream */
-		inline _SagittaExport friend std::ostream& operator << (std::ostream &o, const Vector4 &v){
+		inline _MathExport friend std::ostream& operator << (std::ostream &o, const Vector4 &v){
 			o << "Vector4(" << v.x() << "," << v.y() << "," << v.z() <<"," << v.w() << ")";
 			return o;
 		}

@@ -22,7 +22,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport Color{
+	class _MathExport Color{
 	public:
 		typedef uInt Rgba;
 		typedef uInt Argb;

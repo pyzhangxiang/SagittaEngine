@@ -5,9 +5,9 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "Gui/SD3D9Context.h"
-#include "Gui/SWindow.h"
-#include "Utils/SException.h"
+#include "../SD3D9Context.h"
+#include "../SWindow.h"
+#include "../../common/utils/SException.h"
 
 // DECLARES //////////////////////////////////////////
 

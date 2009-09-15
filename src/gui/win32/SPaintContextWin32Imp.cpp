@@ -5,9 +5,9 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "Gui/SPaintContext.h"
-#include "Gui/SWindow.h"
-#include "Utils/SException.h"
+#include "../SPaintContext.h"
+#include "../SWindow.h"
+#include "../../common/utils/SException.h"
 
 // DECLARES //////////////////////////////////////////
 

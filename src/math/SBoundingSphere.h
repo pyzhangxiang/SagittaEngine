@@ -26,7 +26,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport BoundingSphere{
+	class _MathExport BoundingSphere{
 	// member variables
 	private:
 		Real m_Radius;

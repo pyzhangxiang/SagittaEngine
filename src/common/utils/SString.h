@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SString{
+	class _CommonExport SString{
 		// member variables
 
 		// constructors & destructor

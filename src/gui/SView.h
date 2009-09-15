@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SView : public SWidget{
+	class _GuiExport SView : public SWidget{
 	// member variables
 
 	// constructors & destructor

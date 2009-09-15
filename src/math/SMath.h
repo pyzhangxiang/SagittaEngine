@@ -291,7 +291,7 @@ namespace Sagitta{
 		@par
 
 	*/
-	class _SagittaExport Math{
+	class _MathExport Math{
 	public:
 		// constant defines
 		// pi defines

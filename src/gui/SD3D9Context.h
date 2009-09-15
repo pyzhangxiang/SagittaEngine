@@ -26,7 +26,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SD3D9Context : public SRenderContext{
+	class _GuiExport SD3D9Context : public SRenderContext{
 	// member variables
 	private:
 		LPDIRECT3D9 m_pD3D;

@@ -21,7 +21,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SPaintContext : public SContext{
+	class _GuiExport SPaintContext : public SContext{
 	// member variables
 	protected:
 		SPaintPortHandle m_ps;

@@ -23,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SException : public std::exception{
+	class _CommonExport SException : public std::exception{
 	public:
 		enum ExceptionCode{
 			ERR_CANNOT_WRITE_TO_FILE,
@@ -108,7 +108,7 @@ namespace Sagitta{
 	// Specialised exceptions allowing each to be caught specifically
 	// backwards-compatible since exception codes still used
 
-	class _SagittaExport SUnimplementedException : public SException{
+	class _CommonExport SUnimplementedException : public SException{
 	public:
 		SUnimplementedException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "SUnimplementedException", aFileName, aLine){
@@ -116,7 +116,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SFileNotFoundException : public SException{
+	class _CommonExport SFileNotFoundException : public SException{
 	public:
 		SFileNotFoundException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "SFileNotFoundException", aFileName, aLine){
@@ -124,7 +124,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SIOException : public SException{
+	class _CommonExport SIOException : public SException{
 	public:
 		SIOException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "SIOException", aFileName, aLine){
@@ -132,7 +132,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SInvalidStateException : public SException{
+	class _CommonExport SInvalidStateException : public SException{
 	public:
 		SInvalidStateException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "InvalidStateException", aFileName, aLine){
@@ -140,7 +140,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SInvalidParametersException : public SException{
+	class _CommonExport SInvalidParametersException : public SException{
 	public:
 		SInvalidParametersException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "InvalidParametersException", aFileName, aLine){
@@ -148,7 +148,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SItemIdentityException : public SException{
+	class _CommonExport SItemIdentityException : public SException{
 	public:
 		SItemIdentityException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "ItemIdentityException", aFileName, aLine){
@@ -156,7 +156,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SInternalErrorException : public SException{
+	class _CommonExport SInternalErrorException : public SException{
 	public:
 		SInternalErrorException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "InternalErrorException", aFileName, aLine){
@@ -164,7 +164,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SRenderingAPIException : public SException{
+	class _CommonExport SRenderingAPIException : public SException{
 	public:
 		SRenderingAPIException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "RenderingAPIException", aFileName, aLine){
@@ -172,7 +172,7 @@ namespace Sagitta{
 		}
 	};
 
-	class _SagittaExport SRuntimeAssertionException : public SException{
+	class _CommonExport SRuntimeAssertionException : public SException{
 	public:
 		SRuntimeAssertionException(int aCode, const std::string &aDescription, const std::string &aSourceFunc, const char *aFileName, long aLine)
 			: SException(aCode, aDescription, aSourceFunc, "RuntimeAssertionException", aFileName, aLine){

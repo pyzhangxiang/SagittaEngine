@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport Euler{
+	class _MathExport Euler{
 	// static members
 	public:
 		static const Euler ZERO;

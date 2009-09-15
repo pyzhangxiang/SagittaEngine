@@ -25,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SMainFrame : public SWindow{
+	class _GuiExport SMainFrame : public SWindow{
 	// member variables
 
 	// constructors & destructor

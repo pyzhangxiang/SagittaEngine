@@ -19,7 +19,7 @@
 #include "../../common/utils/SException.h"
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 #	include <gl/glew.h>
-#	include <gl/glut.h>
+//#	include <gl/glut.h>
 #elif SAGITTA_PLATFORM == SAGITTA_PLATFORM_APPLE
 #	include <OpenGL/glu.h>
 #	include <OpenGL/glext.h>

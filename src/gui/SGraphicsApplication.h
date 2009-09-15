@@ -15,7 +15,7 @@ namespace Sagitta{
 	class SWindow;
 	class SSceneManager;
 
-	class _SagittaExport SGraphicsApplication : public SApplication{
+	class _GuiExport SGraphicsApplication : public SApplication{
 	// constructors & destructors
 	public:
 		SGraphicsApplication(void);

@@ -43,12 +43,29 @@ namespace Sagitta{
 /** Windows Settings */
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 #	if defined(SAGITTA_STATIC_LIB)
+#		define _CommonExport
+#		define _MathExport
 #		define _SagittaExport
+#		define _GuiExport
 #	else
+#		define _CommonExport
+
+#		if defined(SAGITTA_MATH)
+#			define _MathExport __declspec(dllexport)
+#		else
+#			define _MathExport __declspec(dllimport)
+#		endif
+
 #		if defined(SAGITTA_KERNEL)
 #			define _SagittaExport __declspec(dllexport)
 #		else
 #			define _SagittaExport __declspec(dllimport)
+#		endif
+
+#		if defined(SAGITTA_GUI)
+#			define _GuiExport __declspec(dllexport)
+#		else
+#			define _GuiExport __declspec(dllimport)
 #		endif
 #	endif
 
@@ -57,7 +74,10 @@ namespace Sagitta{
 
 /** Apple/Linux Settings */
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_APPLE || SAGITTA_PLATFORM == SAGITTA_PLATFORM_LINUX
+#	define _CommonExport
+#	define _MathExport
 #	define _SagittaExport
+#	define _GuiExport
 
 	// A quick define to overcome different names for the same function
 #   define stricmp strcasecmp

@@ -21,7 +21,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SKeyMapping{
+	class _GuiExport SKeyMapping{
 	// static members
 	public:
 		static uLong SagiMouseButton(uLong aSysMB);

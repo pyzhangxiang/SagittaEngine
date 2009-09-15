@@ -5,10 +5,10 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "Gui/SWindowDelegate.h"
-#include "Gui/SListener.h"
-#include "Utils/SString.h"
-#include "Utils/SException.h"
+#include "../SWindowDelegate.h"
+#include "../SListener.h"
+#include "../../common/utils/SString.h"
+#include "../../common/utils/SException.h"
 
 // DECLARES //////////////////////////////////////////
 

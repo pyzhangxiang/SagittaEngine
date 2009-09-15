@@ -23,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SController : public SDelegate{
+	class _GuiExport SController : public SDelegate{
 	// member variables
 
 	// constructors & destructor

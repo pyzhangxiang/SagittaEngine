@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SContext{
+	class _GuiExport SContext{
 	// member variables
 	protected:
 		SContextHandle m_ContextHandle;

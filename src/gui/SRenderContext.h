@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SRenderContext : public SContext{
+	class _GuiExport SRenderContext : public SContext{
 	// member variables
 
 	// constructors & destructor

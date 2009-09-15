@@ -5,9 +5,9 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "Gui/SContext.h"
-#include "Gui/SWindow.h"
-#include "Utils/SException.h"
+#include "../SContext.h"
+#include "../SWindow.h"
+#include "../../common/utils/SException.h"
 
 // DECLARES //////////////////////////////////////////
 

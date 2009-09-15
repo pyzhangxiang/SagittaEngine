@@ -25,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport PlaneBoundedVolume{
+	class _MathExport PlaneBoundedVolume{
 	// type defines
 	protected:
 		typedef std::vector<Plane> PlaneList;

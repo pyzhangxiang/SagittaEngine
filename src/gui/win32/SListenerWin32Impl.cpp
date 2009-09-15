@@ -6,13 +6,13 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "Gui/SListener.h"
-#include "Gui/SWindow.h"
-#include "Gui/SApplication.h"
-#include "Gui/SEvent.h"
-#include "Gui/SKeyMapping.h"
-#include "Utils/SBitOP.h"
-#include "Utils/SException.h"
+#include "../SListener.h"
+#include "../SWindow.h"
+#include "../SApplication.h"
+#include "../SEvent.h"
+#include "../SKeyMapping.h"
+#include "../../common/utils/SBitOP.h"
+#include "../../common/utils/SException.h"
 
 // DECLARES //////////////////////////////////////////
 

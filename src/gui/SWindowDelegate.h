@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SWindowDelegate : public SDelegate{
+	class _GuiExport SWindowDelegate : public SDelegate{
 	// member variables
 	private:
 		/** For Win32, it's the window class style like CS_HREDRAW;
@@ -115,7 +115,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SMainFrameDelegate : public SWindowDelegate{
+	class _GuiExport SMainFrameDelegate : public SWindowDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -183,7 +183,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SWidgetDelegate : public SWindowDelegate{
+	class _GuiExport SWidgetDelegate : public SWindowDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -214,7 +214,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SViewDelegate : public SWidgetDelegate{
+	class _GuiExport SViewDelegate : public SWidgetDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -236,7 +236,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SGraphicsViewDelegate : public SViewDelegate{
+	class _GuiExport SGraphicsViewDelegate : public SViewDelegate{
 	// member variables
 
 	// constructors & destructor

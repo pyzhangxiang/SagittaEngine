@@ -1,4 +1,4 @@
-#include_directories(${SAGITTA_ROOT}/src/engine ${SAGITTA_ROOT}/src/math)
+add_definitions(-DSAGITTA_GUI)
 
 set(Header)
 set(Source)
@@ -34,9 +34,9 @@ if(APPLE)
 endif(APPLE)
 
 if(WIN32)
-	target_link_libraries(SagiGui ${OPENGL_glew_LIBRARY} Sagitta)
+	target_link_libraries(SagiGui opengl32 Sagitta)
 elseif(APPLE)
-	target_link_libraries(SagiGui ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${Carbon_Library} Sagitta)
+	target_link_libraries(SagiGui ${Carbon_Library} Sagitta)
 else(WIN32)
-	target_link_libraries(SagiGui ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} Sagitta)
+	target_link_libraries(SagiGui Sagitta)
 endif(WIN32)

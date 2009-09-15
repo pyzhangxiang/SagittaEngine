@@ -25,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SWidget : public SWindow{
+	class _GuiExport SWidget : public SWindow{
 	// enum defines
 	public:
 		enum SizePolicy{

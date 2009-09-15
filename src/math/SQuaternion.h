@@ -25,7 +25,7 @@ namespace Sagitta{
 	class Matrix3;
 	class Vector3;
 
-	class _SagittaExport Quaternion{
+	class _MathExport Quaternion{
 	// member variables
 	private:
 		union{
@@ -159,7 +159,7 @@ namespace Sagitta{
 		Quaternion operator - (const Quaternion& vqrq) const;
 		Quaternion operator * (const Quaternion& vqrq) const;
 		Quaternion operator * (const Real vfScalar) const;
-		_SagittaExport friend Quaternion operator * (const Real vfScalar, const Quaternion& vqrq);
+		_MathExport friend Quaternion operator * (const Real vfScalar, const Quaternion& vqrq);
 		Quaternion operator - () const;
 
 		inline bool operator == (const Quaternion& vqrq) const{
@@ -255,7 +255,7 @@ namespace Sagitta{
 		/** Function for writing to a stream. Outputs "Quaternion(w, x, y, z)" with w,x,y,z
             being the member values of the quaternion.
         */
-		inline _SagittaExport friend std::ostream& operator << (std::ostream& o, const Quaternion& q){
+		inline _MathExport friend std::ostream& operator << (std::ostream& o, const Quaternion& q){
 			o << "Quaternion(" << q.w() << ", " << q.x() << ", " << q.y() << ", " << q.z() << ")";
 			return o;
 		}

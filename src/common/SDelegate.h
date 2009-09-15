@@ -21,7 +21,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SDelegate : public SObject{
+	class _CommonExport SDelegate : public SObject{
 	// member variables
 
 	// constructors & destructor

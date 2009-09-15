@@ -26,7 +26,7 @@ namespace Sagitta{
             respectively), and a constant (D) which is the distance along
             the normal you have to go to move the plane back to the origin.
      */
-	class _SagittaExport Plane{
+	class _MathExport Plane{
 	// enum declares
 	public:
 		enum Side{
@@ -135,7 +135,7 @@ namespace Sagitta{
 		}
 
 
-		_SagittaExport friend std::ostream& operator << (std::ostream& o, const Plane& p);
+		_MathExport friend std::ostream& operator << (std::ostream& o, const Plane& p);
 
 	}; //#### end class Plane
 

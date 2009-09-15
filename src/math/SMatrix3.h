@@ -39,7 +39,7 @@ namespace Sagitta{
 		@par
 			The coordinate system is assumed to be <b>right-handed</b>.
 	*/
-	class _SagittaExport Matrix3{
+	class _MathExport Matrix3{
 	// member variables
 	private:
 		union{
@@ -110,13 +110,13 @@ namespace Sagitta{
 		Vector3 operator * (const Vector3& vvrv) const;
 
 		/// vector * Matrix (1x3 * 3x3 = 1x3)
-		_SagittaExport friend Vector3 operator * (const Vector3& vvrv, const Matrix3& vmrm);
+		_MathExport friend Vector3 operator * (const Vector3& vvrv, const Matrix3& vmrm);
 
 		/// matrix * scalar
 		Matrix3 operator * (const Real vfScalar) const;
 
 		/// scalar * matrix
-		_SagittaExport friend Matrix3 operator * (const Real vfScalar, const Matrix3& vmrm);
+		_MathExport friend Matrix3 operator * (const Real vfScalar, const Matrix3& vmrm);
 
 		// utilities
 		Matrix3 transpose() const;

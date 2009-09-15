@@ -27,7 +27,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SGraphicsView : public SView{
+	class _GuiExport SGraphicsView : public SView{
 	// type defines
 	public:
 		enum RendererType{

@@ -20,7 +20,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SBitOP{
+	class _CommonExport SBitOP{
 	// member variables
 
 	// constructors & destructor

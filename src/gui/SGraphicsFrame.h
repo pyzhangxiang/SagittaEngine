@@ -16,7 +16,7 @@ namespace Sagitta{
 	class SSceneManager;
 	class SContext;
 
-	class _SagittaExport SGraphicsFrame : public SMainFrame{
+	class _GuiExport SGraphicsFrame : public SMainFrame{
 	// member variables
 	protected:
 		/** Stores the pointer to a SceneManager and holds the ownership. */

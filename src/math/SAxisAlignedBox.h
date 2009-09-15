@@ -26,7 +26,7 @@ namespace Sagitta{
 			for an axis-aligned bounding box (AABB) for collision and
 			visibility determination.
 	*/
-	class _SagittaExport AxisAlignedBox{
+	class _MathExport AxisAlignedBox{
 	// enum declares
 	protected:
 		enum Extent{
@@ -299,7 +299,7 @@ namespace Sagitta{
 			}
 		}
 
-		_SagittaExport friend std::ostream& operator<<(std::ostream& o, const AxisAlignedBox& aab){
+		_MathExport friend std::ostream& operator<<(std::ostream& o, const AxisAlignedBox& aab){
 			switch(aab.m_eExtent){
 				case EXTENT_NULL:
 					o << "AxisAlignedBox(null)";

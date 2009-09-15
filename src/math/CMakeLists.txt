@@ -1,3 +1,5 @@
+add_definitions(-DSAGITTA_MATH)
+
 set(Header)
 set(Source)
 file(GLOB_RECURSE Header *.h)

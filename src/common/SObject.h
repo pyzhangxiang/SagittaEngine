@@ -13,7 +13,7 @@
 // DECLARES //////////////////////////////////////////
 namespace Sagitta{
 
-	class _SagittaExport SObject{
+	class _CommonExport SObject{
 	// static members
 		static uLong ms_oid;
 
