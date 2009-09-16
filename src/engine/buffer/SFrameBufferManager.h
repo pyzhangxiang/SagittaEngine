@@ -8,7 +8,8 @@
 #define __SFRAMEBUFFERMANAGER_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 #include "../../math/SColor.h"
 
 // DECLARES //////////////////////////////////////////
@@ -27,7 +28,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SFrameBufferManager : public SObject{
+	class _SagittaExport SFrameBufferManager{// : public SObject{
 	// member variables
 	private:
 		/// frame buffers

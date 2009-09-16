@@ -7,7 +7,8 @@
 #define __SFILE_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 #include <fstream>
 #include <string>
 #include <vector>
@@ -24,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SFile : public SObject, public std::fstream{
+	class _SagittaExport SFile : public std::fstream{// : public SObject, public std::fstream{
 	// enum declares
 	public:
 		//enum OpenMode{

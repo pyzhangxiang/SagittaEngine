@@ -208,6 +208,20 @@ namespace Sagitta{
 	};
 
 	// STRUCTS
+	struct SPoint{
+		float x;
+		float y;
+		SPoint(float _x, float _y) : x(_x), y(_y){}
+	};
+
+	struct SRect{
+		short left;
+		short top;
+		short right;
+		short bottom;
+		SRect(short _left, short _top, short _right, short _bottom)
+			: left(_left), top(_top), right(_right), bottom(_bottom){}
+	};
 	
 	// VARIABLES
 

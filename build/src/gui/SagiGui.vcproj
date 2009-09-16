@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="SagiGui"
+	ProjectGUID="{AFFAB2B3-AE6C-470A-9F17-421BB993254E}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="SagiGui.dir\Debug"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories=""
+				BasicRuntimeChecks="3"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="0"
+				Optimization="0"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Debug\&quot;,SagiGui_EXPORTS"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="E:/Game Design/myprojects/tyi_sagitta/Sagitta/build/Debug/SagiGui.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Debug\&quot;,SagiGui_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Debug\&quot;,SagiGui_EXPORTS"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"
+				UseFAT32Workaround="true"
+			/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  opengl32.lib ..\..\Debug\Sagitta.lib ..\..\..\misc\deps\opengl\lib\glew32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib ..\..\Debug\SagiCommon.lib ..\..\Debug\SagiMath.lib "
+				OutputFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Debug\SagiGui.dll"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				ProgramDataBaseFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Debug\SagiGui.pdb"
+				GenerateDebugInformation="TRUE"
+				ImportLibrary="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Debug\SagiGui.lib"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="SagiGui.dir\Release"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories=""
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="2"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Release\&quot;,SagiGui_EXPORTS"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="E:/Game Design/myprojects/tyi_sagitta/Sagitta/build/Release/SagiGui.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Release\&quot;,SagiGui_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;Release\&quot;,SagiGui_EXPORTS"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"
+				UseFAT32Workaround="true"
+			/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  opengl32.lib ..\..\Release\Sagitta.lib ..\..\..\misc\deps\opengl\lib\glew32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib ..\..\Release\SagiCommon.lib ..\..\Release\SagiMath.lib "
+				OutputFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Release\SagiGui.dll"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				ProgramDataBaseFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Release\SagiGui.pdb"
+				ImportLibrary="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\Release\SagiGui.lib"/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|Win32"
+			OutputDirectory="MinSizeRel"
+			IntermediateDirectory="SagiGui.dir\MinSizeRel"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories=""
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="1"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;,SagiGui_EXPORTS"
+				AssemblerListingLocation="MinSizeRel"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="E:/Game Design/myprojects/tyi_sagitta/Sagitta/build/MinSizeRel/SagiGui.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;,SagiGui_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;,SagiGui_EXPORTS"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"
+				UseFAT32Workaround="true"
+			/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  opengl32.lib ..\..\MinSizeRel\Sagitta.lib ..\..\..\misc\deps\opengl\lib\glew32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib ..\..\MinSizeRel\SagiCommon.lib ..\..\MinSizeRel\SagiMath.lib "
+				OutputFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\MinSizeRel\SagiGui.dll"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				ProgramDataBaseFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\MinSizeRel\SagiGui.pdb"
+				ImportLibrary="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\MinSizeRel\SagiGui.lib"/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|Win32"
+			OutputDirectory="RelWithDebInfo"
+			IntermediateDirectory="SagiGui.dir\RelWithDebInfo"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories=""
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;,SagiGui_EXPORTS"
+				AssemblerListingLocation="RelWithDebInfo"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="E:/Game Design/myprojects/tyi_sagitta/Sagitta/build/RelWithDebInfo/SagiGui.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;,SagiGui_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,SAGITTA_GUI,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;,SagiGui_EXPORTS"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"
+				UseFAT32Workaround="true"
+			/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  opengl32.lib ..\..\RelWithDebInfo\Sagitta.lib ..\..\..\misc\deps\opengl\lib\glew32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib ..\..\RelWithDebInfo\SagiCommon.lib ..\..\RelWithDebInfo\SagiMath.lib "
+				OutputFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\RelWithDebInfo\SagiGui.dll"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				ProgramDataBaseFile="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\RelWithDebInfo\SagiGui.pdb"
+				GenerateDebugInformation="TRUE"
+				ImportLibrary="E:\Game Design\myprojects\tyi_sagitta\Sagitta\build\RelWithDebInfo\SagiGui.lib"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SWindowDelegate.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SWindow.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SWidget.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SView.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SRenderContext.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SPaintContext.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SMainFrame.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SListener.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SKeyMapping.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGraphicsView.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGraphicsFrame.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGraphicsApplication.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGLContext.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SEvent.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SD3D9Context.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SController.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SContext.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SApplication.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\GuiDef.h">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\GuiDef.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SApplication.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SController.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SEvent.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGraphicsFrame.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SGraphicsView.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SListener.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SMainFrame.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SView.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SWidget.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\SWindow.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/Game Design/myprojects/tyi_sagitta/Sagitta/src/gui/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; &quot;-HE:/Game Design/myprojects/tyi_sagitta/Sagitta&quot; &quot;-BE:/Game Design/myprojects/tyi_sagitta/Sagitta/build&quot; --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/Game Design/myprojects/tyi_sagitta/Sagitta/src/gui/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; &quot;-HE:/Game Design/myprojects/tyi_sagitta/Sagitta&quot; &quot;-BE:/Game Design/myprojects/tyi_sagitta/Sagitta/build&quot; --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/Game Design/myprojects/tyi_sagitta/Sagitta/src/gui/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; &quot;-HE:/Game Design/myprojects/tyi_sagitta/Sagitta&quot; &quot;-BE:/Game Design/myprojects/tyi_sagitta/Sagitta/build&quot; --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/Game Design/myprojects/tyi_sagitta/Sagitta/src/gui/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; &quot;-HE:/Game Design/myprojects/tyi_sagitta/Sagitta&quot; &quot;-BE:/Game Design/myprojects/tyi_sagitta/Sagitta/build&quot; --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;&quot;E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\CMakeLists.txt&quot;;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
+		<Filter
+			Name="win32"
+			Filter="">
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SApplicationWin32Impl.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SContextWin32Imp.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SD3D9Context.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SGLContextWin32Imp.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SKeyMappingWin32Imp.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SListenerWin32Impl.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SPaintContextWin32Imp.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SRenderContextWin32Imp.cpp">
+			</File>
+			<File
+				RelativePath="E:\Game Design\myprojects\tyi_sagitta\Sagitta\src\gui\win32\SWindowDelegateWin32Imp.cpp">
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

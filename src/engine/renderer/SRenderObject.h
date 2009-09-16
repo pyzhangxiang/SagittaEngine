@@ -7,7 +7,8 @@
 #define __SRENDEROBJECT_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -21,7 +22,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SRenderObject : public SObject{
+	class _SagittaExport SRenderObject{// : public SObject{
 	// member variables
 
 	// constructors & destructor

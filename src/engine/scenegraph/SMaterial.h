@@ -7,8 +7,8 @@
 #define __SMATERIAL_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "SSceneObject.h"
 #include "../../common/SObject.h"
+#include "SSceneObject.h"
 
 // DECLARES //////////////////////////////////////////
 

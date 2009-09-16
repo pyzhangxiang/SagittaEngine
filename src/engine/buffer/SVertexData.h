@@ -7,7 +7,8 @@
 #define __SVERTEXDATA_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 #include "../../common/utils/SIterator.h"
 #include <map>
 
@@ -25,7 +26,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SVertexData : public SObject{
+	class _SagittaExport SVertexData{// : public SObject{
 	private:
 		// mapped by element type
 		typedef std::map<int, SVertexBufferElement*> ElementList;
@@ -97,7 +98,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SIndexData : public SObject{
+	class _SagittaExport SIndexData{// : public SObject{
 	private:
 	// mapped by index type
 		typedef std::map<int, SVertexIndexBuffer*> ElementList;

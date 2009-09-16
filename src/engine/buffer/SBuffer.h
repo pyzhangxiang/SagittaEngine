@@ -8,7 +8,8 @@
 #define __SBUFFER_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -22,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SBuffer : public SObject{
+	class _SagittaExport SBuffer{// : public SObject{
 	// member variables
 	private:
 		/// the true data

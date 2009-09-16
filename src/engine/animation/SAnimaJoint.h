@@ -8,7 +8,8 @@
 #define __SANIMAJOINT_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/SObject.h"
+//#include "../../common/SObject.h"
+#include "../../common/configs/config.h"
 #include "../../math/SMathHeader.h"
 #include <vector>
 
@@ -24,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SAnimaJoint : public SObject{
+	class _SagittaExport SAnimaJoint{// : public SObject{
 	// type defines
 	protected:
 		typedef std::vector<Vector3> Vector3List;

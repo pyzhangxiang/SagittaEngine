@@ -16,7 +16,7 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	SFrameBufferManager::SFrameBufferManager(void) :
-	SObject(),
+//	SObject(),
 	m_pColorBuffer(0),
 	m_pDepthBuffer(0),
 	m_pStencilBuffer(0){
@@ -25,7 +25,7 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	SFrameBufferManager::SFrameBufferManager(int aTWidth, int aTHeight, bool aEnableSetencil) :
-	SObject(),
+//	SObject(),
 	m_pColorBuffer(0),
 	m_pDepthBuffer(0),
 	m_pStencilBuffer(0){
@@ -40,7 +40,7 @@ namespace Sagitta{
 	SFrameBufferManager::SFrameBufferManager(const SFrameBufferManager &aParentBuffers,
 											size_t aLeft, size_t aTop,
 											size_t aWidth, size_t aHeight) :
-	SObject(),
+//	SObject(),
 	m_pColorBuffer(0),
 	m_pDepthBuffer(0),
 	m_pStencilBuffer(0){
