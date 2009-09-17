@@ -6,8 +6,8 @@
 #define __SAGITTADEF_H__
 
 // INCLUDES ////////////////////////////////////////////
-#include "SagittaPlatform.h"
 #include "stdint.h"
+#include "SagittaPlatform.h"
 #include <string>
 
 // DECLARES //////////////////////////////////////////
