@@ -10,7 +10,7 @@ if(WIN32)
 elseif(APPLE)
 	add_executable(Demo_AllInOne MACOSX_BUNDLE ${Source_File})
 else(WIN32)
-	add_library(Demo_AllInOne ${Source_File})
+	add_executable(Demo_AllInOne ${Source_File})
 endif(WIN32)
 
 target_link_libraries(Demo_AllInOne Sagitta SagiGui)
