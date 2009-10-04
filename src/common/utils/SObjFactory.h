@@ -21,7 +21,12 @@ namespace Sagitta{
 	 @par
 	 
 	 */
-	class _SagittaExport SObjFactory{
+	template<
+		class AP,	// abstract product
+		class IT,	// identifier type
+		class PC = AP *(*)(),	// product creator
+	>
+	class SObjFactory{
 	// member variables
 		
 	// constructors & destructor
