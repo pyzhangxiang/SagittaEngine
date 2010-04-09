@@ -8,7 +8,7 @@
 // INCLUSIONS ////////////////////////////////////////
 
 // DECLARATIONS //////////////////////////////////////
-namespace Sagitta{
+//namespace Sagitta{
 
 #define SAGITTA_PLATFORM_WIN32 1
 #define SAGITTA_PLATFORM_APPLE 2
@@ -91,7 +91,7 @@ namespace Sagitta{
 #ifdef UNICODE
 #undef UNICODE
 #endif
-}
+//}
 
 // DEFINITIONS ///////////////////////////////////////
 

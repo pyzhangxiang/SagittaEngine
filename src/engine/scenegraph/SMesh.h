@@ -8,6 +8,8 @@
 #define __SMESH_H__
 
 // INCLUDES //////////////////////////////////////////
+#include "../resource/SResource.h"
+#include "../resource/SMeshDelegate.h"
 
 // DECLARES //////////////////////////////////////////
 
