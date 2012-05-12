@@ -8,7 +8,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -25,7 +25,7 @@ namespace Sagitta{
 	}
 /*			no need
 	SContext::SContext(const SContext &aContext){
-		THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE, "Cannot use copy constructor.", "SContext::SContext");
+		THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Cannot use copy constructor.", "SContext::SContext");
 	}
 */	
 	SContext::~SContext(void){
@@ -35,12 +35,12 @@ namespace Sagitta{
 	}
 /*		no need
 	SContext &SContext::operator=(const SContext &aContext){
-		THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE, "Cannot use assignment operator.", "SContext::operator=");
+		THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Cannot use assignment operator.", "SContext::operator=");
 	}
 */	
 	void SContext::release(void){
 		if(!HIViewIsValid(m_pWindow->handle())){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Release context failed : The binded window has been destroyed.", "SContext::release");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Release context failed : The binded window has been destroyed.", "SContext::release");
 		}
 		
 		CGContextRelease(m_ContextHandle);

@@ -8,7 +8,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SPaintContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -25,7 +25,7 @@ namespace Sagitta{
 		}
 		
 		if(err != noErr){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Get paint context failed.", "SPaintContext::SPaintContext");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Get paint context failed.", "SPaintContext::SPaintContext");
 		}	
 	}
 	

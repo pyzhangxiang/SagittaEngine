@@ -8,7 +8,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SGLContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -18,7 +18,7 @@ namespace Sagitta{
 	SGLContext::SGLContext(SWindow *aWindow) : SRenderContext(aWindow), m_GLContextHandle(0){
 		try{
 			buildRenderEnv();
-		}catch(SException &e){
+		}catch(sgException &e){
 			CGContextRelease(m_ContextHandle);
 			// log for future ...
 			// SLog(e.what());
@@ -42,14 +42,14 @@ namespace Sagitta{
 		aglformat = aglChoosePixelFormat(0, 0, attributes);
 		err = aglGetError();
 		if(err != AGL_NO_ERROR){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Choose AGL pixel format faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Choose AGL pixel format faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
 		}
 							  
 		if(aglformat){
 			m_GLContextHandle = aglCreateContext(aglformat, 0);
 			err = aglGetError();
 			if(err != AGL_NO_ERROR){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Choose AGL pixel format faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Choose AGL pixel format faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
 			}
 		}
 		
@@ -62,7 +62,7 @@ namespace Sagitta{
 					m_GLContextHandle = 0;
 					aglDestroyPixelFormat (aglformat);
 					aglformat = 0;					
-					THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Set drawable faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
+					THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Set drawable faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
 				}				
 			}
 			
@@ -75,7 +75,7 @@ namespace Sagitta{
 					m_GLContextHandle = 0;
 					aglDestroyPixelFormat (aglformat);
 					aglformat = 0;
-					THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Set current context faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
+					THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Set current context faild: " + std::string((const char*)(aglErrorString(err))), "SGLContext::buildRenderEnv");
 				}				
 			}
 		}

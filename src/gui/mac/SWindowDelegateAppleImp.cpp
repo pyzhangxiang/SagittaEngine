@@ -8,8 +8,8 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SWindowDelegate.h"
 #include "../SListener.h"
-#include "../../common/utils/SString.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgStringUtil.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -55,7 +55,7 @@ namespace Sagitta{
 			Rect wrect = { aRect.top, aRect.left, aRect.bottom, aRect.right };
 			err = CreateNewWindow(m_iWndClassStyle, m_iWndAttributes, &wrect, &window);
 			if(err != noErr){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Create window failed.", "SWindowDelegate::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Create window failed.", "SWindowDelegate::_createWindow");
 			}
 		
 			static const EventTypeSpec kWindowEventList[] ={
@@ -110,7 +110,7 @@ namespace Sagitta{
 			// create root HIView
 			err = HIObjectCreate(sRootHIViewClassID, initEvent, (HIObjectRef*)&new_hiview);
 			if(err != noErr){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Create HIView failed.", "SWindowDelegate::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Create HIView failed.", "SWindowDelegate::_createWindow");
 			}
 			
 			// set hiview's features
@@ -133,7 +133,7 @@ namespace Sagitta{
 			
 			err = HIViewGetLayoutInfo(new_hiview, &li);
 			if(err != noErr){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Get root view's layout info failed.", "SWindowDelegate::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Get root view's layout info failed.", "SWindowDelegate::_createWindow");
 			}
 			
 			li.scale.x.toView = parent_hiview;
@@ -145,7 +145,7 @@ namespace Sagitta{
 			
 			err = HIViewSetLayoutInfo(new_hiview, &li);
 			if(err != noErr){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Set root view's layout info failed.", "SWindowDelegate::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Set root view's layout info failed.", "SWindowDelegate::_createWindow");
 			}
 		
 		}else{
@@ -176,7 +176,7 @@ namespace Sagitta{
 			// create widget HIView
 			err = HIObjectCreate(sWidgetHIViewClassID, initEvent, (HIObjectRef*)&new_hiview);
 			if(err != noErr){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Create HIView failed.", "SWindowDelegate::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Create HIView failed.", "SWindowDelegate::_createWindow");
 			}
 			
 			// set hiview's features

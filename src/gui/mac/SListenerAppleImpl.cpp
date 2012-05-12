@@ -11,8 +11,8 @@
 #include "../SApplication.h"
 #include "../SEvent.h"
 #include "../SKeyMapping.h"
-#include "../../common/utils/SBitOP.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgBitOP.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -191,7 +191,7 @@ namespace Sagitta{
 	
 	void SListener::sendEvent(const SEvent &aEvent, SWindow *aReceiver){
 		if(!aReceiver){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 							  "Null receiver pointer.", "SListener::sendEvent");
 		}
 		
@@ -244,7 +244,7 @@ namespace Sagitta{
 		}
 		
 		if(err != noErr){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR,
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR,
 							  "Create event or set event parameters failed.",
 							  "SListener::sendEvent");
 		}
