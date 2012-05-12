@@ -15,7 +15,7 @@ namespace Sagitta{
 	class SEvent;
 	class SWindow;
 
-	class _GuiExport SListener : public SController{
+	class _SG_GuiExport SListener : public SController{
 	// member variables
 
 	// contructors & destructor

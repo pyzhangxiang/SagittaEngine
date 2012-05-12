@@ -23,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SEvent{
+	class _SG_GuiExport SEvent{
 	// enum defines
 	public:
 		enum EventType{
@@ -129,7 +129,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SMouseEvent : public SEvent{
+	class _SG_GuiExport SMouseEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SMouseEvent(EventType aType, uLong aButton, uLong aModifiers, const SPoint &aPoint, SListener *aReceiver)
@@ -155,7 +155,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SWheelEvent : public SEvent{
+	class _SG_GuiExport SWheelEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SWheelEvent(EventType aType, int aZDelta, uLong aModifiers, const SPoint &aPoint, SListener *aReceiver)
@@ -181,7 +181,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SKeyEvent : public SEvent{
+	class _SG_GuiExport SKeyEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SKeyEvent(EventType aType, uLong aKey, uLong aModifiers, uLong aCount, SListener *aReceiver)
@@ -206,7 +206,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SCreateEvent : public SEvent{
+	class _SG_GuiExport SCreateEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SCreateEvent(EventType aType, SWindowHandle aHandle, SListener *aReceiver)
@@ -228,7 +228,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SMoveEvent : public SEvent{
+	class _SG_GuiExport SMoveEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SMoveEvent(EventType aType, int aX, int aY, SListener *aReceiver)
@@ -251,7 +251,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SEraseBkgndEvent : public SEvent{
+	class _SG_GuiExport SEraseBkgndEvent : public SEvent{
 	// constructors & destructor
 	public:
 		SEraseBkgndEvent(EventType aType, SContextHandle aContextHandle, SListener *aReceiver)
@@ -273,7 +273,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SResizeEvent : public SEvent{
+	class _SG_GuiExport SResizeEvent : public SEvent{
 		// constructors & destructor
 	public:
 		SResizeEvent(EventType aType, /*uLong aStatus, */uLong aWidth, uLong aHeight, SListener *aReceiver)

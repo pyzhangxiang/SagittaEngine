@@ -7,9 +7,9 @@
 #define __SAGIRENDERER_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "SRenderer.h"
-#include "../buffer/SFrameBufferManager.h"
-#include "../../math/SMathHeader.h"
+#include "sgRenderer.h"
+#include "../buffer/sgFrameBufferManager.h"
+#include "../../math/sgMathHeader.h"
 #include <list>
 #include <vector>
 
@@ -17,7 +17,7 @@
 
 namespace Sagitta{
 
-	class SRenderable;
+	class sgRenderable;
 
 	/** class representation
 	@remarks
@@ -27,7 +27,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SagittaExport SagiRenderer : public SRenderer{
+	class _SG_KernelExport SagiRenderer : public sgRenderer{
 	// inner class defines
 	protected:
 		/** class representation
@@ -81,7 +81,7 @@ namespace Sagitta{
 			size_t vertexnum;
 			size_t facenum;
 
-			SRenderable *renderable;
+			sgRenderable *renderable;
 
 			VertexBuffers(void) :
 			/*pvertices(0),
@@ -145,10 +145,10 @@ namespace Sagitta{
 	// member variables
 	private:
 		/// frame buffers
-		SFrameBufferManager m_FrameBuffers;
+		sgFrameBufferManager m_FrameBuffers;
 
 		/// current viewport frame buffers
-		mutable SFrameBufferManager m_CurFrameBuffers;
+		mutable sgFrameBufferManager m_CurFrameBuffers;
 
 		/// projection matrix
 		mutable Matrix4 m_CurProjMatrix;
@@ -180,36 +180,36 @@ namespace Sagitta{
 		*/
 		void doSthWhenResized(void);
 
-		/** Sets viewport. Overrides from SRenderer. */
-		void setViewport(SViewport *aViewport) const;
+		/** Sets viewport. Overrides from sgRenderer. */
+		void setViewport(sgViewport *aViewport) const;
 
-		/** clear frame buffers. Overrides from SRenderer. */
+		/** clear frame buffers. Overrides from sgRenderer. */
 		void clearFrameBuffers(uInt aFlags,
 							const Color &aBkColor,
 							Real aBkDepth, int aBkStencil) const;
 
-		/** Sets projection matrix. Overrides from SRenderer.
+		/** Sets projection matrix. Overrides from sgRenderer.
 			@param
 				aMatrix The raw matrix from camera.
 		*/
 		void setProjMatrix(const Matrix4 &aMatrix) const;
 
-		/** Sets view matrix. Overrides from SRenderer.
+		/** Sets view matrix. Overrides from sgRenderer.
 			@param
 				aMatrix The raw matrix from camera.
 		*/
 		void setViewMatrix(const Matrix4 &aMatrix) const;
 
-		/** Internal hook. Calls 3D API to setup lights. Overrides from SRenderer. */
+		/** Internal hook. Calls 3D API to setup lights. Overrides from sgRenderer. */
 		int setupLightsImpl(const Color &aGlobalAmbiantColor) const;
 
-		/** Renders a specific renderable object. Overrides from SRenderer. */
-		void render(const SRenderOption &aGlobalRop, SRenderable *aRenderable) const;
+		/** Renders a specific renderable object. Overrides from sgRenderer. */
+		void render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const;
 
-		/** Draw frame buffer to target and do something after rendering. Overrides from SRenderer. */
+		/** Draw frame buffer to target and do something after rendering. Overrides from sgRenderer. */
 		void postRenderImpl(void) const;
 
-		/** Resets light state. Overrides from SRenderer. */
+		/** Resets light state. Overrides from sgRenderer. */
 		void resetLights(int aLightNum) const;
 
 		/** Culls faces.
@@ -323,11 +323,11 @@ namespace Sagitta{
 								int aX3, int aY3) const;
 
 	protected:
-		/** Overridden from SRenderer. Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
+		/** Overridden from sgRenderer. Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
 		int retMapping(int aRet) const{ return 0; }
 
 	public:
-		/** Overridden from SRenderer. Initialize the environment of graphics device. */
+		/** Overridden from sgRenderer. Initialize the environment of graphics device. */
 		void init(void);
 
 	}; //#### end class SagiRenderer
@@ -337,3 +337,4 @@ namespace Sagitta{
 // DEFINES ///////////////////////////////////////////
 
 #endif // __SAGIRENDERER_H__
+

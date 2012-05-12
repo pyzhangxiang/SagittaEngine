@@ -13,9 +13,9 @@
 namespace Sagitta{
 
 	class SWindow;
-	class SSceneManager;
+	class sgSceneManager;
 
-	class _GuiExport SGraphicsApplication : public SApplication{
+	class _SG_GuiExport SGraphicsApplication : public SApplication{
 	// constructors & destructors
 	public:
 		SGraphicsApplication(void);
@@ -25,7 +25,7 @@ namespace Sagitta{
 	protected:
 		HDC hDC;
 		HGLRC hRC; 
-		static SSceneManager *ms_pUniqueSM;
+		static sgSceneManager *ms_pUniqueSM;
 
 	// member functions
 	public:
@@ -38,7 +38,7 @@ namespace Sagitta{
 
 		virtual LRESULT winProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-		static SSceneManager* currentSceneManager(void);
+		static sgSceneManager* currentSceneManager(void);
 	};
 };
 

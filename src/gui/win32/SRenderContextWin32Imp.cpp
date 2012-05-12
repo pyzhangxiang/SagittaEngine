@@ -7,7 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SRenderContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -23,7 +23,7 @@ namespace Sagitta{
 		}
 
 		if(!m_ContextHandle){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Get client dc failed.", "SRenderContext::SRenderContext(SWindow*)")
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Get client dc failed.", "SRenderContext::SRenderContext(SWindow*)")
 		}
 	}
 
@@ -35,7 +35,7 @@ namespace Sagitta{
 	//  [12/14/2008 zhangxiang]
 	void SRenderContext::swapBuffers(void){
 		if(!::SwapBuffers(m_ContextHandle)){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Swap buffer failed.", "SRenderContext::swapBuffers(void)")
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Swap buffer failed.", "SRenderContext::swapBuffers(void)")
 		}
 	}
 

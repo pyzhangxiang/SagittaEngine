@@ -9,8 +9,8 @@
 #include "SGraphicsView.h"
 #include "SWindowDelegate.h"
 #include "SEvent.h"
-#include "../engine/scenegraph/SSceneManager.h"
-#include "../common/utils/SException.h"
+#include "../engine/scenegraph/sgSceneManager.h"
+#include "../common/utils/sgException.h"
 
 // DECLARATIONS //////////////////////////////////////
 
@@ -34,12 +34,12 @@ namespace Sagitta{
 
 	//  [12/14/2008 zhangxiang]
 	void SGraphicsFrame::init(void){
-		m_pSceneManager = new SSceneManager;
+		m_pSceneManager = new sgSceneManager;
 		try{
-			SGraphicsView *gview = new SGraphicsView(this, SGraphicsView::RT_OPENGL);
+            SGraphicsView *gview = new SGraphicsView(this, SGraphicsView::RT_OPENGL);
 			gview->setSizePolicy(SWidget::SP_FILLED);
 			gview->setSceneManager(m_pSceneManager);
-		}catch(SException&){
+		}catch(sgException&){
 			delete m_pSceneManager;
 			throw;
 		}

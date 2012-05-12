@@ -11,8 +11,8 @@
 #include "../SApplication.h"
 #include "../SEvent.h"
 #include "../SKeyMapping.h"
-#include "../../common/utils/SBitOP.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgBitOP.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -53,13 +53,13 @@ namespace Sagitta{
 
 			case WM_SIZE:
 				{
-					err = receiver->handleEvent(SResizeEvent(SEvent::ET_RESIZE, SBitOP::lo16(aLParam)/* & 0xffff*/, SBitOP::hi16(aLParam)/* >> 16*/, receiver));
+					err = receiver->handleEvent(SResizeEvent(SEvent::ET_RESIZE, sgBitOP::lo16(aLParam)/* & 0xffff*/, sgBitOP::hi16(aLParam)/* >> 16*/, receiver));
 				}
 				break;
 
 			case WM_MOVE:
 				{
-					err = receiver->handleEvent(SMoveEvent(SEvent::ET_MOVE, (int)SBitOP::lo16(aLParam), (int)SBitOP::hi16(aLParam), receiver));
+					err = receiver->handleEvent(SMoveEvent(SEvent::ET_MOVE, (int)sgBitOP::lo16(aLParam), (int)sgBitOP::hi16(aLParam), receiver));
 				}
 				break;
 
@@ -87,7 +87,7 @@ namespace Sagitta{
 				{
 					uLong keycode = Sagitta::Key_Unknown;
 					uLong modifiers = SKeyMapping::CheckModifierKeys();
-					uLong count = SBitOP::lo16(aLParam);
+					uLong count = sgBitOP::lo16(aLParam);
 					SEvent::EventType type = SEvent::ET_INVALID;
 
 					switch(aMessage){
@@ -123,9 +123,9 @@ namespace Sagitta{
 				// mouse event
 			case WM_MOUSEWHEEL:
 				{
-					int zdelta = (short)(SBitOP::hi16(aWParam));
-					uLong modifiers = SKeyMapping::SagiModifierKeys(SBitOP::lo16(aWParam));
-					SPoint point(SBitOP::lo16(aLParam), SBitOP::hi16(aLParam));
+					int zdelta = (short)(sgBitOP::hi16(aWParam));
+					uLong modifiers = SKeyMapping::SagiModifierKeys(sgBitOP::lo16(aWParam));
+					SPoint point(sgBitOP::lo16(aLParam), sgBitOP::hi16(aLParam));
 
 					err = receiver->handleEvent(SWheelEvent(SEvent::ET_MOUSE_WHEEL, zdelta, modifiers, point, receiver));
 				}
@@ -144,7 +144,7 @@ namespace Sagitta{
 				{
 					uLong button = Sagitta::MBT_NON;
 					uLong modifiers = SKeyMapping::SagiModifierKeys(aWParam);
-					SPoint point(SBitOP::lo16(aLParam), SBitOP::hi16(aLParam));
+					SPoint point(sgBitOP::lo16(aLParam), sgBitOP::hi16(aLParam));
 					SEvent::EventType type = SEvent::ET_INVALID;
 
 					switch(aMessage){
@@ -244,7 +244,7 @@ DEFHANDLER:
 
 	void SListener::sendEvent(const SEvent &aEvent, SWindow *aReceiver){
 		if(!aReceiver){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 				"Null receiver pointer.", "SListener::sendEvent");
 		}
 

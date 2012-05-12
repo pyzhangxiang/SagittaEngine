@@ -6,19 +6,19 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "SagiRanderer.h"
-#include "SViewport.h"
-#include "../buffer/SFrameBufferManager.h"
-#include "../buffer/SVertexData.h"
-#include "../buffer/SVertexIndexBuffer.h"
-#include "../buffer/SVertexBufferElement.h"
-#include "../buffer/SFrameBuffer.h"
-#include "../scenegraph/SSceneManager.h"
-#include "../scenegraph/SRenderQueue.h"
-#include "../scenegraph/SCamera.h"
-#include "../scenegraph/SRenderable.h"
-#include "../scenegraph/SLight.h"
-#include "../scenegraph/SMaterial.h"
-#include "../../common/utils/SException.h"
+#include "sgViewport.h"
+#include "../buffer/sgFrameBufferManager.h"
+#include "../buffer/sgVertexData.h"
+#include "../buffer/sgVertexIndexBuffer.h"
+#include "../buffer/sgVertexBufferElement.h"
+#include "../buffer/sgFrameBuffer.h"
+#include "../scenegraph/sgSceneManager.h"
+#include "../scenegraph/sgRenderQueue.h"
+#include "../scenegraph/sgCamera.h"
+#include "../scenegraph/sgRenderable.h"
+#include "../scenegraph/sgLight.h"
+#include "../scenegraph/sgMaterial.h"
+#include "../../common/utils/sgException.h"
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 #	include <gl/glew.h>
 #	include <gl/glut.h>
@@ -35,7 +35,7 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	SagiRenderer::SagiRenderer(int aTWidth, int aTHeight, bool aEnableSetencil) :
-	SRenderer(aTWidth, aTHeight, false),
+	sgRenderer(aTWidth, aTHeight, false),
 	m_FrameBuffers(aTWidth, aTHeight, aEnableSetencil),
 	m_CurFrameBuffers(){
 
@@ -57,7 +57,7 @@ namespace Sagitta{
 	}
 
 	//  [1/15/2009 zhangxiang]
-	void SagiRenderer::setViewport(SViewport *aViewport) const{
+	void SagiRenderer::setViewport(sgViewport *aViewport) const{
 		int vwidth = aViewport->actwidth();
 		int vheight = aViewport->actheight();
 		m_CurFrameBuffers.getSliceFromAnother(m_FrameBuffers,
@@ -75,15 +75,15 @@ namespace Sagitta{
 	void SagiRenderer::clearFrameBuffers(uInt aFlags, const Color &aBkColor,
 										Real aBkDepth, int aBkStencil) const{
 		// clear buffers
-		if(aFlags & SViewport::CB_COLOR){
+		if(aFlags & sgViewport::CB_COLOR){
 			// clear color buffer
 			m_CurFrameBuffers.clearColor(aBkColor.toGLColor());
 		}
-		if(aFlags & SViewport::CB_DEPTH){
+		if(aFlags & sgViewport::CB_DEPTH){
 			// clear depth buffer
 			m_CurFrameBuffers.clearDepth(aBkDepth);
 		}
-		if(aFlags & SViewport::CB_STENCIL){
+		if(aFlags & sgViewport::CB_STENCIL){
 			// clear stencil buffer
 			m_CurFrameBuffers.clearStencil(aBkStencil);
 		}
@@ -101,7 +101,7 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	int SagiRenderer::setupLightsImpl(const Color &aGlobalAmbiantColor) const{
-		SLight *light;
+		sgLight *light;
 		LightList::const_iterator lit = m_LightList.begin();
 		LightList::const_iterator leit = m_LightList.end();
 
@@ -120,24 +120,24 @@ namespace Sagitta{
 	}
 
 	//  [1/15/2009 zhangxiang]
-	void SagiRenderer::render(const SRenderOption &aGlobalRop, SRenderable *aRenderable) const{
+	void SagiRenderer::render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const{
 		// setup material
 		// ...
 		
 		m_CurVertexBuffers.renderable = aRenderable;
 
-		SVertexData *pvb = new SVertexData();
-		SVertexIndexBuffer *pvib = new SVertexIndexBuffer(SVertexBufferElement::ET_VERTEX);
+		sgVertexData *pvb = new sgVertexData();
+		sgVertexIndexBuffer *pvib = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
 		aRenderable->getVertexBuffer(pvb, pvib);
 
 		// vertex buffers
-		SVertexData::ConstIterator elemIt = pvb->getConstIterator();
+		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
 		m_CurVertexBuffers.vertexnum = pvb->vertexNum();
 		size_t vertexnum_x_2 = m_CurVertexBuffers.vertexnum + m_CurVertexBuffers.vertexnum;
 		for(; elemIt.hasMoreElements(); elemIt++){
-			SVertexBufferElement *element = elemIt.value();
+			sgVertexBufferElement *element = elemIt.value();
 			switch(element->type()){
-					case SVertexBufferElement::ET_VERTEX:
+					case sgVertexBufferElement::ET_VERTEX:
 					{
 						Vector3 *vertices = static_cast<Vector3*>(element->data());
 						m_CurVertexBuffers.pvertices.reserve(vertexnum_x_2);
@@ -149,7 +149,7 @@ namespace Sagitta{
 						break;
 					}
 
-					case SVertexBufferElement::ET_COLOR:
+					case sgVertexBufferElement::ET_COLOR:
 					{
 						Color *colors = static_cast<Color*>(element->data());
 						m_CurVertexBuffers.pcolors.reserve(vertexnum_x_2);
@@ -159,7 +159,7 @@ namespace Sagitta{
 						break;
 					}
 
-					case SVertexBufferElement::ET_NORMAL:
+					case sgVertexBufferElement::ET_NORMAL:
 					{
 						Vector3 *normals = static_cast<Vector3*>(element->data());
 						m_CurVertexBuffers.pnormals.reserve(vertexnum_x_2);
@@ -169,7 +169,7 @@ namespace Sagitta{
 						break;
 					}
 
-					case SVertexBufferElement::ET_TEXTURE_COORD:
+					case sgVertexBufferElement::ET_TEXTURE_COORD:
 					{
 						Vector2 *texcoords = static_cast<Vector2*>(element->data());
 						m_CurVertexBuffers.ptexcoords.reserve(vertexnum_x_2);
@@ -179,7 +179,7 @@ namespace Sagitta{
 						break;
 					}
 
-					case SVertexBufferElement::ET_FOG_COORDINATE:
+					case sgVertexBufferElement::ET_FOG_COORDINATE:
 					{
 						Real *flogcoords = static_cast<Real*>(element->data());
 						m_CurVertexBuffers.pflogcoords.reserve(vertexnum_x_2);
@@ -191,7 +191,7 @@ namespace Sagitta{
 
 					default:
 					{
-						THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE,
+						THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
 							"Invalid render state.", "SGLRenderSystem::render");
 						break;
 					}
@@ -245,7 +245,7 @@ namespace Sagitta{
 
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::cullFaces(void) const{
-		if(m_CurRenderParam.prenderoption->faceToCull() == SRenderOption::FTC_BACK){
+		if(m_CurRenderParam.prenderoption->faceToCull() == sgRenderOption::FTC_BACK){
 			cullBackFacesImpl();
 		}else{
 			cullFrontFacesImpl();
@@ -381,19 +381,19 @@ namespace Sagitta{
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::clipFaces(void) const{
 		switch(m_CurVertexBuffers.elementtype){
-			case SRenderOption::RET_POINTS:
+			case sgRenderOption::RET_POINTS:
 			{
 				clipPointsImpl();
 				break;
 			}
 
-			case SRenderOption::RET_LINES:
+			case sgRenderOption::RET_LINES:
 			{
 				clipLinesImpl();
 				break;
 			}
 
-			case SRenderOption::RET_TRIANGLES:
+			case sgRenderOption::RET_TRIANGLES:
 			{
 				clipTrianglesImpl();
 				break;
@@ -401,7 +401,7 @@ namespace Sagitta{
 
 			default:
 			{
-				THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE,
+				THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
 					"Unknown render element type.",
 					"SagiRender::clipFaces");
 			}
@@ -959,7 +959,7 @@ namespace Sagitta{
 		Vector3 _s;	// (light_2_vertex + vertex).normalise
 		Real sn_dot;
 
-		const SMaterial &material = m_CurVertexBuffers.renderable->material();
+		const sgMaterial &material = m_CurVertexBuffers.renderable->material();
 		Color::GLColor mAmbient = material.ambientColor().toGLColor();
 		Color::GLColor mDiffuse = material.diffuseColor().toGLColor();
 		Color::GLColor mSpecular = material.specularColor().toGLColor();
@@ -1061,19 +1061,19 @@ namespace Sagitta{
 	//  [1/16/2009 zhangxiang]
 	void SagiRenderer::renderToFrameBuffer(void) const{
 		switch(m_CurVertexBuffers.elementtype){
-			case SRenderOption::RET_POINTS:
+			case sgRenderOption::RET_POINTS:
 			{
 				renderPointsImpl();
 				break;
 			}
 
-			case SRenderOption::RET_LINES:
+			case sgRenderOption::RET_LINES:
 			{
 				renderLinesImpl();
 				break;
 			}
 
-			case SRenderOption::RET_TRIANGLES:
+			case sgRenderOption::RET_TRIANGLES:
 			{
 				renderTrianglesImpl();
 				break;
@@ -1081,7 +1081,7 @@ namespace Sagitta{
 
 			default:
 			{
-				THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE,
+				THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
 					"Unknown render element type.",
 					"SagiRender::renderToFrameBuffer");
 			}

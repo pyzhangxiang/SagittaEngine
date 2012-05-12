@@ -12,7 +12,7 @@
 #include "SPaintContext.h"
 #include "SApplication.h"
 #include "SEvent.h"
-#include "../common/utils/SException.h"
+#include "../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -484,7 +484,7 @@ namespace Sagitta{
 	//  [1/7/2009 zhangxiang]
 	void SWindow::addChild(SWidget *aWidget){
 		if(!aWidget){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 				"Null widget ponter.", "SWindow::addChild");
 		}
 		m_Children.insert(aWidget);
@@ -495,7 +495,7 @@ namespace Sagitta{
 	void SWindow::_removeChild(SWidget *aWidget){
 		ChildList::iterator it = m_Children.find(aWidget);
 		if(it == m_Children.end()){
-			THROW_SAGI_EXCEPT(SException::ERR_ITEM_NOT_FOUND,
+			THROW_SAGI_EXCEPT(sgException::ERR_ITEM_NOT_FOUND,
 							"Widget \"" + aWidget->title() +
 							"\" is not a child of Window \"" +
 							this->title() + "\".", "SWindow::removeChild");
@@ -508,7 +508,7 @@ namespace Sagitta{
 	//  [1/7/2009 zhangxiang]
 	SWidget *SWindow::getChild(uInt aIndex) const{
 		if(aIndex >= m_Children.size()){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 							"Index out of range.", "SWindow::getChild");
 		}
 		ChildList::const_iterator it = m_Children.begin();

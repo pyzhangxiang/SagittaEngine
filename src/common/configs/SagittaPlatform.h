@@ -43,29 +43,29 @@
 /** Windows Settings */
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 #	if defined(SAGITTA_STATIC_LIB)
-#		define _CommonExport
-#		define _MathExport
-#		define _SagittaExport
-#		define _GuiExport
+#		define _SG_CommonExport
+#		define _SG_MathExport
+#		define _SG_KernelExport
+#		define _SG_GuiExport
 #	else
-#		define _CommonExport
+#		define _SG_CommonExport
 
 #		if defined(SAGITTA_MATH)
-#			define _MathExport __declspec(dllexport)
+#			define _SG_MathExport __declspec(dllexport)
 #		else
-#			define _MathExport __declspec(dllimport)
+#			define _SG_MathExport __declspec(dllimport)
 #		endif
 
 #		if defined(SAGITTA_KERNEL)
-#			define _SagittaExport __declspec(dllexport)
+#			define _SG_KernelExport __declspec(dllexport)
 #		else
-#			define _SagittaExport __declspec(dllimport)
+#			define _SG_KernelExport __declspec(dllimport)
 #		endif
 
 #		if defined(SAGITTA_GUI)
-#			define _GuiExport __declspec(dllexport)
+#			define _SG_GuiExport __declspec(dllexport)
 #		else
-#			define _GuiExport __declspec(dllimport)
+#			define _SG_GuiExport __declspec(dllimport)
 #		endif
 #	endif
 
@@ -74,10 +74,10 @@
 
 /** Apple/Linux Settings */
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_APPLE || SAGITTA_PLATFORM == SAGITTA_PLATFORM_LINUX
-#	define _CommonExport
-#	define _MathExport
-#	define _SagittaExport
-#	define _GuiExport
+#	define _SG_CommonExport
+#	define _SG_MathExport
+#	define _SG_KernelExport
+#	define _SG_GuiExport
 
 	// A quick define to overcome different names for the same function
 #   define stricmp strcasecmp

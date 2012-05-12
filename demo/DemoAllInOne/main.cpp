@@ -8,9 +8,9 @@
 #include "MainWindow.h"
 #include <gui/SApplication.h>
 #include <gui/SGraphicsFrame.h>
-#include <engine/scenegraph/SSceneManager.h>
-#include <engine/scenegraph/SEntity.h>
-#include <common/utils/SException.h>
+#include <engine/scenegraph/sgSceneManager.h>
+#include <engine/scenegraph/sgEntity.h>
+#include <common/utils/sgException.h>
 #include <iostream>
 #include <string>
 using namespace Sagitta;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 		mainwindow->show();
 	
 		result = SApplication::instance().run();
-	}catch(SException &e){
+	}catch(sgException &e){
 	//	delete mainwindow;
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 		MessageBox(0, e.what(), 0, MB_ABORTRETRYIGNORE);

@@ -9,8 +9,8 @@
 #include "SWindowDelegate.h"
 #include "SWidget.h"
 #include "SEvent.h"
-#include "../common/utils/SException.h"
-#include "../common/utils/SString.h"
+#include "../common/utils/sgException.h"
+#include "../common/utils/sgStringUtil.h"
 #include <algorithm>
 
 // DECLARES //////////////////////////////////////////

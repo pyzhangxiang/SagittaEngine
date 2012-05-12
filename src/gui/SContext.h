@@ -7,7 +7,7 @@
 #define __SCONTEXT_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../common/SObject.h"
+#include "../common/sgObject.h"
 #include "GuiDef.h"
 
 // DECLARES //////////////////////////////////////////
@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SContext{
+	class _SG_GuiExport SContext{
 	// member variables
 	protected:
 		SContextHandle m_ContextHandle;

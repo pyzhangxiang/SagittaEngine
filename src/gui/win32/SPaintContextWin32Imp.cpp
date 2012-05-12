@@ -7,7 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SPaintContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -24,7 +24,7 @@ namespace Sagitta{
 		}
 
 		if(!m_ContextHandle){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Get paint dc failed.", "SPaintContext::SPaintContext(SWindow*)")
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Get paint dc failed.", "SPaintContext::SPaintContext(SWindow*)")
 		}
 	}
 

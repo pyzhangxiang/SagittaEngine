@@ -7,7 +7,7 @@
 #define __SWINDOWDELEGATE_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../common/SDelegate.h"
+#include "../common/sgDelegate.h"
 #include "GuiDef.h"
 
 // DECLARES //////////////////////////////////////////
@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SWindowDelegate : public SDelegate{
+	class _SG_GuiExport SWindowDelegate : public sgDelegate{
 	// member variables
 	private:
 		/** For Win32, it's the window class style like CS_HREDRAW;
@@ -115,7 +115,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SMainFrameDelegate : public SWindowDelegate{
+	class _SG_GuiExport SMainFrameDelegate : public SWindowDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -183,7 +183,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SWidgetDelegate : public SWindowDelegate{
+	class _SG_GuiExport SWidgetDelegate : public SWindowDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -214,7 +214,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SViewDelegate : public SWidgetDelegate{
+	class _SG_GuiExport SViewDelegate : public SWidgetDelegate{
 	// member variables
 
 	// constructors & destructor
@@ -236,7 +236,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SGraphicsViewDelegate : public SViewDelegate{
+	class _SG_GuiExport SGraphicsViewDelegate : public SViewDelegate{
 	// member variables
 
 	// constructors & destructor

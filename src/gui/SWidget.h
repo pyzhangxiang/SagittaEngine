@@ -25,7 +25,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SWidget : public SWindow{
+	class _SG_GuiExport SWidget : public SWindow{
 	// enum defines
 	public:
 		enum SizePolicy{
@@ -58,7 +58,7 @@ namespace Sagitta{
 		/** Constructor.
 		*	@param
 		*		aDelegate Must be a SWidgetDelegate.
-		*		aParent Cannot be zero, or will cannot create window and will throw a SInternalErrorException.
+		*		aParent Cannot be zero, or will cannot create window and will throw a sgInternalErrorException.
 		*/
 		SWidget(SWidgetDelegate *aDelegate, SMainFrame *aParent, const std::string &aTitle, SRect aRect);
 		SWidget(SMainFrame *aParent, const std::string &aTitle, SRect aRect);

@@ -7,7 +7,7 @@
 #define __SCONTROLLER_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../common/SDelegate.h"
+#include "../common/sgDelegate.h"
 #include "GuiDef.h"
 #include <string>
 
@@ -23,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SController : public SDelegate{
+	class _SG_GuiExport SController : public sgDelegate{
 	// member variables
 
 	// constructors & destructor

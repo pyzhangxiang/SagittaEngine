@@ -19,7 +19,7 @@ namespace Sagitta{
 	class SMainFrame;
 	class SEvent;
 
-	class _GuiExport SApplication : public SListener/*, public Singleton<SApplication>*/{
+	class _SG_GuiExport SApplication : public SListener/*, public Singleton<SApplication>*/{
 	// type define
 	protected:
 		typedef std::map<SWindowHandle, SWindow*> WindowMap;

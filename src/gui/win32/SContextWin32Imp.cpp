@@ -7,7 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -29,7 +29,7 @@ namespace Sagitta{
 
 	//  [12/18/2008 zhangxiang]
 	//SContext::SContext(const SContext& aContext){
-	//	THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE, "Cannot use copy constructor.", "SContext::SContext");
+	//	THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Cannot use copy constructor.", "SContext::SContext");
 	//}
 
 	//  [12/13/2008 zhangxiang]
@@ -41,18 +41,18 @@ namespace Sagitta{
 
 	//  [12/18/2008 zhangxiang]
 	/*SContext &SContext::operator =(const SContext &aContext){
-		THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE, "Cannot use assignment constructor.", "SContext::operator=");
+		THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Cannot use assignment constructor.", "SContext::operator=");
 	}*/
 
 	//  [12/14/2008 zhangxiang]
 	void SContext::release(void){
 		if(m_ContextHandle && m_pWindow){
 			if(!::IsWindow(m_pWindow->handle())){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Release dc failed : The binding window has been destroyed.", "SContext::release(void)");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Release dc failed : The binding window has been destroyed.", "SContext::release(void)");
 			}
 
 			if(!::ReleaseDC(m_pWindow->handle(), m_ContextHandle)){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Release dc failed.", "SContext::release(void)");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Release dc failed.", "SContext::release(void)");
 			}
 		}
 	}

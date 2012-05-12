@@ -9,8 +9,8 @@
 #include "SWindow.h"
 #include "SMainFrame.h"
 #include "SEvent.h"
-#include "../common/utils/SException.h"
-#include "../common/utils/SString.h"
+#include "../common/utils/sgException.h"
+#include "../common/utils/sgStringUtil.h"
 #include <vector>
 
 // DEFINITIONS //////////////////////////////////////////
@@ -34,7 +34,7 @@ namespace Sagitta{
 
 	SApplication::SApplication() : SListener(), m_pMainWindow(0){
 		if(SApplication::instance_ptr()){
-			THROW_SAGI_EXCEPT(SException::ERR_DUPLICATE_ITEM, "Cannot duplicate application, because it's singleton.", "SApplication::SApplication");
+			THROW_SAGI_EXCEPT(sgException::ERR_DUPLICATE_ITEM, "Cannot duplicate application, because it's singleton.", "SApplication::SApplication");
 		}
 
 		SApplication::single_app = this;
@@ -67,7 +67,7 @@ namespace Sagitta{
 				const SCreateEvent &event = dynamic_cast<const SCreateEvent&>(aEvent);
 				SWindow *window = dynamic_cast<SWindow*>(event.receiver());
 				if(!window){
-					THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+					THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 									"The receiver is not a window",
 									"SApplication::handleEvent");
 				}
@@ -80,7 +80,7 @@ namespace Sagitta{
 			{
 				SWindow *window = dynamic_cast<SWindow*>(aEvent.receiver());
 				if(!window){
-					THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
+					THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 						"The receiver is not a window",
 						"SApplication::handleEvent");
 				}
@@ -124,12 +124,12 @@ namespace Sagitta{
 	//  [12/9/2008 zhangxiang]
 	void SApplication::setMainWindow(SMainFrame *aWindow){
 		if(!aWindow){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS, "NULL window pointer", "SApplication::setMainWindow");
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "NULL window pointer", "SApplication::setMainWindow");
 		}
 
 		if(!findWindow(aWindow)){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS,
-							"Window " + aWindow->title() + " " + SString::to_string(aWindow->handle()) + " has not been registered.",
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
+							"Window " + aWindow->title() + " " + sgStringUtil::to_string(aWindow->handle()) + " has not been registered.",
 							"SApplication::setMainWindow");
 		}else{
 			m_pMainWindow = aWindow;
@@ -139,7 +139,7 @@ namespace Sagitta{
 	//  [12/14/2008 zhangxiang]
 	void SApplication::registerWindow(SWindowHandle aHandle, SWindow *aWindow){
 		if(m_WindowMap.find(aHandle) != m_WindowMap.end()){
-			THROW_SAGI_EXCEPT(SException::ERR_INVALIDPARAMS, "Window is existed", "SApplication::registerWindow(SWindowHandle, SWindow*)");
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "Window is existed", "SApplication::registerWindow(SWindowHandle, SWindow*)");
 		}else{
 			m_WindowMap.insert(std::make_pair(aHandle, aWindow));
 		}
@@ -150,7 +150,7 @@ namespace Sagitta{
 	void SApplication::unregisterWindow(SWindow *aWindow){
 		WindowMap::iterator it = m_WindowMap.find(aWindow->handle());
 		if(it == m_WindowMap.end()){
-			THROW_SAGI_EXCEPT(SException::ERR_ITEM_NOT_FOUND, "No such window: " + aWindow->title(), "SApplication::unregisterWindow");
+			THROW_SAGI_EXCEPT(sgException::ERR_ITEM_NOT_FOUND, "No such window: " + aWindow->title(), "SApplication::unregisterWindow");
 		}else{
 			m_WindowMap.erase(it);
 		}

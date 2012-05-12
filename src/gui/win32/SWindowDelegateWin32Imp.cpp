@@ -7,8 +7,8 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SWindowDelegate.h"
 #include "../SListener.h"
-#include "../../common/utils/SString.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgStringUtil.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -41,7 +41,7 @@ namespace Sagitta{
 		m_iWndAttributes |= aWndAttributes;
 		m_iWndExAttributes |= aWndExAttributes;
 
-		std::string wcname = SString::to_string(m_iWndClassStyle);
+		std::string wcname = sgStringUtil::to_string(m_iWndClassStyle);
 						
 		WNDCLASSEX wc;
 		if(!GetClassInfoEx(0, wcname.c_str(), &wc)){
@@ -59,7 +59,7 @@ namespace Sagitta{
 			wc.hIconSm = 0;
 	
 			if(!RegisterClassEx(&wc)){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Register window class failed.", "SWindow::_registerWndClass");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Register window class failed.", "SWindow::_registerWndClass");
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace Sagitta{
 	SWindowHandle SWindowDelegate::_createWindow(const std::string &aTitle, SRect aRect, SWindowHandle aHParent, SWindow *aBindedWindow){
 		/*std::string wcname = _setWindowStyle();	--- outmoded --- */
 
-		std::string wcname = SString::to_string(m_iWndClassStyle);
+		std::string wcname = sgStringUtil::to_string(m_iWndClassStyle);
 
 		WNDCLASSEX wc;
 		if(!GetClassInfoEx(0, wcname.c_str(), &wc)){
@@ -88,7 +88,7 @@ namespace Sagitta{
 			wc.hIconSm = 0;
 
 			if(!RegisterClassEx(&wc)){
-				THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Register window class failed.", "SWindow::_createWindow");
+				THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Register window class failed.", "SWindow::_createWindow");
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Sagitta{
 											x, y, w, h,
 											aHParent, 0, 0, aBindedWindow);
 		if(!hWnd)
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Create window failed.", "SWindow::_createWindow");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Create window failed.", "SWindow::_createWindow");
 		return hWnd;
 	}
 

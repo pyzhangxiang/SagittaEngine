@@ -23,7 +23,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SGLContext : public SRenderContext{
+	class _SG_GuiExport SGLContext : public SRenderContext{
 	// member variables
 	private:
 		SGLContextHandle m_GLContextHandle;

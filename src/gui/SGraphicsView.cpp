@@ -9,14 +9,14 @@
 #include "SWindowDelegate.h"
 #include "SRenderContext.h"
 #include "SGLContext.h"
-#include "../common/utils/SException.h"
-#include "../engine/scenegraph/SSceneManager.h"
-#include "../engine/renderer/SRenderer.h"
-#include "../engine/renderer/SGLRenderer.h"
+#include "../common/utils/sgException.h"
+#include "../engine/scenegraph/sgSceneManager.h"
+#include "../engine/renderer/sgRenderer.h"
+#include "../engine/renderer/sgGLRenderer.h"
 #include "../engine/renderer/SagiRanderer.h"
 #if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
 #	include "SD3D9Context.h"
-#	include "../engine/renderer/SD3D9Renderer.h"
+#	include "../engine/renderer/sgD3D9Renderer.h"
 #endif
 
 // DECLARES //////////////////////////////////////////
@@ -64,8 +64,8 @@ namespace Sagitta{
 			{
 				m_pRenderContext = new SGLContext(this);
 				try{
-					m_pRenderer = new SGLRenderer(width(), height());
-				}catch(SException&){
+					m_pRenderer = new sgGLRenderer(width(), height());
+				}catch(sgException&){
 					delete m_pRenderContext;
 					throw;
 				}
@@ -77,7 +77,7 @@ namespace Sagitta{
 				m_pRenderContext = new SGLContext(this);
 				try{
 					m_pRenderer = new SagiRenderer(width(), height(), false);
-				}catch(SException&){
+				}catch(sgException&){
 					delete m_pRenderContext;
 					throw;
 				}
@@ -89,8 +89,8 @@ namespace Sagitta{
 			{
 				m_pRenderContext = new SD3D9Context(this);
 				try{
-					m_pRenderer = new SD3D9Renderer(handle(), width(), height());
-				}catch(SException&){
+					m_pRenderer = new sgD3D9Renderer(handle(), width(), height());
+				}catch(sgException&){
 					delete m_pRenderContext;
 					throw;
 				}
@@ -99,7 +99,7 @@ namespace Sagitta{
 #endif
 
 			default:
-				THROW_SAGI_EXCEPT(SException::ERR_INVALID_STATE, "No such renderer.", "SGraphicsView::init");
+				THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "No such renderer.", "SGraphicsView::init");
 		}
 
 		m_pRenderer->createViewport(width(), height(), 0.0, 0.0, 1.0, 1.0, 0, 0);
@@ -147,17 +147,17 @@ namespace Sagitta{
 	}
 
 	//  [1/3/2009 zhangxiang]
-	SRenderer *SGraphicsView::getRenderer(void) const{
+	sgRenderer *SGraphicsView::getRenderer(void) const{
 		return m_pRenderer;
 	}
 
 	//  [12/14/2008 zhangxiang]
-	SSceneManager *SGraphicsView::getSceneManager(void) const{
+	sgSceneManager *SGraphicsView::getSceneManager(void) const{
 		return m_pSceneManager;
 	}
 
 	//  [12/14/2008 zhangxiang]
-	void SGraphicsView::setSceneManager(SSceneManager *aSceneManager){
+	void SGraphicsView::setSceneManager(sgSceneManager *aSceneManager){
 		if(m_pSceneManager != aSceneManager){
 			// a new scenemanager, set mine to be it and update
 			m_pSceneManager = aSceneManager;

@@ -7,7 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SD3D9Context.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -18,7 +18,7 @@ namespace Sagitta{
 	SD3D9Context::SD3D9Context(SWindow *aWindow) : SRenderContext(aWindow){
 		try{
 			buildRenderEnv();
-		}catch(SException &e){
+		}catch(sgException &e){
 			::ReleaseDC(m_pWindow->handle(), m_ContextHandle);
 			// log for future ...
 			// SLog(e.what());
@@ -35,13 +35,13 @@ namespace Sagitta{
 	void SD3D9Context::buildRenderEnv(void){
 		m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 		if(!m_pD3D){
-			THROW_SAGI_EXCEPT(SException::ERR_RENDERINGAPI_ERROR, "Create D3D failed.", "SD3D9Context::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_RENDERINGAPI_ERROR, "Create D3D failed.", "SD3D9Context::buildRenderEnv(void)");
 		}
 
 		D3DDISPLAYMODE  d3ddm;
 		ZeroMemory(&d3ddm, sizeof(d3ddm));
 		if(FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm))){
-			THROW_SAGI_EXCEPT(SException::ERR_RENDERINGAPI_ERROR, "Get D3D display mode failed.", "SD3D9Context::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_RENDERINGAPI_ERROR, "Get D3D display mode failed.", "SD3D9Context::buildRenderEnv(void)");
 		}
 
 		D3DPRESENT_PARAMETERS d3dpp;
@@ -52,7 +52,7 @@ namespace Sagitta{
 
 		if(FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_pWindow->handle(), D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &m_pDevice))){
 			delete m_pD3D;
-			THROW_SAGI_EXCEPT(SException::ERR_RENDERINGAPI_ERROR, "Create D3D device failed.", "SD3D9Context::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_RENDERINGAPI_ERROR, "Create D3D device failed.", "SD3D9Context::buildRenderEnv(void)");
 		}
 	}
 

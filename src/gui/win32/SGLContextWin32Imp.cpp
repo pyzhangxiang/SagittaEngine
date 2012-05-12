@@ -7,7 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "../SGLContext.h"
 #include "../SWindow.h"
-#include "../../common/utils/SException.h"
+#include "../../common/utils/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -18,7 +18,7 @@ namespace Sagitta{
 	SGLContext::SGLContext(SWindow *aWindow) : SRenderContext(aWindow){
 		try{
 			buildRenderEnv();
-		}catch(SException &e){
+		}catch(sgException &e){
 			::ReleaseDC(m_pWindow->handle(), m_ContextHandle);
 			// log for future ...
 			// SLog(e.what());
@@ -47,18 +47,18 @@ namespace Sagitta{
 
 		iFormat = ::ChoosePixelFormat(m_ContextHandle, &pfd);
 		if(!iFormat){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Choose pixel format failed.", "SGLContext::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Choose pixel format failed.", "SGLContext::buildRenderEnv(void)");
 		}
 
 		::SetPixelFormat(m_ContextHandle, iFormat, &pfd);
 		m_GLContextHandle = ::wglCreateContext(m_ContextHandle);
 		if(!m_GLContextHandle){
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Create GL render context failed.", "SGLContext::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Create GL render context failed.", "SGLContext::buildRenderEnv(void)");
 		}
 		
 		if(!::wglMakeCurrent(m_ContextHandle, m_GLContextHandle)){
 			::wglDeleteContext(m_GLContextHandle);
-			THROW_SAGI_EXCEPT(SException::ERR_INTERNAL_ERROR, "Make current GL render context failed.", "SGLContext::buildRenderEnv(void)");
+			THROW_SAGI_EXCEPT(sgException::ERR_INTERNAL_ERROR, "Make current GL render context failed.", "SGLContext::buildRenderEnv(void)");
 		}
 	}
 

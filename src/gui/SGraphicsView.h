@@ -16,8 +16,8 @@ namespace Sagitta{
 	class SGraphicsViewDelegate;
 	class SMainFrame;
 	class SRenderContext;
-	class SRenderer;
-	class SSceneManager;
+	class sgRenderer;
+	class sgSceneManager;
 
 	/** class representation
 	@remarks
@@ -27,7 +27,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _GuiExport SGraphicsView : public SView{
+	class _SG_GuiExport SGraphicsView : public SView{
 	// type defines
 	public:
 		enum RendererType{
@@ -43,9 +43,9 @@ namespace Sagitta{
 		/** Stores the renderer type. */
 		RendererType m_RendererType;
 		/** Stores the pointer to a renderer, and holds the ownership. */
-		SRenderer *m_pRenderer;
+		sgRenderer *m_pRenderer;
 		/** Stores the pointer to a SceneManager, and does not hold the ownership. */
-		SSceneManager *m_pSceneManager;
+		sgSceneManager *m_pSceneManager;
 
 		/** Stores owner context. */
 		SRenderContext *m_pRenderContext;
@@ -88,9 +88,9 @@ namespace Sagitta{
 		bool onClose();
 
 	public:
-		SRenderer *getRenderer(void) const;
-		SSceneManager *getSceneManager(void) const;
-		void setSceneManager(SSceneManager *aSceneManager);
+		sgRenderer *getRenderer(void) const;
+		sgSceneManager *getSceneManager(void) const;
+		void setSceneManager(sgSceneManager *aSceneManager);
 
 	}; //#### end class SGraphicsView
 
