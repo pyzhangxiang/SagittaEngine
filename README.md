@@ -5,5 +5,7 @@ A 3d engine with a software render which could get results as the same as opengl
 Build
 =
 mkdir build
+
 cmake -G Xcode ..
+
 (for other compiler, change the cmake generator)
