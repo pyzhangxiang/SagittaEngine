@@ -37,19 +37,19 @@ MainWindow::MainWindow() : SGraphicsFrame("SagiEditor", SRect(200, 200, 400, 400
 		v1.setColor(Color(Vector3(0, 1, 0)));
 		SVertex v2(Vector3(2.0f, -2.0f, -20.0f));
 		v2.setColor(Color(Vector3(0, 0, 1)));
-		STriangle *triangle = new STriangle(v0, v1, v2);
+		//STriangle *triangle = new STriangle(v0, v1, v2);
 
 //		sgGrid *grid = new sgGrid(20, 10, 10); 
 
 	//	sgCube *cube = new sgCube(5);
 	//	sgSphere *cube = new sgSphere(5, 20, 20);
-		sgCone *tank = new sgCone(5, 20, 10);
-		tank->setMaterial(sgMaterial(Color(Color::GLColor(0.5, 0.3, 0.1, 1.0)),
+	//	sgCone *tank = new sgCone(5, 20, 10);
+	/*	tank->setMaterial(sgMaterial(Color(Color::GLColor(0.5, 0.3, 0.1, 1.0)),
 									Color(Color::GLColor(0.5, 0.3, 0.1, 1.0)),
 									Color(Color::GLColor(0.7, 0.7, 0.7, 1.0)),
 									Color(Color::GLColor(0.0, 0.0, 0.0, 1.0)),
 									0.0, 0.5, 0.0));
-
+*/
 		sgSceneNode *gridnode = m_pUniqueSM->createSceneNode("gridnode");
 		sgSceneNode *rolenode = m_pUniqueSM->createSceneNode("rolenode");
 		sgSceneNode *tanknode = m_pUniqueSM->createSceneNode("tanknode");
@@ -66,14 +66,17 @@ MainWindow::MainWindow() : SGraphicsFrame("SagiEditor", SRect(200, 200, 400, 400
 		tanknode->translate(Vector3(-5, -17, -40));
 
 
-		trianglenode->attachEsse(triangle);
+		//trianglenode->attachEsse(triangle);
 
 	//	grid->attachToNode(gridnode);
 
-		tank->attachToNode(tanknode);
+	//	tank->attachToNode(tanknode);
 		
 		sgCamera *camera = new sgCamera(Vector3(0, 1, 0), Vector3(0, 0, -1), sgCamera::CM_FIXER);
 		rolenode->attachEsse(camera);
+        camera->rotate(Quaternion(-Math::PI/10.0f, Vector3(1.0f, 0.0f, 0.0f)));
+        camera->translate(Vector3(0.0f, 30.0f, 160.0f));
+//        camera->roll(Radian(Math::PI/4.0f));
 		static_cast<SGraphicsView*>(getChild(0))->getRenderer()->getViewport(0)->setCamera(camera);
 		
 		sgLight *light0 = new sgLight;
@@ -90,7 +93,6 @@ MainWindow::MainWindow() : SGraphicsFrame("SagiEditor", SRect(200, 200, 400, 400
 		skeleton->setLoopFrame(true);
 		m_pUniqueSM->addSubScene(skeleton);
 
-		int aa = 0;
 		//sgLight *light1 = new sgLight;
 		//light1->attachToNode(lightNode1);
 	}
