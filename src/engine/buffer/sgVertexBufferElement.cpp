@@ -6,7 +6,7 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgVertexBufferElement.h"
-#include "../../common/utils/sgException.h"
+#include "engine/common/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 

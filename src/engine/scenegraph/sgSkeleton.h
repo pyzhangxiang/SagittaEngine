@@ -1,74 +1,72 @@
-//////////////////////////////////////////////////////
-// file: sgSkeleton.h @ 2008-8-28 by Zhang Xiang
-// declares of the class sgSkeleton
-// sgSkeleton is a class ...
-//////////////////////////////////////////////////////
 #ifndef __SGSKELETON_H__
 #define __SGSKELETON_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "sgSubScene.h"
+#include "engine/common/sgObject.h"
+#include "engine/common/sgStlAllocator.h"
+#include "engine/common/sgStrHandle.h"
+#include "math/sgColor.h"
+#include "engine/renderer/sgRenderState.h"
 #include <map>
 
 // DECLARES //////////////////////////////////////////
 
 namespace Sagitta{
-
-	class SSkeletonDelegate;
-
-	/** class representation
-	@remarks
-
-	@note
-
-	@par
-
-	*/
-	class _SG_KernelExport sgSkeleton : public sgSubScene{
-	// enum declares
-	public:
-		// scene type
-		enum SceneType{ ST_SKELETON = 1 };
-
-	// member variables
-	private:
-		/// altitude of this skeleton
-//		Real m_fAltitude;
-		/// the lowest position of this skeleton
-//		Real m_fGround;
-	
-	// constructors & destructor
+    
+	class sgBoneObject;
+    class sgSceneObject;
+    
+	class _SG_KernelExport sgSkeleton : public sgObject
+    {
+		SG_META_DECLARE(sgSkeleton)
+        
+        // for add and remove bone object in sgBoneObject::onSetParent
+        friend class sgBoneObject;
+        
+        // for setBelongTo in sgSceneObject::setSkeleton
+        friend class sgSceneObject;
+        
+	protected:
+		typedef sg_map(std::string, sgBoneObject*) BoneNodeMap;
+        
+    public:
+		//typedef sgMapIterator<BoneNodeMap> BoneNodeMapIterator;
+        
+        // member variables
+	protected:
+		sgSceneObject *mpRoot;
+        sgBoneObject *mpBoneRoot;
+        BoneNodeMap mBoneNodeMap;
+        // constructors & destructor
 	public:
 		sgSkeleton(void);
-		sgSkeleton(const StdString &aName);
-		sgSkeleton(SSkeletonDelegate *aDelegate);
-		sgSkeleton(const StdString &aName, SSkeletonDelegate *aDelegate);
-		~sgSkeleton(void);
-
-	// member functions
+		virtual ~sgSkeleton(void);
+        
 	public:
-		/** Gets altitude. */
-	//	Real altitude(void) const;
+		sgSceneObject *getRoot(void) const;
+        sgBoneObject *getBoneRoot(void) const;
+		virtual void update(Float32 deltaTime);
+        
+        sgSceneObject *parent(void);
 
-		/** Gets ground. */
-//		Real ground(void) const;
-
-		/** Sets altitude.
-			@remarks Internal method. Called by SSkeletonDelegate.
-		*/
-//		void _setAltitude(Real aAltitude);
-
-		/** Sets ground.
-			@remarks Internal method. Called by SSkeletonDelegate.
-		*/
-//		void _setGround(Real aGround);
-	
-	}; //#### end class sgSkeleton
-
+    protected:
+        // for sgBoneObject
+		bool addBoneObject(sgBoneObject *node);
+        void removeBoneObject(sgBoneObject *node);
+        void removeBoneObject(const std::string &name);
+    
+    protected:
+        // for sgSceneObject
+        void setBelongTo(sgSceneObject *parent);
+        
+    public:
+        virtual void showDebug(bool show);
+    
+	}; //#### end class sgSceneNode
+    
 } // namespace Sagitta
 
 // DEFINES ///////////////////////////////////////////
 
 #endif // __SGSKELETON_H__
-
 

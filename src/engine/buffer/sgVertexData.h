@@ -7,9 +7,11 @@
 #define __SGVERTEXDATA_H__
 
 // INCLUDES //////////////////////////////////////////
-//#include "../../common/sgObject.h"
-#include "../../common/configs/config.h"
-#include "../../common/utils/sgIterator.h"
+#include "engine/common/sgMemObject.h"
+#include "engine/common/sgStlAllocator.h"
+#include "math/SagittaPlatform.h"
+#include "math/sgTypeDef.h"
+#include "engine/common/sgIterator.h"
 #include <map>
 
 // DECLARES //////////////////////////////////////////
@@ -26,10 +28,10 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgVertexData{// : public sgObject{
+	class _SG_KernelExport sgVertexData : public sgMemObject{
 	private:
 		// mapped by element type
-		typedef std::map<int, sgVertexBufferElement*> ElementList;
+		typedef sg_map(int, sgVertexBufferElement*) ElementList;
 
 	public:
 		typedef sgMapIterator<ElementList> Iterator;
@@ -98,10 +100,10 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgIndexData{// : public sgObject{
+	class _SG_KernelExport sgIndexData : public sgMemObject{
 	private:
 	// mapped by index type
-		typedef std::map<int, sgVertexIndexBuffer*> ElementList;
+		typedef sg_map(int, sgVertexIndexBuffer*) ElementList;
 
 	public:
 		typedef sgMapIterator<ElementList> Iterator;

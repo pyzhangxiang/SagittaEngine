@@ -1,45 +1,70 @@
 add_definitions(-DSAGITTA_KERNEL)
 
+include_directories(${SAGITTA_ROOT}/src)
+include_directories(${SAGITTA_ROOT}/deps)
+
 set(Header)
 set(Source)
 file(GLOB_RECURSE Header *.h)
 file(GLOB_RECURSE Source *.cpp)
 
 set(Source_File ${Header} ${Source})
+
+set(to_remove_h)
+set(to_remove_cpp)
+if(MSVC)
+    file(GLOB_RECURSE to_remove_h "*gcc*.h")
+    file(GLOB_RECURSE to_remove_cpp "*gcc*.cpp")
+
+#    set(CPACK_SOURCE_IGNORE_FILES ".*msvc.*.cpp$;${CPACK_SOURCE_IGNORE_FILES}")
+#    file(GLOB_RECURSE Source "*.cpp")
+else(MSVC)
+    file(GLOB_RECURSE to_remove_h "*msvc*.h")
+    file(GLOB_RECURSE to_remove_cpp "*msvc*.cpp")
+
+#    file(GLOB_RECURSE Source "^(?!msvc).*.cpp")
+endif(MSVC)
+
+set(to_remove ${to_remove_h} ${to_remove_cpp})
+message("To remove files:\n${to_remove}\n")
+
+list(REMOVE_ITEM Source_File ${to_remove})
+
 source_group_by_dir(Source_File)
 
-# find opengl and directx
+# find opengl, glew and directx
 if(WIN32)
 	# use the opengl lib in the misc/deps
-	include_directories(${SAGITTA_ROOT}/misc/deps/opengl/include)
+    set(GLEW_INCLUDE_DIRS ${SAGITTA_ROOT}/deps/opengl/include)
 	if(Static)
-		set(OPENGL_glew_LIBRARY ${SAGITTA_ROOT}/misc/deps/opengl/lib/glew32s.lib)
+		set(GLEW_LIBRARIES ${SAGITTA_ROOT}/deps/opengl/lib/glew32s.lib)
 	else(Static)
-		set(OPENGL_glew_LIBRARY ${SAGITTA_ROOT}/misc/deps/opengl/lib/glew32.lib)
+		set(GLEW_LIBRARIES ${SAGITTA_ROOT}/deps/opengl/lib/glew32.lib)
 	endif(Static)
 	
 	set(DX_DIR $ENV{DXSDK_DIR})
     if(DX_DIR)
     	message(${DX_DIR})
-        include_directories(${DX_DIR}/Include)
-        link_directories(${DX_DIR}/Lib/x86)
+        include_directories(${DX_DIR}Include)
+        link_directories(${DX_DIR}Lib/x86)
     else(DX_DIR)
         message("DirectX SDK not found.")
     endif(DX_DIR)
 	
 else(WIN32)
 	# For unix or unix-like system. This should always work if everything is installed and working fine.
-	find_package(OpenGL)
-	if(OPENGL_FOUND)
-		message("OPENGL FOUND")
-		message(${OPENGL_LIBRARIES})
-	else(OPENGL_FOUND)
-		# create project failed
-		message(FATAL_ERROR "OPENGL NOT FOUND")
-	endif(OPENGL_FOUND)
+    message("Finding GLEW ...")
+	find_package(GLEW)
+    if(GLEW_FOUND)
+        message("GLEW found\n${GLEW_INCLUDE_DIRS}\n")
+    else(GLEW_FOUND)
+        message(FATAL_ERROR "GLEW not found")
+    endif(GLEW_FOUND)
 
-	find_package(GLU)
+	#find_package(GLU)
 endif(WIN32)
+
+include_directories(${GLEW_INCLUDE_DIRS})
 
 if(Static)
 	add_library(Sagitta STATIC ${Source_File})
@@ -49,10 +74,10 @@ endif(Static)
 
 if(WIN32)
 	if(DX_DIR)
-		target_link_libraries(Sagitta ${OPENGL_glew_LIBRARY} d3dxof dxguid d3dx9d d3d9 SagiCommon SagiMath)
+		target_link_libraries(Sagitta ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARIES} d3dxof dxguid d3dx9d d3d9 SagiMath)
 	else(DX_DIR)
-		target_link_libraries(Sagitta ${OPENGL_glew_LIBRARY} SagiCommon SagiMath)
+		target_link_libraries(Sagitta ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARIES} SagiMath)
 	endif(DX_DIR)
 else(WIN32)
-	target_link_libraries(Sagitta ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} SagiCommon SagiMath)
+	target_link_libraries(Sagitta ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARIES} SagiMath)
 endif(WIN32)

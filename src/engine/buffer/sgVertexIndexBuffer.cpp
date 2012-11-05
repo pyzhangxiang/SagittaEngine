@@ -6,7 +6,7 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgVertexIndexBuffer.h"
-#include "../../common/utils/sgException.h"
+#include "engine/common/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -48,10 +48,6 @@ namespace Sagitta{
 
 	//  [1/5/2009 zhangxiang]
 	void sgVertexIndexBuffer::resize(size_t aPolyNum){
-		if(aPolyNum < 0){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
-				"Negative polygon num.", "sgVertexBufferElement::resize");
-		}
 
 		if(aPolyNum == m_iPolyNum){
 			// same num with original one, do nothing
@@ -65,10 +61,6 @@ namespace Sagitta{
 
 	//  [1/5/2009 zhangxiang]
 	void sgVertexIndexBuffer::resize(uInt aPolyType, size_t aPolyNum){
-		if(aPolyType < 0 || aPolyNum < 0){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
-				"Negative polygon type or num.", "sgVertexBufferElement::resize");
-		}
 
 		m_iPolyType = aPolyType;
 		m_iPolyNum = aPolyNum;

@@ -21,12 +21,12 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgGLRenderer : public sgRenderer{
-	// member variables
-
-	// constructors & destructor
+	class _SG_KernelExport sgGLRenderer : public sgRenderer
+    {
+        SG_META_DECLARE(sgGLRenderer)
+        
 	public:
-		sgGLRenderer(int aTWidth, int aTHeight);
+		sgGLRenderer();
 		virtual ~sgGLRenderer(void);
 
 	// member functions
@@ -55,7 +55,7 @@ namespace Sagitta{
 		int setupLightsImpl(const Color &aGlobalAmbiantColor) const;
 
 		/** Renders a specific renderable object. Overrides from sgRenderer. */
-		void render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const;
+		void render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const;
 
 		/** Draw frame buffer to target and do something after rendering. Overrides from sgRenderer. */
 		void postRenderImpl(void) const;
@@ -73,6 +73,14 @@ namespace Sagitta{
 
 		/** Overridden from sgRenderer. Reset graphics attributes when the window's size changed. */
 	//	void resize(int aWidth, int aHeight);
+        
+        virtual bool initShaderEnvironment(void);
+        
+    private:
+        void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                       , const Matrix4 &modelMatrix, int polyType) const;
+        void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                   , const Matrix4 &modelMatrix, int polyType) const;
 
 	}; //#### end class sgGLRenderer
 

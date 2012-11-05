@@ -8,9 +8,9 @@
 #define __SGFRAMEBUFFERMANAGER_H__
 
 // INCLUDES //////////////////////////////////////////
-//#include "../../common/sgObject.h"
-#include "../../common/configs/config.h"
-#include "../../math/sgColor.h"
+#include "engine/common/sgMemObject.h"
+#include "math/SagittaPlatform.h"
+#include "math/sgColor.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -28,7 +28,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgFrameBufferManager{// : public sgObject{
+	class _SG_KernelExport sgFrameBufferManager : public sgMemObject{
 	// member variables
 	private:
 		/// frame buffers

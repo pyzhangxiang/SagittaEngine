@@ -7,9 +7,9 @@
 #define __SGNODE_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/sgObject.h"
-#include "../../math/sgMathHeader.h"
-#include "../../common/utils/sgIterator.h"
+#include "engine/common/sgObject.h"
+#include "math/sgMathHeader.h"
+#include "engine/common/sgIterator.h"
 #include <map>
 
 // DECLARES //////////////////////////////////////////
@@ -24,7 +24,9 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgNode : public sgObject{
+	class _SG_KernelExport sgNode : public sgObject
+	{
+		SG_META_DECLARE_ABSTRACT(sgNode)
 	// enum defines
 	public:
 		/** Enumeration denoting the spaces which a transform can be relative to.
@@ -40,23 +42,16 @@ namespace Sagitta{
 
 	// type defines
 	protected:
-		typedef std::map<uLong, sgNode*> ChildNodeMap;
+		typedef sg_map(id_type, sgNode*) ChildNodeMap;
 	public:
 		typedef sgMapIterator<ChildNodeMap> ChildIterator;
 		typedef sgConstMapIterator<ChildNodeMap> ConstChildIterator;
 
 	// static members
 	private:
-		/// Incremented count for next name extension
-		static uLong ms_iNodeCount;
 
 	// member variables	//////////////////////////////////////////////////////////////////////////
 	private:
-		/// node id
-		const uLong mc_iNodeID;
-
-		/// node name
-		StdString m_sName;
 
 		/// whether this node is active
 		bool m_bActive;
@@ -119,17 +114,8 @@ namespace Sagitta{
 
 	// constructors & destructor //////////////////////////////////////////////////////////////////////////
 	public:
-		/** Constructor.
-		*	@remarks
-		*		Generates a name.
-		*/
 		sgNode(void);
-		/** Constructor.
-		*	@remarks
-		*		Assigned a name.
-		*/
-		sgNode(const StdString &aName);
-		virtual ~sgNode(void);
+		virtual ~sgNode(void) = 0;
 
 	// member functions //////////////////////////////////////////////////////////////////////////
 	private:
@@ -151,60 +137,45 @@ namespace Sagitta{
 		const Vector3 &_getDerivedScale(void) const;
 
 	protected:
-		/** Changes the Node's parent.
-			@remarks
-				Just set the parent node pointer.
-				Only called internally.
-		*/
-		void setParent(sgNode *aParent);
+        /** Adds a (precreated) child scene node to this node. If it is attached to another node,
+         it must be detached first.
+         @param
+         aChild The Node which is to become a child node of this one
+         */
+        virtual void addChild(sgNode* aChild);
+        
+        /** Drops the specified child from this node. 
+         @remarks
+         Does not delete the node, just detaches it from
+         this parent, potentially to be reattached elsewhere. 
+         There is also an alternate version which drops a named
+         child from this node.
+         */
+        void removeChild(sgNode *apChild);
 
+    protected:
 		/** Sets my active property.
 			@remarks Notify children to set active.
 		*/
 		void setActive(bool aActive);
 
+        /// do something in the inherited class
+        virtual void onSetParent(sgNode *aParent);
 	public:
-		/** Clone this node - should be re-implemented by subclass*/
-		virtual sgNode *clone(void) const = 0;
 
-		/** Gets id. */
-		uLong getNodeID(void) const;
-
-		/** Gets my name. */
-		const StdString &name(void) const;
-		/** Sets my name. */
-		void setName(const StdString &aName);
+		sgNode *root(void);
+        
+        /** Changes the Node's parent.
+         @remarks
+         Just set the parent node pointer.
+         Only called internally.
+         */
+		void setParent(sgNode *aParent);
 
 		/** Check if I'm active. */
 		bool isActive(void) const;
 
-		/** Step myself to another parent. */
-		virtual void stepToParent(sgNode *aNewParent);
-
-        /** Adds a (precreated) child scene node to this node. If it is attached to another node,
-            it must be detached first.
-			@param
-				aChild The Node which is to become a child node of this one
-        */
-        virtual void addChild(sgNode* aChild);
-
-		/** Drops the specified child from this node. 
-			@remarks
-				Does not delete the node, just detaches it from
-				this parent, potentially to be reattached elsewhere. 
-				There is also an alternate version which drops a named
-				child from this node.
-        */
-        sgNode *removeChild(size_t aIndex);
-
-        /** Drops the specified child from this node. 
-			@remarks
-				Does not delete the node, just detaches it from
-				this parent, potentially to be reattached elsewhere. 
-				There is also an alternate version which drops a named
-				child from this node.
-        */
-        sgNode *removeChild(sgNode *apChild);
+		virtual void update(Float32 deltaTime);
 
         /** Removes all child Nodes attached to this node. Does not delete the nodes, just detaches them from
             this parent, potentially to be reattached elsewhere.
@@ -410,19 +381,13 @@ namespace Sagitta{
 
         /** Reports the number of child nodes under this one.
         */
-        size_t childNum(void) const;
-
-        /** Gets a pointer to a child node.
-			@remarks
-				There is an alternate getChild method which returns child by name.
-		*/
-        sgNode *getChild(size_t aIndex) const;    
+        size_t childNum(void) const;  
 
         /** Gets child by ID.
 			@remarks
 				return the first one found.
 		*/
-		sgNode *getChild(const StdString &aName) const;
+		sgNode *getChild(id_type aId) const;
 
 		/** Gets the full transformation matrix for this node.
             @remarks
@@ -433,7 +398,7 @@ namespace Sagitta{
                 derived transforms have been updated before calling this method.
                 Applications using Sagitta should just use the relative transforms.
         */
-        const Matrix4 &_getFullTransform(void) const;
+        const Matrix4 &getFullTransform(void) const;
 
 		/** Returns if need update from parent. */
 		bool isNeedUpdate(void) const;

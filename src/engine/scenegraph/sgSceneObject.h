@@ -1,98 +1,95 @@
-//////////////////////////////////////////////////////
-// file: sgSceneObject.h @ 2008-1-31 by Zhang Xiang
-// declares of the class sgSceneObject
-// sgSceneObject is a class ...
-//////////////////////////////////////////////////////
 #ifndef __SGSCENEOBJECT_H__
 #define __SGSCENEOBJECT_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "../../common/sgObject.h"
-#include "../../math/sgMathHeader.h"
-#include <vector>
+#include "sgNode.h"
+#include "engine/common/sgStlAllocator.h"
+#include "engine/common/sgStrHandle.h"
+#include "engine/component/sgComponent.h"
+#include <map>
 
 // DECLARES //////////////////////////////////////////
 
-
-
-
 namespace Sagitta{
-	
-	// TYPE DEFINE
-//	typedef Vector4 Color;
 
-	class sgNode;
 	class sgScene;
-	class sgSceneManager;
+    class sgSkeleton;
 
-	/** class representation
-	@remarks
+	class _SG_KernelExport sgSceneObject : public sgNode
+    {
+		SG_META_DECLARE(sgSceneObject)
+        
+        // for the root constructed in sgScene's construction
+        // to call my setScene function
+        friend class sgScene;
 
-	@note
 
-	@par
-
-	*/
-	class _SG_KernelExport sgSceneObject : public sgObject{
-	// static members
-	private:
-		static uLong ms_iSceneObjectCount;
+	protected:
+		typedef sg_map(sgStrHandle, sgComponent*) ComponentMap;
+        
+    public:
+		//typedef sgMapIterator<ComponentMap> ComponentIterator;
+		typedef sg_vector(sgSceneObject*) SceneObjectVec;
 
 	// member variables
 	private:
-		/// object id
-		const uLong mc_iSceneObjID;
+		/** Esse mapped by type. */
+		ComponentMap mComponentMap;
 
-		/// object name
-		StdString m_sName;
-
-		/// whether this object is active
-		bool m_bActive;
-
+		sgScene *mpScene;
+		bool mbSceneChanged;
+        
+        sgSkeleton *mpSkeleton;
+        
 	// constructors & destructor
 	public:
-		sgSceneObject();
-		sgSceneObject(const std::string &aName);
+		sgSceneObject(void);
 		virtual ~sgSceneObject(void);
 
-	// member functions
+	private:
+		void setScene(sgScene *pScene);
+        
+    protected:
+        virtual void onSetParent(sgNode *aParent);
 	public:
-		/** Clone this scene object - should be re-implemented by subclass*/
-		virtual sgSceneObject *clone(void) const = 0;
+		sgScene *getScene(void) const;
 
-		/** Gets id. */
-		uLong getSObjID(void) const;
+        sgSkeleton *getSkeleton(void) const;
+        /// the skeleton's root will become a child of the oject
+        sgSkeleton *setSkeleton(sgSkeleton *pSkeleton);
 
-		/** Gets my name. */
-		const StdString &name(void) const;
+		/// create a component by its type(class name)
+		sgComponent *createComponent(const sgStrHandle &type);
+		void removeComponent(const sgStrHandle &type);
+		sgComponent *getComponent(const sgStrHandle &type) const;
 
-		/** Sets my name. */
-		void _setName(const StdString &aName);
+		void getAllObjects(SceneObjectVec &objVec);
 
-		/** Check if I'm active. */
-		virtual bool isActive(void) const;
+		virtual void update(Float32 deltaTime);
+        
+    private:
+        /// if this instance is a debug object
+        bool mIsDebugObj;
+    public:
+        bool isDebugObj(void) const{ return mIsDebugObj; }
+        void setIsDebugObj(bool debug);
+        
+    protected:
+        /// the debug object attach to this instance
+        sgSceneObject *mDebugObjectToShow;
+    public:
+        sgSceneObject *getDebugObjectToShow(void) const;
+        sgSceneObject *setDebugObjectToShow(sgSceneObject *obj);
+        
+        virtual void showDebug(bool show);
+        
 
-		/** Sets active property. */
-		virtual void setActive(bool aActive);
 
-		/** Gets the position of this object in world space. */
-		virtual Vector3 position(void) const = 0;
-		
-		/** Gets the SceneManager myself belong to. */
-	//	virtual sgSceneManager *getSceneManager(void) const = 0;
-
-		/** Gets the scene i'm in. */
-		virtual sgScene *getScene(void) const = 0;
-
-		/** Checks if i'm in a scene. */
-		bool isInScene(void) const;
-
-	}; //#### end class sgSceneObject
+	}; //#### end class sgSceneNode
 
 } // namespace Sagitta
 
 // DEFINES ///////////////////////////////////////////
 
 #endif // __SGSCENEOBJECT_H__
-
 

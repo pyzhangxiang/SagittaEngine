@@ -6,7 +6,9 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgViewport.h"
-#include "../scenegraph/sgCamera.h"
+#include "engine/component/sgCameraComponent.h"
+#include "engine/scenegraph/sgSceneObject.h"
+#include "engine/scenegraph/sgScene.h"
 
 
 // DECLARES //////////////////////////////////////////
@@ -17,7 +19,7 @@ namespace Sagitta{
 	sgViewport::sgViewport(int aRTWidth, int aRTHeight,
 						Real aLeft, Real aTop, 
 						Real aWidth, Real aHeight,
-						int aZOrder, sgCamera *aCamera /* = 0 */) :
+						int aZOrder, sgCameraComponent *aCamera /* = 0 */) :
 	m_iRTWidth(aRTWidth), m_iRTHeight(aRTHeight),
 	m_fLeft(aLeft), m_fTop(aTop),
 	m_fWidth(aWidth), m_fHeight(aHeight),
@@ -141,12 +143,12 @@ namespace Sagitta{
 	}
 
 	//  [1/3/2009 zhangxiang]
-	sgCamera *sgViewport::camera(void) const{
+	sgCameraComponent *sgViewport::camera(void) const{
 		return m_pCamera;
 	}
 
 	//  [1/3/2009 zhangxiang]
-	void sgViewport::setCamera(sgCamera *aCamera){
+	void sgViewport::setCamera(sgCameraComponent *aCamera){
 		m_pCamera = aCamera;
 		if(m_pCamera){
 			m_pCamera->_setViewport(this);
@@ -195,7 +197,12 @@ namespace Sagitta{
 
 	//  [1/3/2009 zhangxiang]
 	bool sgViewport::isActive(void) const{
-		return m_pCamera && m_pCamera->isActive();
+		if(!m_pCamera)
+			return false;
+		if( ! (m_pCamera->getParent()->getScene()) )
+			return false;
+
+		return m_pCamera->getParent()->getScene()->getRoot()->isActive();
 	}
 
 } // namespace Sagitta

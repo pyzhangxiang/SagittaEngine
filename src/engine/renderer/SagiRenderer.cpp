@@ -5,39 +5,39 @@
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
-#include "SagiRanderer.h"
+#include "SagiRenderer.h"
 #include "sgViewport.h"
-#include "../buffer/sgFrameBufferManager.h"
-#include "../buffer/sgVertexData.h"
-#include "../buffer/sgVertexIndexBuffer.h"
-#include "../buffer/sgVertexBufferElement.h"
-#include "../buffer/sgFrameBuffer.h"
-#include "../scenegraph/sgSceneManager.h"
-#include "../scenegraph/sgRenderQueue.h"
-#include "../scenegraph/sgCamera.h"
-#include "../scenegraph/sgRenderable.h"
-#include "../scenegraph/sgLight.h"
-#include "../scenegraph/sgMaterial.h"
-#include "../../common/utils/sgException.h"
-#if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
-#	include <gl/glew.h>
-#	include <gl/glut.h>
-#elif SAGITTA_PLATFORM == SAGITTA_PLATFORM_APPLE
-#	include <OpenGL/glu.h>
-#	include <OpenGL/glext.h>
-#else
-#endif
+#include "engine/buffer/sgFrameBufferManager.h"
+#include "engine/buffer/sgVertexData.h"
+#include "engine/buffer/sgVertexIndexBuffer.h"
+#include "engine/buffer/sgVertexBufferElement.h"
+#include "engine/buffer/sgFrameBuffer.h"
+#include "engine/scenegraph/sgScene.h"
+#include "engine/resource/sgMaterial.h"
+#include "engine/common/sgException.h"
+#include "engine/component/sgLightComponent.h"
+#include "engine/component/sgRenderStateComponent.h"
+#include "engine/component/sgMeshComponent.h"
+#include "engine/component/sgCameraComponent.h"
+#include "engine/resource/sgMesh.h"
+#include "sgRenderState.h"
+
+#include "sgGLInclude.h"
 
 // DECLARES //////////////////////////////////////////
 
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
+    
+    SG_META_DEFINE(SagiRenderer, sgRenderer)
 
 	//  [1/15/2009 zhangxiang]
-	SagiRenderer::SagiRenderer(int aTWidth, int aTHeight, bool aEnableSetencil) :
-	sgRenderer(aTWidth, aTHeight, false),
-	m_FrameBuffers(aTWidth, aTHeight, aEnableSetencil),
-	m_CurFrameBuffers(){
+	SagiRenderer::SagiRenderer() 
+    : sgRenderer(),
+	m_FrameBuffers(1, 1, false),
+	m_CurFrameBuffers(),
+	m_bLighting(false)
+    {
 
 	}
 
@@ -101,16 +101,19 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	int SagiRenderer::setupLightsImpl(const Color &aGlobalAmbiantColor) const{
-		sgLight *light;
-		LightList::const_iterator lit = m_LightList.begin();
-		LightList::const_iterator leit = m_LightList.end();
+		m_bLighting = true;
 
-		int lightNum = static_cast<int>(m_LightList.size());
+		sgLightComponent *light;
+		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
+
+		int lightNum = static_cast<int>(m_CurRenderParam.lightlist.size());
 		m_CurSagiLightList.reserve(lightNum);
-		for(; leit!=lit; ++lit){
+		for(; leit!=lit; ++lit)
+        {
 			light = *lit;
 			
-			m_CurSagiLightList.push_back(SagiLight(light->position(),
+			m_CurSagiLightList.push_back(SagiLight(light->getParent()->position(),
 												light->ambientColor().toGLColor(),
 												light->diffuseColor().toGLColor(),
 												light->specularColor().toGLColor()));
@@ -120,15 +123,29 @@ namespace Sagitta{
 	}
 
 	//  [1/15/2009 zhangxiang]
-	void SagiRenderer::render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const{
-		// setup material
+	void SagiRenderer::render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const{
+		sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassName()));
+        if(!meshComp)
+            return ;
+        sgMesh *mesh = meshComp->getMesh();
+        if(!mesh)
+            return ;
+        
+        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
+        sgMaterial *material = 0;
+        if(renderState)
+            material = (sgMaterial*)(renderState->getMaterial());
+        
+        // todo setup material
 		// ...
 		
 		m_CurVertexBuffers.renderable = aRenderable;
+        m_CurVertexBuffers.mesh = mesh;
+        m_CurVertexBuffers.material = material;
 
 		sgVertexData *pvb = new sgVertexData();
 		sgVertexIndexBuffer *pvib = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-		aRenderable->getVertexBuffer(pvb, pvib);
+		mesh->getVertexBuffer(pvb, pvib);
 
 		// vertex buffers
 		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
@@ -207,17 +224,17 @@ namespace Sagitta{
 			++(m_CurVertexBuffers.padjacentcount[indices[i]]);
 		}
 
-		m_CurVertexBuffers.elementtype = aRenderable->renderOption().renderElementType();
+		m_CurVertexBuffers.elementtype = mesh->polyType();
 		m_CurVertexBuffers.facenum = pvib->polyNum();
 
 		
 
 		// model transform matrix
-		m_CurModelMatrix = aRenderable->getModelMatrix();
+		m_CurModelMatrix = aRenderable->getFullTransform();
 		
 		// cull faces, only for triangles
 		if(pvib->polyType() == 3 &&
-			m_CurRenderParam.prenderoption->isFaceCullingEnable()){
+			m_CurRenderParam.pscene->getRenderState().isFaceCullingEnable()){
 			cullFaces();
 		}
 
@@ -228,7 +245,8 @@ namespace Sagitta{
 		clipFaces();
 
 		// calculate lighting
-		vertexShader();
+		if(m_bLighting)
+			vertexShader();
 
 		// screen transform
 		screenTransform();
@@ -245,7 +263,7 @@ namespace Sagitta{
 
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::cullFaces(void) const{
-		if(m_CurRenderParam.prenderoption->faceToCull() == sgRenderOption::FTC_BACK){
+		if(m_CurRenderParam.pscene->getRenderState().faceToCull() == sgRenderState::FTC_BACK){
 			cullBackFacesImpl();
 		}else{
 			cullFrontFacesImpl();
@@ -257,10 +275,10 @@ namespace Sagitta{
 		// have not done view transformation,
 		// transform the camera position to the object's local space
 		Matrix4 invModelMatrix;
-		invModelMatrix.makeInverseTransform(m_CurVertexBuffers.renderable->attachedNode()->absolutePosition(),
-											m_CurVertexBuffers.renderable->attachedNode()->absoluteScale(),
-											m_CurVertexBuffers.renderable->attachedNode()->absoluteOrientation());
-		Vector3 camera_local_pos = invModelMatrix * m_CurRenderParam.pcamera->position();
+		invModelMatrix.makeInverseTransform(m_CurVertexBuffers.renderable->absolutePosition(),
+											m_CurVertexBuffers.renderable->absoluteScale(),
+											m_CurVertexBuffers.renderable->absoluteOrientation());
+		Vector3 camera_local_pos = invModelMatrix * m_CurRenderParam.pcamera->getParent()->position();
 		Vector3 local_viewray;
 		
 		IndexList::iterator ait, bit, cit;	// store current three vertices' indices
@@ -270,7 +288,7 @@ namespace Sagitta{
 		IndexList &indices = m_CurVertexBuffers.pindices;
 		CountList &adjacentcouts = m_CurVertexBuffers.padjacentcount;
 
-		Vector3 *face_normals = static_cast<Vector3*>(m_CurVertexBuffers.renderable->getFaceNormalBuffer()->data());
+		Vector3 *face_normals = static_cast<Vector3*>(m_CurVertexBuffers.mesh->getFaceNormalBuffer()->data());
 
 		size_t orifacenum = m_CurVertexBuffers.facenum;
 		IndexList::iterator iit = indices.begin();
@@ -304,10 +322,10 @@ namespace Sagitta{
 		// have not done view transformation,
 		// transform the camera position to the object's local space
 		Matrix4 invModelMatrix;
-		invModelMatrix.makeInverseTransform(m_CurVertexBuffers.renderable->attachedNode()->absolutePosition(),
-											m_CurVertexBuffers.renderable->attachedNode()->absoluteScale(),
-											m_CurVertexBuffers.renderable->attachedNode()->absoluteOrientation());
-		Vector3 camera_local_pos = invModelMatrix * m_CurRenderParam.pcamera->position();
+		invModelMatrix.makeInverseTransform(m_CurVertexBuffers.renderable->absolutePosition(),
+											m_CurVertexBuffers.renderable->absoluteScale(),
+											m_CurVertexBuffers.renderable->absoluteOrientation());
+		Vector3 camera_local_pos = invModelMatrix * m_CurRenderParam.pcamera->getParent()->position();
 		Vector3 local_viewray;
 		
 		IndexList::iterator ait, bit, cit;	// store current three vertices' indices
@@ -317,7 +335,7 @@ namespace Sagitta{
 		IndexList &indices = m_CurVertexBuffers.pindices;
 		CountList &adjacentcouts = m_CurVertexBuffers.padjacentcount;
 
-		Vector3 *face_normals = static_cast<Vector3*>(m_CurVertexBuffers.renderable->getFaceNormalBuffer()->data());
+		Vector3 *face_normals = static_cast<Vector3*>(m_CurVertexBuffers.mesh->getFaceNormalBuffer()->data());
 
 		size_t orifacenum = m_CurVertexBuffers.facenum;
 		IndexList::iterator iit = indices.begin();
@@ -354,8 +372,8 @@ namespace Sagitta{
 		V3List::iterator veit = m_CurVertexBuffers.pvertices.end();
 		CountList::iterator cit = m_CurVertexBuffers.padjacentcount.begin();
 		if(!m_CurVertexBuffers.pnormals.empty()){
-			Quaternion normal_rot_q = m_CurRenderParam.pcamera->attachedNode()->absoluteOrientation().inverse() *
-									m_CurVertexBuffers.renderable->attachedNode()->absoluteOrientation();
+			Quaternion normal_rot_q = m_CurRenderParam.pcamera->getParent()->absoluteOrientation().inverse() *
+									m_CurVertexBuffers.renderable->absoluteOrientation();
 
 			V3List::iterator nit = m_CurVertexBuffers.pnormals.begin();
 			for(; vit!=veit; ++vit, ++nit, ++cit){
@@ -381,19 +399,19 @@ namespace Sagitta{
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::clipFaces(void) const{
 		switch(m_CurVertexBuffers.elementtype){
-			case sgRenderOption::RET_POINTS:
+			case sgMesh::RET_POINTS:
 			{
 				clipPointsImpl();
 				break;
 			}
 
-			case sgRenderOption::RET_LINES:
+			case sgMesh::RET_LINES:
 			{
 				clipLinesImpl();
 				break;
 			}
 
-			case sgRenderOption::RET_TRIANGLES:
+			case sgMesh::RET_TRIANGLES:
 			{
 				clipTrianglesImpl();
 				break;
@@ -959,18 +977,27 @@ namespace Sagitta{
 		Vector3 _s;	// (light_2_vertex + vertex).normalise
 		Real sn_dot;
 
-		const sgMaterial &material = m_CurVertexBuffers.renderable->material();
-		Color::GLColor mAmbient = material.ambientColor().toGLColor();
-		Color::GLColor mDiffuse = material.diffuseColor().toGLColor();
-		Color::GLColor mSpecular = material.specularColor().toGLColor();
-		Color::GLColor mEmission = material.emissionColor().toGLColor();
+        Color::GLColor mAmbient = Color::GLColor(0.2f, 0.2f, 0.2f, 1.0f);
+        Color::GLColor mDiffuse = Color::GLColor(0.8f, 0.8f, 0.8f, 1.0f);
+        Color::GLColor mSpecular = Color::GLColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Color::GLColor mEmission = Color::GLColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Real mShininess = 0.0f;
+        Real mSpecularAmount = 0.5f;
+        Real mReflectFraction = 1.0f;
+        if(m_CurVertexBuffers.material)
+        {
+            mAmbient = m_CurVertexBuffers.material->ambientColor().toGLColor();
+            mDiffuse = m_CurVertexBuffers.material->diffuseColor().toGLColor();
+            mSpecular = m_CurVertexBuffers.material->specularColor().toGLColor();
+            mEmission = m_CurVertexBuffers.material->emissionColor().toGLColor();
 
-		Real mShininess = material.shininess();
-		Real mSpecularAmount = material.specularAmount();
-		Real mReflectFraction = material.reflectFraction();
+            mShininess = m_CurVertexBuffers.material->shininess();
+            mSpecularAmount = m_CurVertexBuffers.material->specularAmount();
+            mReflectFraction = m_CurVertexBuffers.material->reflectFraction();
+        }
 
 		// global ambient color
-		Color::GLColor res_ambient = mEmission + m_CurRenderParam.pscenemanager->globalAmbientColor().toGLColor() * mAmbient;
+		Color::GLColor res_ambient = mEmission + m_CurRenderParam.pscene->getAmbiantColor().toGLColor() * mAmbient;
 		
 		Color::GLColor vc;
 		Color::GLColor light_color_effect;
@@ -1061,19 +1088,19 @@ namespace Sagitta{
 	//  [1/16/2009 zhangxiang]
 	void SagiRenderer::renderToFrameBuffer(void) const{
 		switch(m_CurVertexBuffers.elementtype){
-			case sgRenderOption::RET_POINTS:
+			case sgMesh::RET_POINTS:
 			{
 				renderPointsImpl();
 				break;
 			}
 
-			case sgRenderOption::RET_LINES:
+			case sgMesh::RET_LINES:
 			{
 				renderLinesImpl();
 				break;
 			}
 
-			case sgRenderOption::RET_TRIANGLES:
+			case sgMesh::RET_TRIANGLES:
 			{
 				renderTrianglesImpl();
 				break;
@@ -1131,7 +1158,7 @@ namespace Sagitta{
 		size_t v1, v2;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.prenderoption->isDepthTestEnable()){
+			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 2 * i
@@ -2818,7 +2845,7 @@ namespace Sagitta{
 		size_t v1, v2, v3;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.prenderoption->isDepthTestEnable()){
+			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 3 * i
@@ -3274,6 +3301,7 @@ INTERPOLATION:
 	//  [1/15/2009 zhangxiang]
 	void SagiRenderer::resetLights(int aLightNum) const{
 		m_CurSagiLightList.clear();
+		m_bLighting = false;
 	}
 
 } // namespace Sagitta

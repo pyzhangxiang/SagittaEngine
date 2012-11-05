@@ -7,7 +7,8 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgBuffer.h"
-#include "../../common/utils/sgException.h"
+#include "engine/common/sgException.h"
+#include <cassert>
 
 // DECLARES //////////////////////////////////////////
 
@@ -32,8 +33,9 @@ namespace Sagitta{
 		}*/
 
 		if(m_iSizeInBytes > 0){
-			m_pData = new uByte[m_iSizeInBytes];
-			m_pRefCount = new uInt(1);
+			m_pData = (uByte*)sgMalloc(m_iSizeInBytes); //new uByte[m_iSizeInBytes];
+			m_pRefCount = (uInt*)sgMalloc(sizeof(uInt));//new uInt(1);
+			*m_pRefCount = 1;
 		}
 	}
 
@@ -74,8 +76,10 @@ namespace Sagitta{
 	void sgBuffer::release(void){
 		if(m_pRefCount){
 			if(--(*m_pRefCount) == 0){
-				delete [](m_pData - m_iOffsetInBytes);
-				delete m_pRefCount;
+				//delete [](m_pData - m_iOffsetInBytes);
+				//delete m_pRefCount;
+				sgFree(m_pData - m_iOffsetInBytes);
+				sgFree(m_pRefCount);
 				m_pData = 0;
 				m_pRefCount = 0;
 			}
@@ -143,8 +147,9 @@ namespace Sagitta{
 		// reallcate
 		m_iSizeInBytes = aSizeInBytes;
 		if(m_iSizeInBytes > 0){
-			m_pData = new uByte[m_iSizeInBytes];
-			m_pRefCount = new uInt(1);
+			m_pData = (uByte*)sgMalloc(m_iSizeInBytes); //new uByte[m_iSizeInBytes];
+			m_pRefCount = (uInt*)sgMalloc(sizeof(uInt));//new uInt(1);
+			*m_pRefCount = 1;
 		}
 	}
 

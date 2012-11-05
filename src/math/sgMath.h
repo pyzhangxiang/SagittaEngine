@@ -8,13 +8,15 @@
 #define __SGMATH_H__
 
 // INCLUDES ////////////////////////////////////////
-#include "../common/configs/SagittaPrerequisites.h"
+#include "SagittaPlatform.h"
+#include "sgTypeDef.h"
 #include <assert.h>
 #include <ostream>
 #include <limits>
 #include <cmath>
 #include <vector>
 #include <list>
+#include <string>
 
 // DECLARES //////////////////////////////////////
 
@@ -34,7 +36,7 @@
 //#define EPSILON_E8 (Real)(1E-08)
 
 namespace Sagitta{
-	
+
 	class Degree;
 	class Angle;
 	class Vector2;

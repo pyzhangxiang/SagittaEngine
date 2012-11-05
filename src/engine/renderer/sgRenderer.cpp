@@ -1,43 +1,67 @@
-//////////////////////////////////////////////////////
-// file: sgRenderer.cpp @ 2008-8-1 by Zhang Xiang
-// defines of the class SRenderSystem
-// SRenderSystem is a class ...
-//////////////////////////////////////////////////////
+//  [8/1/2008 fabiozhang]
 
-// INCLUDES //////////////////////////////////////////
 #include "sgRenderer.h"
 #include "sgViewport.h"
-#include "../scenegraph/sgSubScene.h"
-#include "../scenegraph/sgSceneManager.h"
-#include "../scenegraph/sgRenderable.h"
-#include "../scenegraph/sgCamera.h"
-#include "../scenegraph/sgLight.h"
-#include "../scenegraph/sgRenderQueue.h"
-#include "../../common/utils/sgException.h"
+#include "engine/component/sgLightComponent.h"
+#include "engine/component/sgCameraComponent.h"
+#include "engine/common/sgException.h"
+#include "engine/component/sgMeshComponent.h"
+#include "engine/component/sgRenderStateComponent.h"
+#include "engine/resource/sgMesh.h"
+#include "engine/scenegraph/sgScene.h"
+#include "sgRenderQueue.h"
+#include "sgRenderEffect.h"
+#include "sgRenderPass.h"
+#include "sgGpuProgram.h"
+#include "sgGLRenderer.h"
+#include "SagiRenderer.h"
 
-// DECLARES //////////////////////////////////////////
 
-// DEFINES ///////////////////////////////////////////
 namespace Sagitta{
+    
+    sgRenderer *g_renderer = 0;
+    
+    SG_META_DEFINE_ABSTRACT(sgRenderer, sgObject)
+    
+    sgRenderer *sgCreateRenderer(const sgStrHandle &type/*, bool useshader*/)
+    {
+        if(g_renderer)
+            return g_renderer;
+        g_renderer = (sgRenderer*)sgObject::createObject(type);
+//        if(g_renderer)
+//            g_renderer->setUseShader(useshader);
+        return g_renderer;
+    }
+    
+    sgRenderer *sgGetRenderer(void)
+    {
+        if(!g_renderer)
+            sgCreateRenderer(sgGLRenderer::GetClassName());
+        return g_renderer;
+    }
+    
+    void sgDestroyRenderer(void)
+    {
+        if(g_renderer)
+        {
+            sgObject::destroyObject(g_renderer);
+            g_renderer = 0;
+        }
+    }
 
 	//  [8/1/2008 zhangxiang]
-	sgRenderer::sgRenderer(int aTWidth, int aTHeight, bool abSwapBufferSelf /* = false */)
-	: m_bSwapBufferSelf(abSwapBufferSelf),
-	m_iTargetWidth(aTWidth),
-	m_iTargetHeight(aTHeight){
-		if(aTWidth < 0 || aTHeight < 0){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
-				"Negative target width or height", "sgRenderer::sgRenderer");
-		}
-		m_pRenderQueue = new sgRenderQueue;
+	sgRenderer::sgRenderer()
+	: m_bSwapBufferSelf(false)
+	, m_iTargetWidth(800)
+	, m_iTargetHeight(600)
+	{
+        mDefaultRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassName());
 	}
 
 	//  [8/1/2008 zhangxiang]
 	sgRenderer::~sgRenderer(void){
 		removeAllViewport();
-		if(m_pRenderQueue){
-			delete m_pRenderQueue;
-		}
+        sgObject::destroyObject(mDefaultRenderQueue);
 	}
 
 	//  [1/10/2009 zhangxiang]
@@ -57,56 +81,33 @@ namespace Sagitta{
 	}
 
 	//  [8/21/2008 zhangxiang]
-	void sgRenderer::cullObjects(sgCamera *aCamera) const{
-		if(!aCamera->isInScene() || !aCamera->getScene()->getSceneManager()){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
-							"This camera is not in any SceneManager.",
-							"sgRenderer::cullObjects");
-		}
-
-		sgSceneManager *scene = aCamera->getScene()->getSceneManager();
-
-		std::list<sgRenderable*> rlist;
-		// collect scene manager's renderable objects
-		sgScene::ConstTypedEsseIterator rit = scene->getConstEsseIterator(sgRenderable::SET_RENDERABLE);
-		for(; rit.hasMoreElements(); ++rit){
-			rlist.push_back(static_cast<sgRenderable*>(rit.value()));
-		}
-		// collect sub-scenes' renderable objects
-		sgSubScene *subscene;
-		sgSceneManager::ConstTotalSubSceneIterator tssit = scene->getConstSubSceneIterator();
-		for(; tssit.hasMoreElements(); ++tssit){
-			subscene = tssit.value();
-			sgScene::ConstTypedEsseIterator teit = subscene->getConstEsseIterator(sgRenderable::SET_RENDERABLE);
-			for(; teit.hasMoreElements(); ++teit){
-				rlist.push_back(static_cast<sgRenderable*>(teit.value()));
-			}
-		}
-
-		// clear render queue
-		m_pRenderQueue->clear();
-
-		if(rlist.empty()){
-			// no renderable object
+	void sgRenderer::cullObjects(sgCameraComponent *aCamera) const
+	{
+		m_CurRenderParam.renderqueue->clear();
+		if(m_CurRenderParam.objlist.empty())
 			return ;
-		}
 
 		Matrix4 viewMatrix = aCamera->getViewMatrix();
 		Real maxradius;
 		Real dot;
+		sgSceneObject *obj = 0;
+		sgMeshComponent *meshComp = 0;
+        sgMesh *mesh = 0;
+		for(size_t i=0; i<m_CurRenderParam.objlist.size(); ++i)
+        {
+			obj = m_CurRenderParam.objlist[i];
+            if(!obj->isActive())
+                continue;
+        
+            meshComp = (sgMeshComponent*)obj->getComponent(sgMeshComponent::GetClassName());
+            if(!meshComp)
+                continue;
+            
+            mesh = meshComp->getMesh();
+        
+			maxradius = mesh->maxRadius();
 
-		sgRenderable *object;
-		std::list<sgRenderable*>::const_iterator newrit = rlist.begin();
-		std::list<sgRenderable*>::const_iterator newreit = rlist.end();
-		for(; newrit!=newreit; ++newrit){
-			object = static_cast<sgRenderable*>(*newrit);
-			maxradius = object->maxRadius();
-
-			if(!object->isVisible()){
-				continue;
-			}
-
-			Vector3 spherePos = viewMatrix * (object->position() + object->center());
+			Vector3 spherePos = viewMatrix * (obj->position() + mesh->center());
 
 			// near and far plane cull
 			if((spherePos.z() + maxradius) < -aCamera->zFar() ||
@@ -152,55 +153,77 @@ namespace Sagitta{
 			}
 			
 			// The object passed cull test, so add it in to render queque.
-			m_pRenderQueue->addRenderable(object);
+			m_CurRenderParam.renderqueue->push_back(obj);
 
 		} //#### end for renderable
+        
+        m_CurRenderParam.renderqueue->sort();
 	}
 
 	//  [1/10/2009 zhangxiang]
-	int sgRenderer::setupLights(sgSceneManager *aScene) const{
-		m_LightList.clear();
+	int sgRenderer::setupLights() const
+	{
+		sgStrHandle strLightType = sgLightComponent::GetClassName();
 
-		// scene manager's lights
-		sgScene::ConstTypedEsseIterator smteit = aScene->getConstEsseIterator(sgLight::SET_LIGHT);
-		for(; smteit.hasMoreElements(); ++smteit){
-			m_LightList.push_back(static_cast<sgLight*>(smteit.value()));
+		m_CurRenderParam.lightlist.clear();
+		for(size_t i=0; i<m_CurRenderParam.objlist.size(); ++i)
+		{
+			sgSceneObject *obj = m_CurRenderParam.objlist[i];
+			sgLightComponent *pcomp = (sgLightComponent*)(obj->getComponent(strLightType));
+			if(pcomp)
+				m_CurRenderParam.lightlist.push_back(pcomp);
 		}
+        
+        if(m_CurRenderParam.lightlist.empty())
+        {
+            return 0;
+        }
 
-		// sub-scenes' lights
-		sgSubScene *subscene;
-		sgSceneManager::ConstTotalSubSceneIterator tssit = aScene->getConstSubSceneIterator();
-		for(; tssit.hasMoreElements(); ++tssit){
-			subscene = tssit.value();
-			sgScene::ConstTypedEsseIterator teit = subscene->getConstEsseIterator(sgLight::SET_LIGHT);
-			for(; teit.hasMoreElements(); ++teit){
-				m_LightList.push_back(static_cast<sgLight*>(teit.value()));
-			}
-		}
-
-		return setupLightsImpl(aScene->globalAmbientColor());
+		return setupLightsImpl(m_CurRenderParam.pscene->getAmbiantColor());
 	}
 
 	//  [1/15/2009 zhangxiang]
 	void sgRenderer::render(sgViewport *aViewport) const{
 		m_CurRenderParam.pviewport = aViewport;
 		m_CurRenderParam.pcamera = aViewport->camera();
-		m_CurRenderParam.pscenemanager = m_CurRenderParam.pcamera->getScene()->getSceneManager();
-		m_CurRenderParam.prenderoption = &(m_CurRenderParam.pscenemanager->globalRenderOption());
+		m_CurRenderParam.pscene = aViewport->camera()->getParent()->getScene();
+        m_CurRenderParam.current_gpu_program =
+            m_CurRenderParam.scene_gpu_program = NULL;
+        
+        
+        if(!m_CurRenderParam.pscene)
+            return ;
+		
+		// collect scene objects
+		m_CurRenderParam.objlist.clear();
+		m_CurRenderParam.pscene->getRoot()->getAllObjects(m_CurRenderParam.objlist);
+		
+		//sg_list(sgSceneObject*) stackNode;
+		//stackNode.push_back(m_CurRenderParam.pscene);
+		//while(!stackNode.empty())
+		//{
+		//	sgSceneObject *node = stackNode.back();
+		//	m_CurRenderParam.objlist.push_back(node);
+
+		//	stackNode.pop_back();
+
+		//	sgNode::ChildIterator it = node->getChildIterator();
+		//	while(it.hasMoreElements())
+		//	{
+		//		sgSceneObject *curnode = dynamic_cast<sgSceneObject*>(it.value());				
+		//		if(curnode)
+		//			stackNode.push_back(curnode);
+		//	}
+		//}
+
+
 
 		// update scene graph
 		// update scene geometry by current frame from it's animation data
 		// will update visible sub-scenes too
-		m_CurRenderParam.pscenemanager->_updateFromAnimation();
+		//m_CurRenderParam.pscenemanager->_updateFromAnimation();
 
-		// set viewport
-		setViewport(aViewport);
-
-		// clear frame buffers
-		clearFrameBuffers(aViewport->getClearBuffers(),
-						aViewport->getBackColor(),
-						aViewport->getBackDepth(),
-						aViewport->getBackStencil());
+		
 
 		// set projection matrix
 		setProjMatrix(m_CurRenderParam.pcamera->getProjectionMatrix());
@@ -210,26 +233,55 @@ namespace Sagitta{
 
 		// setup lights
 		int lightNum = 0;
-		if(m_CurRenderParam.prenderoption->isLightEnable()){
-			lightNum = setupLights(m_CurRenderParam.pscenemanager);
+		if(m_CurRenderParam.pscene->getRenderState().isLightEnable())
+		{
+			lightNum = setupLights();
 		}
+        
+        sgRenderEffect *sceneRenderEffect = m_CurRenderParam.pscene->getRenderEffect();
+        if(sceneRenderEffect && !sceneRenderEffect->emptyRenderPass())
+        {
+            for(size_t irp=0; irp<sceneRenderEffect->getRenderPassNum(); ++irp)
+            {
+                sgRenderPass *rp = sceneRenderEffect->getRenderPass(irp);
+                m_CurRenderParam.renderqueue = rp->getRenderQueue();
+                m_CurRenderParam.current_gpu_program =
+                    m_CurRenderParam.scene_gpu_program = rp->getGpuProgram();
+                
+                if(m_CurRenderParam.current_gpu_program)
+                    m_CurRenderParam.current_gpu_program->useProgram();
+                
+                // cull objects
+                cullObjects(m_CurRenderParam.pcamera);
+                
+                // render
+                const sgRenderQueue::ObjectList &objects = m_CurRenderParam.renderqueue->getObjectList();
+                for(size_t i=0; i<objects.size(); ++i)
+                {
+                    render(m_CurRenderParam.pscene->getRenderState(), objects[i]);
+                }
+            }
+        }
+        else
+        {
+            m_CurRenderParam.renderqueue = mDefaultRenderQueue;
+            
+            // cull objects
+            cullObjects(m_CurRenderParam.pcamera);
 
-		// cull objects
-		cullObjects(m_CurRenderParam.pcamera);
-
-		// render
-		sgRenderQueue::ConstIterator it = m_pRenderQueue->getConstIterator();
-		sgRenderable *renderable;
-		for(; it.hasMoreElements(); it++){
-			renderable = it.value();
-			render(*(m_CurRenderParam.prenderoption), renderable);
-		}
+            // render
+            const sgRenderQueue::ObjectList &objects = m_CurRenderParam.renderqueue->getObjectList();
+            for(size_t i=0; i<objects.size(); ++i)
+            {
+                render(m_CurRenderParam.pscene->getRenderState(), objects[i]);
+            }
+        }
 
 		// draw to target
 		postRenderImpl();
 
 		// reset lights
-		resetLights(lightNum);
+//		resetLights(lightNum);
 	}
 
 	//  [1/3/2009 zhangxiang]
@@ -238,10 +290,21 @@ namespace Sagitta{
 		ViewportList::const_reverse_iterator reit = m_ViewportList.rend();
 		int avnum = 0;	// active viewport num
 		for(; rit!=reit; ++rit){
-			if(rit->second->isActive()){
-				render(rit->second);
-				++avnum;
+            sgViewport *viewport = rit->second;
+            // set viewport
+            setViewport(viewport);
+            
+            // clear frame buffers
+            clearFrameBuffers(viewport->getClearBuffers(),
+                              viewport->getBackColor(),
+                              viewport->getBackDepth(),
+                              viewport->getBackStencil());
+           
+			if(viewport->isActive()){
+				render(viewport);
+				
 			}
+            ++avnum;
 		}
 		if(avnum == 0){
 			doSthIfNoViewportActive();
@@ -262,7 +325,7 @@ namespace Sagitta{
 	sgViewport *sgRenderer::createViewport(int aRTWidth, int aRTHeight,
 										Real aLeft, Real aTop, 
 										Real aWidth, Real aHeight, 
-										int aZOrder, sgCamera *aCamera /* = 0 */){
+										int aZOrder, sgCameraComponent *aCamera /* = 0 */){
 		sgViewport *ret = new sgViewport(aRTWidth, aRTHeight,
 									aLeft, aTop,
 									aWidth, aHeight,

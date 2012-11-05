@@ -1,70 +1,135 @@
-//////////////////////////////////////////////////////
-// file: sgSkeleton.cpp @ 2008-8-28 by Zhang Xiang
-// defines of the class sgSkeleton
-// sgSkeleton is a class ...
-//////////////////////////////////////////////////////
 
-// INCLUDES //////////////////////////////////////////
 #include "sgSkeleton.h"
-#include "../resource/sgSceneDelegate.h"
-#include "../../common/utils/sgStringUtil.h"
+#include "sgSceneObject.h"
+#include "sgBoneObject.h"
+#include "engine/component/sgAnimationComponent.h"
+#include "engine/resource/sgAnimation.h"
+#include "engine/resource/sgAnimationJoint.h"
 
-// DECLARES //////////////////////////////////////////
-
-// DEFINES ///////////////////////////////////////////
 namespace Sagitta{
-
-	//  [1/11/2009 zhangxiang]
-	sgSkeleton::sgSkeleton(void) :
-	sgSubScene(new SSkeletonDelegate, ST_SKELETON)/*,
-	m_fAltitude(0.0), m_fGround(0.0)*/{
-
+    
+	
+	SG_META_DEFINE(sgSkeleton, sgObject)
+    
+	//  [1/1/2009 zhangxiang]
+	sgSkeleton::sgSkeleton(void)
+	: sgObject(), mpRoot(0)
+    {
+		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+        mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassName());
+        mpBoneRoot->setParent(mpRoot);
+        // let bone root belong to me
+        mpBoneRoot->mpSkeletonBelongTo = this;
+        addBoneObject(mpBoneRoot);
 	}
-
-	//  [1/11/2009 zhangxiang]
-	sgSkeleton::sgSkeleton(const StdString &aName) :
-	sgSubScene(aName, new SSkeletonDelegate, ST_SKELETON)/*,
-	m_fAltitude(0.0), m_fGround(0.0)*/{
-
+    
+    
+	//  [1/1/2009 zhangxiang]
+	sgSkeleton::~sgSkeleton(void)
+    {
+        // first clear map
+        // so that while in the destruction of bone objects
+        // removing from me would be faster
+        mBoneNodeMap.clear();
+        
+        // detach from parent object
+        // and I will be dettached from the scene I am belong to
+    //mpRoot->setParent(0);
+        //parent and scene will be set to zero in the destruction of sgNode and sgSceneObject
+        // so we don't need to set root's separent as zero manually
+        
+        // destruct all objects belong to me
+		sgObject::destroyObject(mpRoot);
 	}
-
-	//  [1/11/2009 zhangxiang]
-	sgSkeleton::sgSkeleton(SSkeletonDelegate *aDelegate) :
-	sgSubScene(aDelegate, ST_SKELETON)/*,
-	m_fAltitude(0.0), m_fGround(0.0)*/{
-
+    
+	sgSceneObject * sgSkeleton::getRoot( void ) const
+	{
+		return mpRoot;
 	}
-
-	//  [1/11/2009 zhangxiang]
-	sgSkeleton::sgSkeleton(const StdString &aName, SSkeletonDelegate *aDelegate) :
-	sgSubScene(aName, aDelegate, ST_SKELETON)/*,
-	m_fAltitude(0.0), m_fGround(0.0)*/{
-
+    
+    sgBoneObject *sgSkeleton::getBoneRoot(void) const
+    {
+        return mpBoneRoot;
+    }
+    
+	void sgSkeleton::update( Float32 deltaTime )
+	{
+		// set nodes' transform by their animation joints
+        sgSceneObject *parent = this->parent();
+        if(!parent)
+            return ;
+        
+        sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassName());
+        if(!comp)
+            return ;
+        
+        sgAnimation *pAnimation = comp->getAnimation();
+        if(!pAnimation)
+            return ;
+        
+        Real animTime = comp->getCurrentTime();
+        BoneNodeMap::iterator it = mBoneNodeMap.begin();
+        for( ; it!=mBoneNodeMap.end(); ++it)
+        {
+            sgSceneObject *node = it->second;
+            sgAnimationJoint *joint = pAnimation->getAnimaJoint(it->first);
+			if(joint)
+			{
+				if(joint->isPositionActive())
+					node->setRelativePosition(joint->getPosition(animTime));
+				if(joint->isOrientationActive())
+					node->setRelativeOrientation(joint->getOrientation(animTime));
+				if(joint->isScaleActive())
+					node->setRelativeScale(joint->getScale(animTime));
+			}
+        }
 	}
+    
+    void sgSkeleton::setBelongTo(sgSceneObject *parent)
+    {
+        mpRoot->setParent(parent);
+    }
+    
+    sgSceneObject *sgSkeleton::parent(void)
+    {
+        return dynamic_cast<sgSceneObject*>(mpRoot->parent());
+    }
+    
+    
+    void sgSkeleton::showDebug(bool show)
+    {
+        BoneNodeMap::iterator it = mBoneNodeMap.begin();
+        for(; it!=mBoneNodeMap.end(); ++it)
+        {
+            it->second->showDebug(show);
+        }
+    }
 
-	//  [1/11/2009 zhangxiang]
-	sgSkeleton::~sgSkeleton(void){
-
+	bool sgSkeleton::addBoneObject( sgBoneObject *node )
+	{
+		BoneNodeMap::iterator it = mBoneNodeMap.find(node->getName());
+		if(it != mBoneNodeMap.end())
+        {
+			return false;
+        }
+		mBoneNodeMap.insert(std::make_pair(node->getName(), node));
+        return true;
 	}
-
-	//  [1/12/2009 zhangxiang]
-	/*Real sgSkeleton::altitude(void) const{
-		return m_fAltitude;
-	}*/
-
-	//  [1/12/2009 zhangxiang]
-	/*Real sgSkeleton::ground(void) const{
-		return m_fGround;
-	}*/
-
-	//  [1/12/2009 zhangxiang]
-	/*void sgSkeleton::_setAltitude(Real aAltitude){
-		m_fAltitude = aAltitude;
-	}*/
-
-	//  [1/12/2009 zhangxiang]
-	/*void sgSkeleton::_setGround(Real aGround){
-		m_fGround = aGround;
-	}*/
+    
+    void sgSkeleton::removeBoneObject(sgBoneObject *node)
+    {
+        if(!node)
+            return ;
+        removeBoneObject(node->getName());
+    }
+    
+    void sgSkeleton::removeBoneObject(const std::string &name)
+    {
+        BoneNodeMap::iterator it = mBoneNodeMap.find(name);
+        if(it != mBoneNodeMap.end())
+        {
+            mBoneNodeMap.erase(it);
+        }
+    }
 
 } // namespace Sagitta

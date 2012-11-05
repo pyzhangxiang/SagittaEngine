@@ -7,33 +7,28 @@
 // INCLUDES //////////////////////////////////////////
 #include "sgGLRenderer.h"
 #include "sgViewport.h"
-#include "../buffer/sgVertexData.h"
-#include "../buffer/sgVertexIndexBuffer.h"
-#include "../buffer/sgVertexBufferElement.h"
-#include "../scenegraph/sgSceneManager.h"
-#include "../scenegraph/sgRenderQueue.h"
-#include "../scenegraph/sgCamera.h"
-#include "../scenegraph/sgRenderable.h"
-#include "../scenegraph/sgLight.h"
-#include "../scenegraph/sgMaterial.h"
-#include "../../common/utils/sgException.h"
-#if SAGITTA_PLATFORM == SAGITTA_PLATFORM_WIN32
-#	include <gl/glew.h>
-//#	include <gl/glut.h>
-#elif SAGITTA_PLATFORM == SAGITTA_PLATFORM_APPLE
-#	include <OpenGL/glu.h>
-#	include <OpenGL/glext.h>
-#else
-#endif
+#include "engine/buffer/sgVertexData.h"
+#include "engine/buffer/sgVertexIndexBuffer.h"
+#include "engine/buffer/sgVertexBufferElement.h"
+#include "engine/common/sgException.h"
+#include "engine/scenegraph/sgSceneObject.h"
+#include "engine/component/sgLightComponent.h"
+#include "engine/component/sgRenderStateComponent.h"
+#include "engine/component/sgMeshComponent.h"
+#include "engine/resource/sgMaterial.h"
+#include "engine/resource/sgMesh.h"
+#include "sgGLInclude.h"
 
 // DECLARES //////////////////////////////////////////
 
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
+    
+    SG_META_DEFINE(sgGLRenderer, sgRenderer)
 
 	//  [8/1/2008 zhangxiang]
-	sgGLRenderer::sgGLRenderer(int aTWidth, int aTHeight) :
-	sgRenderer(aTWidth, aTHeight, false){
+	sgGLRenderer::sgGLRenderer() :
+	sgRenderer(){
 		
 	}
 
@@ -103,6 +98,10 @@ namespace Sagitta{
 		glMatrixMode(GL_PROJECTION);                        
 		glLoadIdentity();
 		glMultMatrixf(aMatrix.arr());
+        
+//        gluPerspective(60,800/600.0,1,10000);
+        
+        
 		
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -112,11 +111,12 @@ namespace Sagitta{
 		glMatrixMode(GL_MODELVIEW); 
 		glLoadIdentity();
 
-		Matrix4 mat(1, 0, 0, 0,
+		/*Matrix4 mat(1, 0, 0, 0,
 					0, 1, 0, 0,
 					0, 0, -1, 0,
-					0, 0, 0, 1);
+					0, 0, 0, 1);*/
 		glMultMatrixf((aMatrix.transpose().arr()));//.transpose() * mat).arr());
+    //    gluLookAt(0,0,8,0,0,-1,0,1,0);
 	}
 
 	//  [1/10/2009 zhangxiang]
@@ -125,15 +125,15 @@ namespace Sagitta{
 		glEnable(GL_LIGHTING);
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, aGlobalAmbiantColor.toGLColor().data());
 
-		sgLight *light;
-		LightList::const_iterator lit = m_LightList.begin();
-		LightList::const_iterator leit = m_LightList.end();
+		sgLightComponent *light;
+		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
 		// OpenGL only support 8 light at most
 		int lightNum = 0;
 		for(; lightNum<9 && leit!=lit; ++lightNum, ++lit){
 			light = *lit;
 
-			glLightfv(LIGHT_INDEX, GL_POSITION, Vector4(light->position()).data());
+			glLightfv(LIGHT_INDEX, GL_POSITION, Vector4(light->getParent()->position()).data());
 			glLightfv(LIGHT_INDEX, GL_AMBIENT, light->ambientColor().toGLColor().data());
 			glLightfv(LIGHT_INDEX, GL_DIFFUSE, light->diffuseColor().toGLColor().data());
 			glLightfv(LIGHT_INDEX, GL_SPECULAR, light->specularColor().toGLColor().data());
@@ -145,88 +145,47 @@ namespace Sagitta{
 	}
 
 	//  [1/15/2009 zhangxiang]
-	void sgGLRenderer::render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const{
+	void sgGLRenderer::render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const{
+        sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassName()));
+        if(!meshComp)
+            return ;
+        sgMesh *mesh = meshComp->getMesh();
+        if(!mesh)
+            return ;
+        
+        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
+        sgMaterial *material = 0;
+        if(renderState)
+            material = (sgMaterial*)(renderState->getMaterial());
+        
 		// setup material
-		if(aGlobalRop.isLightEnable()){
-			sgMaterial material = aRenderable->material();
-			glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambientColor().toGLColor().data());
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuseColor().toGLColor().data());
-			glMaterialfv(GL_FRONT, GL_SPECULAR, material.specularColor().toGLColor().data());
-			glMaterialf(GL_FRONT, GL_SHININESS, material.shininess());
-			glMaterialfv(GL_FRONT, GL_EMISSION, material.emissionColor().toGLColor().data());
+		if( (renderState && material) && (aGlobalRop.isLightEnable() || 
+           (renderState->getRenderState().isLightEnable())) )
+        {
+			glMaterialfv(GL_FRONT, GL_AMBIENT, material->ambientColor().toGLColor().data());
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, material->diffuseColor().toGLColor().data());
+			glMaterialfv(GL_FRONT, GL_SPECULAR, material->specularColor().toGLColor().data());
+			glMaterialf(GL_FRONT, GL_SHININESS, material->shininess());
+			glMaterialfv(GL_FRONT, GL_EMISSION, material->emissionColor().toGLColor().data());
 		}
 
+        sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
+		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+        //	mesh->getVertexBuffer(pvb, pvib);
+        Matrix4 modelMatrix = aRenderable->getFullTransform();
+        int polyType = retMapping(mesh->polyType());
+		if(m_CurRenderParam.scene_gpu_program && m_CurRenderParam.current_gpu_program)
+        {
+            //renderProgramPipeline(pvb, pvib, modelMatrix, polyType);
+            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
+        }
+        else
+        {
+            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
+        }
 
-		sgVertexData *pvb = new sgVertexData();
-		sgVertexIndexBuffer *pvib = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-		aRenderable->getVertexBuffer(pvb, pvib);
-
-		// render
-		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
-		for(; elemIt.hasMoreElements(); elemIt++){
-			sgVertexBufferElement *element = elemIt.value();
-			switch(element->type()){
-					case sgVertexBufferElement::ET_VERTEX:
-						{
-							glVertexPointer(element->coordNum(), GL_FLOAT, 0, element->data());
-							glEnableClientState(GL_VERTEX_ARRAY);
-							break;
-						}
-
-					case sgVertexBufferElement::ET_COLOR:
-						{
-							element->_colorConversion();
-							glColorPointer(element->coordNum(), GL_UNSIGNED_BYTE, 0, element->data());
-							glEnableClientState(GL_COLOR_ARRAY);
-							break;
-						}
-
-					case sgVertexBufferElement::ET_NORMAL:
-						{
-							glNormalPointer(GL_FLOAT, 0, element->data());
-							glEnableClientState(GL_NORMAL_ARRAY);
-							break;
-						}
-
-					case sgVertexBufferElement::ET_TEXTURE_COORD:
-						{
-							glTexCoordPointer(element->coordNum(), GL_FLOAT, 0, element->data());
-							glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-							break;
-						}
-
-					case sgVertexBufferElement::ET_FOG_COORDINATE:
-						{
-							glFogCoordPointer(GL_FLOAT, 0, element->data());
-							glEnableClientState(GL_FOG_COORDINATE_ARRAY);
-							break;
-						}
-
-					default:
-						{
-							THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Invalid render state.", "SGLRenderSystem::render");
-							break;
-						}
-			}
-		}
-
-		// model transform
-		Matrix4 modelMatrix = aRenderable->getModelMatrix();
-		glPushMatrix();
-		glMultMatrixf(modelMatrix.transpose().arr());
-
-		glDrawElements(retMapping(aRenderable->renderOption().renderElementType()), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
-		
-		glPopMatrix();
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_FOG_COORDINATE_ARRAY);
-
-		delete pvb;
-		delete pvib;
+	//	delete pvb;
+	//	delete pvib;
 	}
 
 	//  [1/15/2009 zhangxiang]
@@ -246,28 +205,28 @@ namespace Sagitta{
 	//  [8/1/2008 zhangxiang]
 	int sgGLRenderer::retMapping(int aRet) const{
 		switch(aRet){
-			case sgRenderOption::RET_POINTS:
+			case sgMesh::RET_POINTS:
 				return GL_POINTS;
 
-			case sgRenderOption::RET_LINES:
+			case sgMesh::RET_LINES:
 				return GL_LINES;
 
-			case sgRenderOption::RET_LINE_STRIP:
-				return GL_LINE_STRIP;
+		//	case sgRenderState::RET_LINE_STRIP:
+		//		return GL_LINE_STRIP;
 
-			case sgRenderOption::RET_LINE_LOOP:
-				return GL_LINE_LOOP;
+		//	case sgRenderState::RET_LINE_LOOP:
+		//		return GL_LINE_LOOP;
 
-			case sgRenderOption::RET_TRIANGLES:
+			case sgMesh::RET_TRIANGLES:
 				return GL_TRIANGLES;
 
-			case sgRenderOption::RET_TRIANGLE_STRIP:
-				return GL_TRIANGLE_STRIP;
+		//	case sgRenderState::RET_TRIANGLE_STRIP:
+		//		return GL_TRIANGLE_STRIP;
 
-			case sgRenderOption::RET_TRIANGLE_FAN:
-				return GL_TRIANGLE_FAN;
+		//	case sgRenderState::RET_TRIANGLE_FAN:
+		//		return GL_TRIANGLE_FAN;
 
-			case sgRenderOption::RET_QUADS:
+			case sgMesh::RET_QUADS:
 				return GL_QUADS;
 
 			default:
@@ -277,5 +236,93 @@ namespace Sagitta{
 
 		}
 	}
+    
+    bool sgGLRenderer::initShaderEnvironment(void)
+    {
+        glewInit();
+        bool gl2_0 = glewIsSupported("GL_VERSION_2_0");
+        if(!gl2_0)
+        {
+            std::string log = "OpenGL 2.0 not supported\n";
+        }
+        return gl2_0;
+    }
+    
+    void sgGLRenderer::renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                                 , const Matrix4 &modelMatrix, int polyType) const
+    {
+        if(!pvb || !pvib)
+            return ;
+        
+		// render
+		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
+		for(; elemIt.hasMoreElements(); elemIt++){
+			sgVertexBufferElement *element = elemIt.value();
+			switch(element->type()){
+                case sgVertexBufferElement::ET_VERTEX:
+                {
+                    glVertexPointer(element->coordNum(), GL_FLOAT, 0, element->data());
+                    glEnableClientState(GL_VERTEX_ARRAY);
+                    break;
+                }
+                    
+                case sgVertexBufferElement::ET_COLOR:
+                {
+                    //	element->_colorConversion();
+                    glColorPointer(element->coordNum(), GL_UNSIGNED_BYTE, 0, element->data());
+                    glEnableClientState(GL_COLOR_ARRAY);
+                    break;
+                }
+                    
+                case sgVertexBufferElement::ET_NORMAL:
+                {
+                    glNormalPointer(GL_FLOAT, 0, element->data());
+                    glEnableClientState(GL_NORMAL_ARRAY);
+                    break;
+                }
+                    
+                case sgVertexBufferElement::ET_TEXTURE_COORD:
+                {
+                    glTexCoordPointer(element->coordNum(), GL_FLOAT, 0, element->data());
+                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    break;
+                }
+                    
+                case sgVertexBufferElement::ET_FOG_COORDINATE:
+                {
+                    glFogCoordPointer(GL_FLOAT, 0, element->data());
+                    glEnableClientState(GL_FOG_COORDINATE_ARRAY);
+                    break;
+                }
+                    
+                default:
+                {
+                    THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE, "Invalid render state.", "SGLRenderSystem::render");
+                    break;
+                }
+			}
+		}
+        
+		// model transform
+		glPushMatrix();
+		glMultMatrixf(modelMatrix.transpose().arr());
+        
+		glDrawElements(polyType, pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
+		
+		glPopMatrix();
+        
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_FOG_COORDINATE_ARRAY);
+    }
+    
+    void sgGLRenderer::renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                             , const Matrix4 &modelMatrix, int polyType) const
+    {
+        if(!pvb || !pvib)
+            return ;
+    }
 
 } // namespace Sagitta

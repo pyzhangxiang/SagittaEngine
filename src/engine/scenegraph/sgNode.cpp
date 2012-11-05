@@ -6,20 +6,18 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgNode.h"
-#include "../../common/utils/sgException.h"
-#include "../../common/utils/sgStringUtil.h"
+#include "engine/common/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
-	unsigned long sgNode::ms_iNodeCount = 1;
+	SG_META_DEFINE_ABSTRACT(sgNode, sgObject)
 
 	//  [7/30/2008 zhangxiang]
 	sgNode::sgNode(void) :
 	sgObject(),
-	mc_iNodeID(ms_iNodeCount),
 	m_bActive(true),
 	m_pParent(0),
 	m_bNeedUpdateFromParent(true),
@@ -32,52 +30,35 @@ namespace Sagitta{
 	m_DerivedPosition(Vector3::ZERO),
 	m_DerivedScale(Vector3::UNIT_SCALE),
 	m_bCachedTransformOutOfDate(true){
-		m_sName = "Node" + sgStringUtil::to_string(sgNode::ms_iNodeCount++);
+		
 		needUpdate();
 	}
 
-	//  [7/30/2008 zhangxiang]
-	sgNode::sgNode(const StdString &aName) :
-	sgObject(),
-	mc_iNodeID(ms_iNodeCount),
-	m_sName(aName),
-	m_bActive(true),
-	m_pParent(0),
-	m_bNeedUpdateFromParent(true),
-	m_RelativeOrientation(Quaternion::IDENTITY),
-	m_RelativePosition(Vector3::ZERO),
-	m_RelativeScale(Vector3::UNIT_SCALE),
-	m_bInheritOrientation(true),
-	m_bInheritScale(true),
-	m_DerivedOrientation(Quaternion::IDENTITY),
-	m_DerivedPosition(Vector3::ZERO),
-	m_DerivedScale(Vector3::UNIT_SCALE),
-	m_bCachedTransformOutOfDate(true){
-		++ms_iNodeCount;
-		needUpdate();
-	}
 
 	//  [7/30/2008 zhangxiang]
+    //  [10/26/2012 zhangxiang]
 	sgNode::~sgNode(){
-		removeAllChildren();
-		if(m_pParent){
-			m_pParent->removeChild(this);
+        if(m_pParent)
+        {
+            // detached me from my parent
+            m_pParent->removeChild(this);
+            m_pParent = 0;
+        }
+        
+        // destroy all children
+        ChildNodeMap to_rm = m_Children;
+        // first clear map
+        // so that while in the destruction of children
+        // detaching from me would be faster
+        m_Children.clear();
+        
+		ChildNodeMap::iterator it = to_rm.begin();
+		ChildNodeMap::iterator eit = to_rm.end();
+		for(; it!=eit; ++it)
+		{
+            sgObject::destroyObject(it->second);
 		}
-	}
-
-	//  [1/9/2009 zhangxiang]
-	uLong sgNode::getNodeID(void) const{
-		return mc_iNodeID;
-	}
-
-	//  [1/9/2009 zhangxiang]
-	const StdString &sgNode::name(void) const{
-		return m_sName;
-	}
-
-	//  [1/9/2009 zhangxiang]
-	void sgNode::setName(const StdString &aName){
-		m_sName = aName;
+		
 	}
 
 	//  [1/9/2009 zhangxiang]
@@ -100,20 +81,6 @@ namespace Sagitta{
 		}
 	}
 
-	//  [1/6/2009 zhangxiang]
-	void sgNode::stepToParent(sgNode *aNewParent){
-		if(!aNewParent){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "Null new parent pointer.", "sgNode::stepToParent");
-		}
-
-		if(m_pParent){
-			// if i have a parent, ask him to remove me first.
-			m_pParent->removeChild(this);
-		}
-
-		// at last, ask the new parent to add me.
-		aNewParent->addChild(this);
-	}
 
 	//  [7/30/2008 zhangxiang]
 	sgNode *sgNode::parent(void) const{
@@ -122,19 +89,25 @@ namespace Sagitta{
 
 	//  [7/30/2008 zhangxiang]
 	void sgNode::setParent(sgNode *apParent){
+        if(m_pParent)
+        {
+            m_pParent->removeChild(this);
+        }
 		m_pParent = apParent;
-		
-		// Request update from parent
-		needUpdate();
+        
+        if(m_pParent)
+        {
+            m_pParent->addChild(this);
+            
+            // Request update from parent
+            needUpdate();
 
-		// after set parent processed, set active
-		if(!apParent || !(apParent->isActive())){
-			// no parent now, so set inactive
-			m_bActive = false;
-		}else{
-			// new parent is active, i should be active too
-			m_bActive = true;
-		}
+            // after set parent processed, set active
+            if( !(m_pParent->isActive()) )
+                m_bActive = false;
+        }
+        
+        this->onSetParent(apParent);
 	}
 
 	//  [8/21/2008 zhangxiang]
@@ -388,21 +361,17 @@ namespace Sagitta{
 
 	//  [7/30/2008 zhangxiang]
 	void sgNode::addChild(sgNode* aChild){
-		if(!aChild){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "NULL child node pointer.", "sgNode::addChild");
+		if(!aChild)
+        {
+			return ;
 		}
 
-		// Continue when the new child has no parent or
-		if(aChild->parent()){
-			if(aChild->parent() != this){
-				THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "Node \"" + aChild->name() + "\" already was a child of \"" + aChild->parent()->name() + "\".", "sgNode::addChild");
-			}else{
-				return ;
-			}
-		}
+        ChildNodeMap::iterator it = m_Children.find(aChild->getId());
+        if(it != m_Children.end())
+            return ;
+        
+		m_Children.insert(std::make_pair(aChild->getId(), aChild));
 
-		m_Children.insert(std::make_pair(aChild->getNodeID(), aChild));
-		aChild->setParent(this);
 	}
 
 	//  [7/30/2008 zhangxiang]
@@ -411,73 +380,32 @@ namespace Sagitta{
 	}
 
 	//  [7/30/2008 zhangxiang]
-	sgNode *sgNode::getChild(size_t aIndex) const{
-		if(aIndex < m_Children.size()){
-			ChildNodeMap::const_iterator i = m_Children.begin();
-			while(aIndex--) ++i;
-			return i->second;
-		}else{
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "Child index out of range.", "sgNode::getChild");
-		}
-	}
+	void sgNode::removeChild(sgNode *apChild){
+        if(!apChild)
+            return ;
 
-	//  [7/30/2008 zhangxiang]
-	sgNode *sgNode::getChild(const StdString &aName) const{
-		ChildNodeMap::const_iterator i = m_Children.begin();
-		for(; i!=m_Children.end(); ++i){
-			if(i->second->name() == aName)
-				return i->second;
-		}
+        ChildNodeMap::iterator it = m_Children.find(apChild->getId());
+        if(it == m_Children.end())
+            return ;
 
-		THROW_SAGI_EXCEPT(sgException::ERR_ITEM_NOT_FOUND, "Child node named " + aName + "does not exist.", "sgNode::getChild");
-	}
+        m_Children.erase(it);
 
-	//  [7/30/2008 zhangxiang]
-	sgNode *sgNode::removeChild(size_t aIndex){
-		sgNode* ret;
-		if(aIndex < m_Children.size()){
-			ChildNodeMap::iterator i = m_Children.begin();
-			while (aIndex--) ++i;
-			ret = i->second;
-			
-			m_Children.erase(i);
-			ret->setParent(0);
-			return ret;
-		}else{
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "Child index out of range.", "sgNode::removeChild");
-		}
-	}
-
-	//  [7/30/2008 zhangxiang]
-	sgNode *sgNode::removeChild(sgNode *apChild){
-		if(apChild){
-			ChildNodeMap::iterator i = m_Children.find(apChild->getNodeID());
-
-			if(i == m_Children.end()){
-				THROW_SAGI_EXCEPT(sgException::ERR_ITEM_NOT_FOUND, "Child Node" + sgStringUtil::to_string(apChild->getNodeID()) + " does not exist.", "sgNode::removeChild");
-			}
-
-			sgNode* ret = i->second;
-			m_Children.erase(i);
-			ret->setParent(0);
-			return ret;
-		}else{
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS, "NULL child for remove.", "sgNode::removeChild");
-		}
 	}
 
 	//  [7/30/2008 zhangxiang]
 	void sgNode::removeAllChildren(void){
+        ChildNodeMap torm = m_Children;
+        
 		ChildNodeMap::iterator i, iend;
-		iend = m_Children.end();
-		for (i = m_Children.begin(); i != iend; ++i){
+		iend = torm.end();
+		for (i = torm.begin(); i != iend; ++i){
 			i->second->setParent(0);
 		}
 		m_Children.clear();
 	}
 
 	//  [7/30/2008 zhangxiang]
-	const Matrix4 &sgNode::_getFullTransform(void) const{
+	const Matrix4 &sgNode::getFullTransform(void) const{
 		if(m_bCachedTransformOutOfDate){
 			// Use derived values
 			m_CachedTransform.makeTransform(
@@ -537,6 +465,15 @@ namespace Sagitta{
 		m_bNeedUpdateFromParent = false;
 
 	}
+    
+    //  [22/9/2012 zhangxiang]
+    sgNode *sgNode::getChild(id_type aId) const
+    {
+        ChildNodeMap::const_iterator it = m_Children.find(aId);
+        if(it == m_Children.end())
+            return 0;
+        return it->second;
+    }
 
 	//  [1/6/2009 zhangxiang]
 	sgNode::ChildIterator sgNode::getChildIterator(void){
@@ -547,5 +484,35 @@ namespace Sagitta{
 	sgNode::ConstChildIterator sgNode::getConstChildIterator(void) const{
 		return sgNode::ConstChildIterator(m_Children);
 	}
+
+	sgNode * sgNode::root( void )
+	{
+		sgNode *node = this;
+		while(node->parent())
+		{
+			node = node->parent();
+		}
+
+		return node;
+	}
+
+	void sgNode::update( Float32 deltaTime )
+	{
+		_updateFromParent();
+
+		// update children
+		ChildNodeMap::iterator it = m_Children.begin();
+		ChildNodeMap::iterator eit = m_Children.end();
+		for(; it!=eit; ++it)
+		{
+			it->second->update(deltaTime);
+		}
+
+	}
+
+    void sgNode::onSetParent(sgNode *aParent)
+    {
+        
+    }
 
 } // namespace Sagitta

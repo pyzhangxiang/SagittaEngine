@@ -28,6 +28,7 @@ namespace Sagitta{
 	class _SG_MathExport Quaternion{
 	// member variables
 	private:
+        SERIALIZE_BEGIN(Quaternion)
 		union{
 			Real m_faq[4]; // array indexed storage w,x,y,z
 
@@ -35,6 +36,7 @@ namespace Sagitta{
 				Real m_fw, m_fx, m_fy, m_fz;
 			};
 		};
+        SERIALIZE_END
 
 	public:
 		// cutoff for sine near zero

@@ -1,32 +1,34 @@
-//////////////////////////////////////////////////////
-// file: sgRenderer.h @ 2008-8-1 by Zhang Xiang
-// declares of the class sgRenderer
-// sgRenderer is a class ...
-//////////////////////////////////////////////////////
+//  [8/1/2008 fabiozhang]
+
 #ifndef __SGRENDERER_H__
 #define __SGRENDERER_H__
 
-// INCLUDES //////////////////////////////////////////
-#include "sgRenderObject.h"
-#include "sgRenderOption.h"
-#include "../../math/sgColor.h"
+#include "engine/common/sgObject.h"
+#include "engine/common/sgStlAllocator.h"
+#include "engine/scenegraph/sgSceneObject.h"
+#include "sgRenderState.h"
+#include "math/sgColor.h"
 #include <list>
 #include <map>
 
-// DECLARES //////////////////////////////////////////
 
 namespace Sagitta{
+    
+    class sgRenderer;
+    sgRenderer *sgCreateRenderer(const sgStrHandle &type/*, bool useshader*/);
+    void sgDestroyRenderer(void);
+    _SG_KernelExport sgRenderer *sgGetRenderer(void);
+    
 
+	class sgCameraComponent;
+	class sgLightComponent;
 	class sgViewport;
-	class sgRenderQueue;
-	class sgCamera;
-	class sgSceneManager;
-	class sgLight;
-	class sgRenderable;
-	class sgSceneManager;
+	class sgScene;
 	class sgVertexData;
 	class sgVertexIndexBuffer;
 	class Matrix4;
+    class sgRenderQueue;
+    class sgGpuProgram;
 
 	/** class representation
 	@remarks
@@ -36,32 +38,64 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgRenderer : public sgRenderObject{
-	// inner class defines
+	class _SG_KernelExport sgRenderer : public sgObject
+    {
+        SG_META_DECLARE_ABSTRACT(sgRenderer)
+        
+//        friend sgRenderer *sgCreateRenderer(const sgStrHandle &type, bool useshader);
+        
+    public:
+        enum DataType
+        {
+            DT_F,
+            DT_FV2,
+            DT_FV3,
+            DT_FV4,
+            DT_I,
+            DT_IV2,
+            DT_IV3,
+            DT_IV4,
+            DT_UI,
+            DT_UIV2,
+            DT_UIV3,
+            DT_UIV4,
+            DT_B,
+            DT_BV2,
+            DT_BV3,
+            DT_BV4,
+            DT_FM22,
+            DT_FM33,
+            DT_FM44,
+            DT_TEXTURE,
+            DT_NIL,
+        };
+
+	protected:
+		// key_value is z-order value
+		typedef sg_multimap(int, sgViewport*) ViewportList;
+		typedef sg_vector(sgLightComponent*) LightList;
+		typedef sgSceneObject::SceneObjectVec ObjectList;
 
 		struct CurrentRenderParam{
 			sgViewport *pviewport;
-			sgCamera *pcamera;
-			sgSceneManager *pscenemanager;
-			sgRenderOption *prenderoption;
+			sgCameraComponent *pcamera;
+			sgScene *pscene;
+			ObjectList objlist;
+			//ObjectList renderqueue;
+            sgRenderQueue *renderqueue;
+            sgGpuProgram *scene_gpu_program;
+            sgGpuProgram *current_gpu_program;
+			LightList lightlist;
 		};
 
 	// type defines
-	protected:
-		// key_value is z-order value
-		typedef std::multimap<int, sgViewport*> ViewportList;
-		typedef std::list<sgLight*> LightList;
+	
 
 	// member variables
 	protected:
+
 		/// viewport list ordered by z-order, higher = further to the front
 		ViewportList m_ViewportList;
-
-		/// render queue
-		sgRenderQueue *m_pRenderQueue;
-
-		/// light list
-		mutable LightList m_LightList;
 
 		/// current render param for very viewport
 		mutable CurrentRenderParam m_CurRenderParam;
@@ -78,10 +112,21 @@ namespace Sagitta{
 				And will be reseted after a render process.
 		*/
 	//	bool m_bResized;
+        
+        sgRenderQueue *mDefaultRenderQueue;
+        
+    private:
+        // if the scene has an effect, then we use
+        // its shader to render
+        // otherwise, use the traditional pipe line
+//        bool mUseShader;
+//        void setUseShader(bool use){ mUseShader = use; }
+    public:
+        //bool isUseShader(void) const{ return mUseShader; }
 
 	// constructors & destructor
 	public:
-		sgRenderer(int aTWidth, int aTHeight, bool abSwapBufferSelf = false);
+		sgRenderer(/*int aTWidth, int aTHeight, bool abSwapBufferSelf = false*/);
 		virtual ~sgRenderer(void);
 
 	// member functions
@@ -100,7 +145,7 @@ namespace Sagitta{
 		/** clear frame buffers. */
 		virtual void clearFrameBuffers(uInt aFlags,
 									const Color &aBkColor,
-									Real aBkDepth, int aBkStencil) const = 0;
+                                       Real aBkDepth, int aBkStencil) const = 0;
 
 		/** Sets projection matrix.
 			@param
@@ -117,16 +162,16 @@ namespace Sagitta{
 		/** Collects and setups lights.
 			@return Actually enabled lights num.
 		*/
-		int setupLights(sgSceneManager *aScene) const;
+		int setupLights() const;
 
 		/** Internal hook. Calls 3D API to setup lights. */
 		virtual int setupLightsImpl(const Color &aGlobalAmbiantColor) const = 0;
 
 		/** Checks if the specified renderable object is in the forum of camera, if true, add it to the render queque of scene manager. */
-		void cullObjects(sgCamera *aCamera) const;
+		void cullObjects(sgCameraComponent *aCamera) const;
 
 		/** Renders a specific renderable object. */
-		virtual void render(const sgRenderOption &aGlobalRop, sgRenderable *aRenderable) const = 0;
+		virtual void render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const = 0;
 
 		/** Draw frame buffer to target and do something after rendering. */
 		virtual void postRenderImpl(void) const = 0;
@@ -179,7 +224,7 @@ namespace Sagitta{
 		sgViewport *createViewport(int aRTWidth, int aRTHeight,
 								Real aLeft, Real aTop, 
 								Real aWidth, Real aHeight, 
-								int aZOrder, sgCamera *aCamera = 0);
+								int aZOrder, sgCameraComponent *aCamera = 0);
 
 		/** Remove a viewport from this renderer.
 			@remarks Destroy the specified viewport too.
@@ -219,12 +264,13 @@ namespace Sagitta{
 
 		/** Renders viewports */
 		void render(void) const;
+        
+        virtual bool initShaderEnvironment(void){ return false; };
 
 	}; //#### end class sgRenderer
 
 } // namespace Sagitta
 
-// DEFINES ///////////////////////////////////////////
 
 #endif // __SGRENDERER_H__
 

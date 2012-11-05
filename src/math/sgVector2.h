@@ -27,6 +27,7 @@ namespace Sagitta{
 	class _SG_MathExport Vector2{
 	// member variables
 	private:
+        SERIALIZE_BEGIN(Vector2)
 		union{
 			Real m_fa[2];	// array indexed storage
 
@@ -34,6 +35,7 @@ namespace Sagitta{
 				Real m_fx, m_fy; // explicit names
 			}; //#### end struct
 		}; //#### end union
+        SERIALIZE_END
 
 	public:
 		/** special points */

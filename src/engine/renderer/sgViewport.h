@@ -7,24 +7,17 @@
 #define __SGVIEWPORT_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "sgRenderObject.h"
-#include "../../math/sgColor.h"
+#include "engine/common/sgObject.h"
+#include "math/sgColor.h"
 
 // DECLARES //////////////////////////////////////////
 
 namespace Sagitta{
 
-	class sgCamera;
+	class sgCameraComponent;
 
-	/** class representation
-	@remarks
-
-	@note
-
-	@par
-
-	*/
-	class _SG_KernelExport sgViewport : public sgRenderObject{
+	class _SG_KernelExport sgViewport : public sgMemObject
+	{
 	// enum declares
 	public:
 		enum ClearBuffers{
@@ -49,7 +42,7 @@ namespace Sagitta{
 		int m_iZOrder;
 
 		/// camera this viewport used, could be changed
-		sgCamera *m_pCamera;
+		sgCameraComponent *m_pCamera;
 
 		/// background color
 		Color m_BackColor;
@@ -91,7 +84,7 @@ namespace Sagitta{
 		sgViewport(int aRTWidth, int aRTHeight,
 				Real aLeft, Real aTop, 
 				Real aWidth, Real aHeight, 
-				int aZOrder, sgCamera *aCamera = 0);
+				int aZOrder, sgCameraComponent *aCamera = 0);
 	public:
 		virtual ~sgViewport(void);
 
@@ -165,9 +158,9 @@ namespace Sagitta{
 		int getZOrder(void) const;
 
 		/** Gets my combined camera. */
-		sgCamera *camera(void) const;
+		sgCameraComponent *camera(void) const;
 		/** Sets a camera to combine to me. */
-		void setCamera(sgCamera *aCamera);
+		void setCamera(sgCameraComponent *aCamera);
 
 		/** Gets my background color. */
 		const Color &getBackColor(void) const;

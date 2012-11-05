@@ -31,8 +31,10 @@ namespace Sagitta{
 
 	// member variables
 	private:
+        SERIALIZE_BEGIN(Euler)
 		/// Radian value of angles
 		Real m_fx, m_fy, m_fz;
+        SERIALIZE_END
 
 	// constructors & destructor
 	public:

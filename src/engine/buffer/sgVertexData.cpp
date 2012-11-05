@@ -8,7 +8,7 @@
 #include "sgVertexData.h"
 #include "sgVertexBufferElement.h"
 #include "sgVertexIndexBuffer.h"
-#include "../../common/utils/sgException.h"
+#include "engine/common/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 

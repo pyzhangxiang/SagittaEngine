@@ -7,8 +7,8 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgFrameBuffer.h"
-#include "../../math/sgColor.h"
-#include "../../common/utils/sgException.h"
+#include "math/sgColor.h"
+#include "engine/common/sgException.h"
 
 // DECLARES //////////////////////////////////////////
 

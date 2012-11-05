@@ -86,10 +86,12 @@ namespace Sagitta{
 
 	// member variables
 	private:
-		uByte _m_iblue;
-		uByte _m_igreen;
+        SERIALIZE_BEGIN(Color)
 		uByte _m_ired;
+		uByte _m_igreen;
+		uByte _m_iblue;
 		uByte _m_ialpha;
+        SERIALIZE_END
 
 	// constructors & destructor
 	public:
