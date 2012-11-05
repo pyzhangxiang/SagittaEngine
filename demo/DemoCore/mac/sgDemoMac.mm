@@ -3,6 +3,19 @@
 #import "sgAppDelegate.h"
 #import <Cocoa/Cocoa.h>
 
+void sgMessageBox(const std::string &title, const std::string &content)
+{
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSString *str = [[NSString alloc] initWithCString:content.c_str() encoding:NSASCIIStringEncoding];
+    [alert setMessageText:str];
+    [str release];
+    [alert runModal];
+    /*[alert beginSheetModalForWindow:nil
+                  modalDelegate:nil
+                 didEndSelector:nil
+                    contextInfo:@"aa"];
+*/
+}
 
 int sgDemo::run(int argc, char *argv[])
 {
