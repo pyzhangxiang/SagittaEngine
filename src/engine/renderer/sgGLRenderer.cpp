@@ -18,6 +18,7 @@
 #include "engine/resource/sgMaterial.h"
 #include "engine/resource/sgMesh.h"
 #include "sgGLInclude.h"
+#include "sgGLUtil.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -27,9 +28,35 @@ namespace Sagitta{
     SG_META_DEFINE(sgGLRenderer, sgRenderer)
 
 	//  [8/1/2008 zhangxiang]
-	sgGLRenderer::sgGLRenderer() :
-	sgRenderer(){
-		
+	sgGLRenderer::sgGLRenderer()
+	: sgRenderer()
+    {
+		// init uniform func map
+        mUniformFuncMap[DT_F] = setUniform1f;
+        mUniformFuncMap[DT_FV2] = setUniform2fv;
+        mUniformFuncMap[DT_FV3] = setUniform3fv;
+        mUniformFuncMap[DT_FV4] = setUniform4fv;
+        
+        mUniformFuncMap[DT_I] = setUniform1i;
+        mUniformFuncMap[DT_IV2] = setUniform2iv;
+        mUniformFuncMap[DT_IV3] = setUniform3iv;
+        mUniformFuncMap[DT_IV4] = setUniform4iv;
+        
+        mUniformFuncMap[DT_UI] = setUniform1ui;
+        mUniformFuncMap[DT_UIV2] = setUniform2uiv;
+        mUniformFuncMap[DT_UIV3] = setUniform3uiv;
+        mUniformFuncMap[DT_UIV4] = setUniform4uiv;
+        
+        /*
+        mUniformFuncMap[DT_B] = setUniform1b;
+        mUniformFuncMap[DT_BV2] = setUniform2bv;
+        mUniformFuncMap[DT_BV3] = setUniform3bv;
+        mUniformFuncMap[DT_BV4] = setUniform4bv;
+        */
+        
+        mUniformFuncMap[DT_FM22] = setUniformMatrixf22;
+        mUniformFuncMap[DT_FM33] = setUniformMatrixf33;
+        mUniformFuncMap[DT_FM44] = setUniformMatrixf44;
 	}
 
 	//  [8/1/2008 zhangxiang]

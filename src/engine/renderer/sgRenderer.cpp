@@ -439,5 +439,15 @@ namespace Sagitta{
 
 		doSthWhenResized();
 	}
+    
+    bool sgRenderer::setUniformForShader(int type, int location, int extra, sgBuffer* data)
+    {
+        UniformFuncMap::iterator it = mUniformFuncMap.find(type);
+        if(it == mUniformFuncMap.end())
+            return false;
+        
+        it->second(location, extra, data);
+        return true;
+    }
 
 } // namespace Sagitta

@@ -19,6 +19,9 @@ namespace Sagitta{
     void sgDestroyRenderer(void);
     _SG_KernelExport sgRenderer *sgGetRenderer(void);
     
+    class sgBuffer;
+    // params, location, extra(matrix: if transpose; fv: count), data
+    typedef void(*SetShaderUniformFunc)(int, int, sgBuffer*);
 
 	class sgCameraComponent;
 	class sgLightComponent;
@@ -75,6 +78,9 @@ namespace Sagitta{
 		typedef sg_multimap(int, sgViewport*) ViewportList;
 		typedef sg_vector(sgLightComponent*) LightList;
 		typedef sgSceneObject::SceneObjectVec ObjectList;
+        
+        typedef sg_map(int, SetShaderUniformFunc) UniformFuncMap;
+        UniformFuncMap mUniformFuncMap;
 
 		struct CurrentRenderParam{
 			sgViewport *pviewport;
@@ -266,6 +272,8 @@ namespace Sagitta{
 		void render(void) const;
         
         virtual bool initShaderEnvironment(void){ return false; };
+        
+        bool setUniformForShader(int type, int location, int extra, sgBuffer* data);
 
 	}; //#### end class sgRenderer
 
