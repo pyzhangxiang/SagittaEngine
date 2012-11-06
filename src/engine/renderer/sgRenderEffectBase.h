@@ -3,12 +3,12 @@
 #ifndef __SGRENDEREFFECTBASE_H__
 #define __SGRENDEREFFECTBASE_H__
 
-#include "sgRenderEffect.h"
+#include "sgSceneRenderEffect.h"
 
 
 namespace Sagitta{
     
-	class _SG_KernelExport sgRenderEffectBase : public sgRenderEffect
+	class _SG_KernelExport sgRenderEffectBase : public sgSceneRenderEffect
 	{
         SG_META_DECLARE(sgRenderEffectBase)
         

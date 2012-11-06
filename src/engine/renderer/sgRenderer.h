@@ -33,6 +33,39 @@ namespace Sagitta{
     class sgRenderQueue;
     class sgGpuProgram;
 
+	namespace sg_render
+	{
+		typedef sg_vector(sgLightComponent*) LightList;
+		typedef sgSceneObject::SceneObjectVec ObjectList;
+
+		struct CurrentRenderParam{
+			sgViewport *pviewport;
+			sgCameraComponent *pcamera;
+			sgScene *pscene;
+			ObjectList objlist;
+			LightList lightlist;
+			sgRenderQueue *renderqueue;
+			sgGpuProgram *scene_gpu_program;
+			sgGpuProgram *current_gpu_program;
+			sgGpuProgram *last_gpu_program;
+
+			// own by the param
+			sgRenderQueue *mDefaultRenderQueue;
+
+			CurrentRenderParam(void);
+			~CurrentRenderParam(void);
+
+			void resetRenderQueue(sgRenderQueue *rq);
+
+			/** Checks if the specified renderable object is in the forum of camera, if true, 
+				add it to the render queque of scene manager. 
+				also sort the render queue
+			 */
+			void cullObjects(sgCameraComponent *aCamera) const;
+		};
+	};
+	
+
 	/** class representation
 	@remarks
 
@@ -76,23 +109,11 @@ namespace Sagitta{
 	protected:
 		// key_value is z-order value
 		typedef sg_multimap(int, sgViewport*) ViewportList;
-		typedef sg_vector(sgLightComponent*) LightList;
-		typedef sgSceneObject::SceneObjectVec ObjectList;
         
         typedef sg_map(int, SetShaderUniformFunc) UniformFuncMap;
         UniformFuncMap mUniformFuncMap;
 
-		struct CurrentRenderParam{
-			sgViewport *pviewport;
-			sgCameraComponent *pcamera;
-			sgScene *pscene;
-			ObjectList objlist;
-			//ObjectList renderqueue;
-            sgRenderQueue *renderqueue;
-            sgGpuProgram *scene_gpu_program;
-            sgGpuProgram *current_gpu_program;
-			LightList lightlist;
-		};
+		
 
 	// type defines
 	
@@ -104,7 +125,7 @@ namespace Sagitta{
 		ViewportList m_ViewportList;
 
 		/// current render param for very viewport
-		mutable CurrentRenderParam m_CurRenderParam;
+		mutable sg_render::CurrentRenderParam m_CurRenderParam;
 
 		/** Whether swap buffer by renderer self, if false, let os do it. */
 		bool m_bSwapBufferSelf;
@@ -118,9 +139,7 @@ namespace Sagitta{
 				And will be reseted after a render process.
 		*/
 	//	bool m_bResized;
-        
-        sgRenderQueue *mDefaultRenderQueue;
-        
+               
     private:
         // if the scene has an effect, then we use
         // its shader to render
@@ -168,13 +187,12 @@ namespace Sagitta{
 		/** Collects and setups lights.
 			@return Actually enabled lights num.
 		*/
-		int setupLights() const;
+		//int setupLights() const;
+		//  [11/6/2012 fabiozhang]
+		void collectLights(void) const;
 
 		/** Internal hook. Calls 3D API to setup lights. */
 		virtual int setupLightsImpl(const Color &aGlobalAmbiantColor) const = 0;
-
-		/** Checks if the specified renderable object is in the forum of camera, if true, add it to the render queque of scene manager. */
-		void cullObjects(sgCameraComponent *aCamera) const;
 
 		/** Renders a specific renderable object. */
 		virtual void render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const = 0;

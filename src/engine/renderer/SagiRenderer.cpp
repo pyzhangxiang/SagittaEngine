@@ -104,8 +104,8 @@ namespace Sagitta{
 		m_bLighting = true;
 
 		sgLightComponent *light;
-		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
-		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
+		sg_render::LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		sg_render::LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
 
 		int lightNum = static_cast<int>(m_CurRenderParam.lightlist.size());
 		m_CurSagiLightList.reserve(lightNum);

@@ -3,11 +3,11 @@
 #ifndef __SGRENDEREFFECTSHADOWMAP_H__
 #define __SGRENDEREFFECTSHADOWMAP_H__
 
-#include "sgRenderEffect.h"
+#include "sgSceneRenderEffect.h"
 
 namespace Sagitta{
 
-	class _SG_KernelExport sgRenderEffectShadowmap : public sgRenderEffect
+	class _SG_KernelExport sgRenderEffectShadowmap : public sgSceneRenderEffect
 	{
         SG_META_DECLARE(sgRenderEffectShadowmap)
         

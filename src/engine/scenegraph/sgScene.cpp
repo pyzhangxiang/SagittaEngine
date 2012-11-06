@@ -1,7 +1,7 @@
 
 #include "sgScene.h"
 #include "sgSceneObject.h"
-#include "engine/renderer/sgRenderEffect.h"
+#include "engine/renderer/sgSceneRenderEffect.h"
 
 namespace Sagitta{
 
@@ -62,12 +62,12 @@ namespace Sagitta{
         mRenderState = state;
     }
     
-    sgRenderEffect *sgScene::createRenderEffect(const sgStrHandle &effectType)
+    sgSceneRenderEffect *sgScene::createRenderEffect(const sgStrHandle &effectType)
     {
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
         if(!meta)
             return mRenderEffect;
-        if(!meta->isClass(sgRenderEffect::GetClassName()))
+        if(!meta->isClass(sgSceneRenderEffect::GetClassName()))
             return mRenderEffect;
         
         if(mRenderEffect)
@@ -75,7 +75,7 @@ namespace Sagitta{
             // warning: the original one will be destroyed
             destroyRenderEffect();
         }
-        mRenderEffect = (sgRenderEffect*)sgObject::createObject(effectType);
+        mRenderEffect = (sgSceneRenderEffect*)sgObject::createObject(effectType);
         
         return mRenderEffect;
     }

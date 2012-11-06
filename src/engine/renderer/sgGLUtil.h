@@ -24,12 +24,12 @@ namespace Sagitta{
     void setUniform2iv(int location, int extra, sgBuffer *data);
     void setUniform3iv(int location, int extra, sgBuffer *data);
     void setUniform4iv(int location, int extra, sgBuffer *data);
-    
+    /*
     void setUniform1ui(int location, int extra, sgBuffer *data);
     void setUniform2uiv(int location, int extra, sgBuffer *data);
     void setUniform3uiv(int location, int extra, sgBuffer *data);
     void setUniform4uiv(int location, int extra, sgBuffer *data);
-    
+    */
     /*
     void setUniform1b(int location, int extra, sgBuffer *data);
     void setUniform2bv(int location, int extra, sgBuffer *data);

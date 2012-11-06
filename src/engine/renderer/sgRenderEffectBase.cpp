@@ -8,7 +8,7 @@ namespace Sagitta{
     SG_META_DEFINE(sgRenderEffectBase, sgRenderEffect)
 
     sgRenderEffectBase::sgRenderEffectBase(void)
-    : sgRenderEffect()
+    : sgSceneRenderEffect()
     {
         addPass(sgRenderQueue::GetClassName());
     }

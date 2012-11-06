@@ -41,12 +41,12 @@ namespace Sagitta{
         mUniformFuncMap[DT_IV2] = setUniform2iv;
         mUniformFuncMap[DT_IV3] = setUniform3iv;
         mUniformFuncMap[DT_IV4] = setUniform4iv;
-        
+        /*
         mUniformFuncMap[DT_UI] = setUniform1ui;
         mUniformFuncMap[DT_UIV2] = setUniform2uiv;
         mUniformFuncMap[DT_UIV3] = setUniform3uiv;
         mUniformFuncMap[DT_UIV4] = setUniform4uiv;
-        
+        */
         /*
         mUniformFuncMap[DT_B] = setUniform1b;
         mUniformFuncMap[DT_BV2] = setUniform2bv;
@@ -153,8 +153,8 @@ namespace Sagitta{
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, aGlobalAmbiantColor.toGLColor().data());
 
 		sgLightComponent *light;
-		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
-		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
+		sg_render::LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		sg_render::LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
 		// OpenGL only support 8 light at most
 		int lightNum = 0;
 		for(; lightNum<9 && leit!=lit; ++lightNum, ++lit){
@@ -201,15 +201,8 @@ namespace Sagitta{
         //	mesh->getVertexBuffer(pvb, pvib);
         Matrix4 modelMatrix = aRenderable->getFullTransform();
         int polyType = retMapping(mesh->polyType());
-		if(m_CurRenderParam.scene_gpu_program && m_CurRenderParam.current_gpu_program)
-        {
-            //renderProgramPipeline(pvb, pvib, modelMatrix, polyType);
-            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
-        }
-        else
-        {
-            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
-        }
+		
+		renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
 
 	//	delete pvb;
 	//	delete pvib;
@@ -267,7 +260,7 @@ namespace Sagitta{
     bool sgGLRenderer::initShaderEnvironment(void)
     {
         glewInit();
-        bool gl2_0 = glewIsSupported("GL_VERSION_2_0");
+        bool gl2_0 = glewIsSupported("GL_VERSION_2_0") != 0;
         if(!gl2_0)
         {
             std::string log = "OpenGL 2.0 not supported\n";

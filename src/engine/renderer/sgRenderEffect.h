@@ -11,6 +11,12 @@ namespace Sagitta{
     
     class sgRenderPass;
     class sgBuffer;
+	class sgSceneObject;
+
+	namespace sg_render
+	{
+		struct CurrentRenderParam;
+	};
 
 	class _SG_KernelExport sgRenderEffect : public sgObject
 	{
@@ -23,6 +29,8 @@ namespace Sagitta{
         typedef sg_map(std::string, sgBuffer*) DataMap;
         DataMap mDataMap;
         
+		sg_render::CurrentRenderParam *mCurrentRenderParam;
+
     protected:
         void addPass(const sgStrHandle &queueType = sgStrHandle::EmptyString);
         
@@ -36,6 +44,10 @@ namespace Sagitta{
         
         virtual void update(Float32 deltaTime){}
 
+		virtual void render(sg_render::CurrentRenderParam *param, sgSceneObject *object) = 0;
+
+		virtual void setSceneUniforms(void){}
+		virtual void setObjectUniforms(void){}
 	};
 
 } // namespace Sagitta

@@ -2,6 +2,8 @@
 
 #include "sgRenderEffect.h"
 #include "sgRenderPass.h"
+#include "sgRenderer.h"
+#include "sgRenderQueue.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/buffer/sgBuffer.h"
 
@@ -10,6 +12,7 @@ namespace Sagitta
     SG_META_DEFINE_ABSTRACT(sgRenderEffect, sgObject)
 
     sgRenderEffect::sgRenderEffect(void)
+	: mCurrentRenderParam(NULL)
     {
         
     }
@@ -43,5 +46,5 @@ namespace Sagitta
         
         return mPassList[index];
     }
-    
+
 } // namespace Sagitta

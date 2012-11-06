@@ -94,25 +94,25 @@ namespace Sagitta{
     
     void setUniform1i(int location, int extra, sgBuffer *data)
     {
-        int count = data->getSizeInBytes() / sizeof(Int32);
-        glUniform1iv(location, count, (Int32*)(data->data()));
+        int count = data->getSizeInBytes() / sizeof(int);
+        glUniform1iv(location, count, (int*)(data->data()));
     }
     void setUniform2iv(int location, int extra, sgBuffer *data)
     {
-        int count = data->getSizeInBytes() / (sizeof(Int32) * 2);
-        glUniform2iv(location, count, (Int32*)(data->data()));
+        int count = data->getSizeInBytes() / (sizeof(int) * 2);
+        glUniform2iv(location, count, (int*)(data->data()));
     }
     void setUniform3iv(int location, int extra, sgBuffer *data)
     {
-        int count = data->getSizeInBytes() / (sizeof(Int32) * 3);
-        glUniform3iv(location, count, (Int32*)(data->data()));
+        int count = data->getSizeInBytes() / (sizeof(int) * 3);
+        glUniform3iv(location, count, (int*)(data->data()));
     }
     void setUniform4iv(int location, int extra, sgBuffer *data)
     {
-        int count = data->getSizeInBytes() / (sizeof(Int32) * 4);
-        glUniform4iv(location, count, (Int32*)(data->data()));
+        int count = data->getSizeInBytes() / (sizeof(int) * 4);
+        glUniform4iv(location, count, (int*)(data->data()));
     }
-    
+    /*
     void setUniform1ui(int location, int extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / sizeof(UInt32);
@@ -133,7 +133,7 @@ namespace Sagitta{
         int count = data->getSizeInBytes() / (sizeof(UInt32) * 4);
         glUniform4uiv(location, count, (UInt32*)(data->data()));
     }
-    
+    */
     /*
     void setUniform1b(int location, int extra, sgBuffer *data);
     void setUniform2bv(int location, int extra, sgBuffer *data);
