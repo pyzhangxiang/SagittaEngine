@@ -11,6 +11,7 @@ namespace Sagitta{
 
     _SG_KernelExport std::string sgCheckGLError(const std::string &file, int line);
     _SG_KernelExport int sgGetRendererDataType(GLenum glType);
+    _SG_KernelExport GLenum sgGetRendererDataTypeInv(int sgType);
 #define SG_CHECK_GL_ERROR() sgCheckGLError(__FILE__, __LINE__)
     
     class sgBuffer;

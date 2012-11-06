@@ -5,6 +5,7 @@
 #include "engine/common/sgException.h"
 #include "engine/common/sgStringUtil.h"
 #include "engine/common/sgLogSystem.h"
+#include "engine/buffer/sgVertexBufferElement.h"
 
 namespace Sagitta{
     
@@ -142,6 +143,24 @@ namespace Sagitta{
         return true;
     }
     
+    bool sgGLGpuProgram::setAttribute(sgVertexBufferElement *data)
+    {
+        sgAssert(data, "sgGLGpuProgram::setAttribute, NULL vertex data");
+        
+        AttributeList::iterator it = mAttributeList.find(data->getName());
+        if(it == mAttributeList.end())
+            return false;
+        
+        glVertexPointer(element->coordNum(), GL_FLOAT, 0, element->data());
+        glEnableClientState(GL_VERTEX_ARRAY);
+        
+        sgGpuAttribute &attr = it->second;
+        glVertexAttribPointer(attr.location, data->vertexNum(), );
+        
+        return true;
+        
+    }
+    
     bool sgGLGpuProgram::prepareProgram(void)
     {
         if(mProgramId == 0)
@@ -259,7 +278,6 @@ namespace Sagitta{
 		glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxChar);
         
         mAttributeList.clear();
-        mAttributeList.reserve(count);
         
 		char *name = (char*)sgMalloc(maxChar);
 		for(int i=0; i<count; ++i)
@@ -276,7 +294,7 @@ namespace Sagitta{
             attr.name = strName;
 			attr.type = sgGetRendererDataType(type);
             attr.location = glGetAttribLocation(mProgramId, name);
-            mAttributeList.push_back(attr);
+            mAttributeList.insert(std::make_pair(strName, attr));
 		}
         sgFree(name);
         

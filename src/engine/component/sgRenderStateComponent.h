@@ -12,6 +12,7 @@
 namespace Sagitta{
 
 	class sgMaterial;
+    class sgObjectRenderEffect;
 
 	class _SG_KernelExport sgRenderStateComponent : public sgComponent
 	{
@@ -21,6 +22,8 @@ namespace Sagitta{
 		sgStrHandle mMaterialFile; // material id
         
 		sgRenderState mRenderState;
+        
+        sgObjectRenderEffect *mRenderEffect;
 
 	public:
 		sgRenderStateComponent(void);
@@ -33,6 +36,9 @@ namespace Sagitta{
 		sgRenderState getRenderState(void) const;
 		void setRenderOption(const sgRenderState &ro);
 
+        sgObjectRenderEffect *createRenderEffect(const sgStrHandle &effectType);
+        void destroyRenderEffect(void);
+        sgObjectRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
 	}; 
 
 } // namespace Sagitta

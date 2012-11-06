@@ -44,10 +44,6 @@ namespace Sagitta{
         
         virtual void update(Float32 deltaTime){}
 
-		virtual void render(sg_render::CurrentRenderParam *param, sgSceneObject *object) = 0;
-
-		virtual void setSceneUniforms(void){}
-		virtual void setObjectUniforms(void){}
 	};
 
 } // namespace Sagitta

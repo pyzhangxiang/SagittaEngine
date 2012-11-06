@@ -199,10 +199,9 @@ namespace Sagitta{
         sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
 		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
         //	mesh->getVertexBuffer(pvb, pvib);
-        Matrix4 modelMatrix = aRenderable->getFullTransform();
-        int polyType = retMapping(mesh->polyType());
+        const Matrix4 &modelMatrix = aRenderable->getFullTransform();
 		
-		renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
+		renderTraditionalPipeline(pvb, pvib, modelMatrix, mesh->polyType());
 
 	//	delete pvb;
 	//	delete pvib;
@@ -327,7 +326,7 @@ namespace Sagitta{
 		glPushMatrix();
 		glMultMatrixf(modelMatrix.transpose().arr());
         
-		glDrawElements(polyType, pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
+		glDrawElements(retMapping(polyType), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
 		
 		glPopMatrix();
         
@@ -343,6 +342,23 @@ namespace Sagitta{
     {
         if(!pvb || !pvib)
             return ;
+        
+		// render
+		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
+		for(; elemIt.hasMoreElements(); elemIt++)
+        {
+			sgVertexBufferElement *element = elemIt.value();
+            m_CurRenderParam.current_gpu_program->setAttribute(element);
+		}
+        
+		// model transform
+		glPushMatrix();
+		glMultMatrixf(modelMatrix.transpose().arr());
+        
+		glDrawElements(retMapping(polyType), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
+		
+		glPopMatrix();
+        
     }
 
 } // namespace Sagitta

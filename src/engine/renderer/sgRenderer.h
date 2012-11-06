@@ -209,6 +209,10 @@ namespace Sagitta{
 	protected:
 		/** Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
 		virtual int retMapping(int aRet) const = 0;
+        
+    public:
+        virtual void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                           , const Matrix4 &modelMatrix, int polyType) const{};
 
 		/** Checks if target was resized.
 			@remarks Internal method.

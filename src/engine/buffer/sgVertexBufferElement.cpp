@@ -21,18 +21,37 @@ namespace Sagitta{
 	: sgBuffer(), m_Type(aType),
 	m_iCoordNum(aCoordNum), m_iVertexNum(aVertexNum),
 	m_iSource(aSource), m_iOffset(aOffset){
-	/*	if(m_iCoordNum < 0 || m_iVertexNum < 0){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
-							"Negative parameters.",
-							"sgVertexBufferElement::sgVertexBufferElement");
-		}
-	 */
 
 		// Calculate vertex size
 		m_iVertexSize = _calculateVertexSize();
 
 		size_t iSizeInBytes = m_iVertexSize * m_iVertexNum;
 		sgBuffer::resize(iSizeInBytes);
+        
+        if(m_Type == ET_VERTEX)
+        {
+            setName("sg_vertex");
+        }
+        else if(m_Type == ET_NORMAL)
+        {
+            setName("sg_normal");
+        }
+        else if(m_Type == ET_TEXTURE_COORD)
+        {
+            setName("sg_tex0");
+        }
+        else if(m_Type == ET_FOG_COORDINATE)
+        {
+            setName("sg_fog");
+        }
+        else if(m_Type == ET_COLOR)
+        {
+            setName("sg_color");
+        }
+        else
+        {
+            setName("sg_unknown");
+        }
 	}
 
 	sgVertexBufferElement::~sgVertexBufferElement(void){

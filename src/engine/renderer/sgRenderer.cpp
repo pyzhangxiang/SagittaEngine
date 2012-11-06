@@ -158,7 +158,7 @@ namespace Sagitta{
 		}
 		else
 		{
-			sceneRenderEffect->render(&m_CurRenderParam, NULL);
+			sceneRenderEffect->renderScene(&m_CurRenderParam);
 		}
 
 		// draw to target
@@ -380,6 +380,8 @@ namespace Sagitta{
 				continue;
 
 			mesh = meshComp->getMesh();
+            if(!mesh)
+                continue;
 
 			maxradius = mesh->maxRadius();
 

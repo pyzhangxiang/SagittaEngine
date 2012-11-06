@@ -21,7 +21,7 @@ namespace Sagitta
     {
     }
 
-	void sgObjectRenderEffect::render( sg_render::CurrentRenderParam *param, sgSceneObject *object )
+	void sgObjectRenderEffect::renderObject( sg_render::CurrentRenderParam *param, sgSceneObject *object )
 	{
 
 	}

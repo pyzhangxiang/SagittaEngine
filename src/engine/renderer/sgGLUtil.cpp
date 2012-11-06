@@ -71,6 +71,11 @@ namespace Sagitta{
     
     }
     
+    GLenum sgGetRendererDataTypeInv(int sgType)
+    {
+        
+    }
+    
     void setUniform1f(int location, int extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / sizeof(Float32);

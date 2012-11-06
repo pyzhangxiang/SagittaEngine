@@ -7,19 +7,27 @@
 
 namespace Sagitta
 {
+    class sgRenderer;
     
 	class _SG_KernelExport sgSceneRenderEffect : public sgRenderEffect
 	{
         SG_META_DECLARE_ABSTRACT(sgSceneRenderEffect)
         
+        friend class sgRenderer;
+        
+    private:
+        size_t mCurrentPass;
+        
     public:
         sgSceneRenderEffect(void);
         virtual ~sgSceneRenderEffect(void) = 0;
-        
-		virtual void render(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 		
 	protected:
+        void renderScene(sg_render::CurrentRenderParam *param);
 		void renderObject(sgSceneObject *object);
+        
+        virtual void setUniformScene(void){}
+        virtual void setUniformObject(sgSceneObject *object){}
 	};
 
 } // namespace Sagitta
