@@ -12,6 +12,7 @@
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/common/sgStringUtil.h"
+#include "engine/common/sgUtil.h"
 #include "math/sgVector2.h"
 #include "math/sgVector3.h"
 #include "math/sgPlane.h"
@@ -219,7 +220,7 @@ namespace Sagitta
 			size_t normalNum = m_iVertexNum;
 			if(!vnBuffer){
 				// have no vertex normal buffer, create it
-				vnBuffer = m_pVertexData->createElement(sgVertexBufferElement::ET_NORMAL,
+				vnBuffer = m_pVertexData->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F,
                                                         3, normalNum);
 			}else{
 				if(vnBuffer->vertexNum() != normalNum){
@@ -609,7 +610,7 @@ namespace Sagitta
         //		IndexedPolygon<m_iPolyType> *vIndexData = static_cast<IndexedPolygon<m_iPolyType>*>(vIndex->data());
 		
 		// vertices
-		Vector3 *outvBufferData = static_cast<Vector3*>(outVBuffer->createElement(sgVertexBufferElement::ET_VERTEX, 3, outVertexNum)->data());
+		Vector3 *outvBufferData = static_cast<Vector3*>(outVBuffer->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, outVertexNum)->data());
 		size_t *outIBufferData = static_cast<size_t*>(outIBuffer->data());
         //		IndexedPolygon<m_iPolyType> *outIBufferData = static_cast<IndexedPolygon<m_iPolyType>*>(outIBuffer->data());
 		if(m_bSmooth){
@@ -638,7 +639,7 @@ namespace Sagitta
 		sgVertexBufferElement *cBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_COLOR);
 		if(cBuffer){
 			Color *cBufferData = static_cast<Color*>(cBuffer->data());
-			Color *outcBufferData = static_cast<Color*>(outVBuffer->createElement(sgVertexBufferElement::ET_COLOR, 4, outVertexNum)->data());
+			Color *outcBufferData = static_cast<Color*>(outVBuffer->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, outVertexNum)->data());
 			if(m_bSmooth){
 				// for smooth entity, the color buffer for rendering is the same as the original one
 				cBuffer->readData(0, cBuffer->getSizeInBytes(), static_cast<void*>(outcBufferData));
@@ -658,7 +659,7 @@ namespace Sagitta
 		// normals
 		sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_NORMAL);
 		if(m_pFaceNormalBuffer){
-			Vector3 *outnBufferData = static_cast<Vector3*>(outVBuffer->createElement(sgVertexBufferElement::ET_NORMAL, 3, outVertexNum)->data());
+			Vector3 *outnBufferData = static_cast<Vector3*>(outVBuffer->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, outVertexNum)->data());
 			if(m_bSmooth){
 				// for smooth entity, the normal buffer for rendering is the same as the original one
 				nBuffer->readData(0, nBuffer->getSizeInBytes(), static_cast<void*>(outnBufferData));
@@ -678,7 +679,7 @@ namespace Sagitta
 		sgVertexIndexBuffer *tIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_TEXTURE_COORD);
 		if(tBuffer){
 			if(m_bSmooth){
-				Vector2 *outtBufferData = static_cast<Vector2*>(outVBuffer->createElement(sgVertexBufferElement::ET_TEXTURE_COORD, 2, outVertexNum)->data());
+				Vector2 *outtBufferData = static_cast<Vector2*>(outVBuffer->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, outVertexNum)->data());
 				// for smooth entity, the texture coordinate buffer for rendering is the same as the original one
 				tBuffer->readData(0, tBuffer->getSizeInBytes(), static_cast<void*>(outtBufferData));
 			}else{
@@ -686,7 +687,7 @@ namespace Sagitta
 					Vector2 *tBufferData = static_cast<Vector2*>(tBuffer->data());
 					size_t *tIndexData = static_cast<size_t*>(tIndex->data());
                     //		IndexedPolygon<m_iPolyType> *tIndexData = static_cast<IndexedPolygon<m_iPolyType>*>(tIndex->data());
-					Vector2 *outtBufferData = static_cast<Vector2*>(outVBuffer->createElement(sgVertexBufferElement::ET_TEXTURE_COORD, 2, outVertexNum)->data());
+					Vector2 *outtBufferData = static_cast<Vector2*>(outVBuffer->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, outVertexNum)->data());
 					// for flat entity, have to store duplicate texture coordinates
 					size_t vi = 0;
 					for(size_t i=0; i<m_iPolyNum; ++i){

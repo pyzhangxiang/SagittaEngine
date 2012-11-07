@@ -8,6 +8,7 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "sgBuffer.h"
+#include "engine/common/sgStrHandle.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -32,8 +33,22 @@ namespace Sagitta{
 			ET_FOG_COORDINATE
 		};
 
+		static const sgStrHandle VertexAttributeName;
+		static const sgStrHandle ColorAttributeName;
+		static const sgStrHandle NormalAttributeName;
+		static const sgStrHandle UV0AttributeName;
+		static const sgStrHandle FogAttributeName;
+
 	// member variables
 	private:
+		// element name, for shader attributes
+		sgStrHandle mName;
+		// data type, e.g. RDT_F, RDT_I
+		UInt32 mDataType;
+
+		// should be normalized in gpu, default false
+		bool mShouldNormalize;
+
 		/// vetex element type
 		int m_Type;
 		/// coordinate num of a vertex element
@@ -47,6 +62,8 @@ namespace Sagitta{
 		/// vertex size of this element, 3 * sizeof(Real) for positioin
 		size_t m_iVertexSize;
 
+		
+
 	// constructors & destructor
 	private:
 		// Disables copy constructor and assignment operator function
@@ -54,7 +71,8 @@ namespace Sagitta{
 		sgVertexBufferElement &operator = (const sgVertexBufferElement &);
 
 	public:
-		sgVertexBufferElement(int aType, 
+		sgVertexBufferElement(const sgStrHandle &name, 
+							UInt32 aDataType,
 							uShort aCoordNum,
 							size_t aVertexNum,
 							uShort aSource,
@@ -106,6 +124,12 @@ namespace Sagitta{
 		*/ 
 		void _colorConversion(void);
 	
+		UInt32 getDataType(void) const{ return mDataType; }
+		sgStrHandle getName(void) const{ return mName; }
+		//void setName(const sgStrHandle &name);
+		
+		bool shouldNormalize(void) const{ return mShouldNormalize; }
+		void setShouldNormalize(bool norm);
 
 	}; //#### end class sgVertexBufferElement
 

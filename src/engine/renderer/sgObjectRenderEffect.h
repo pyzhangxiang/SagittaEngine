@@ -21,7 +21,7 @@ namespace Sagitta{
         
     protected:
 		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
-  		virtual void setUniforms(sgSceneObject *object){}
+  		virtual void setUniforms(sg_render::CurrentRenderParam *param, sgSceneObject *object){}
 
 	};
 

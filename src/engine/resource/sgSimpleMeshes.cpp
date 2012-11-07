@@ -13,6 +13,7 @@
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/common/sgStringUtil.h"
+#include "engine/common/sgUtil.h"
 #include "math/sgVector2.h"
 #include "math/sgVector3.h"
 #include "math/sgPlane.h"
@@ -52,9 +53,9 @@ namespace Sagitta{
     {
         reset(1, 1, 1);
         
-		m_pPosition = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		m_pPosition = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         
-		m_pColor = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColor = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 		*pIndex = 0;
@@ -92,12 +93,12 @@ namespace Sagitta{
     {
         reset(2, 2, 1);
         
-        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         m_pPosData[0] = Vector3(0.0f, 0.0f, 0.0f);
 		m_pPosData[1] = Vector3(1.0f, 1.0f, 1.0f);
         
         
-		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         m_pColorData[0] = Color::WHITE;
 		m_pColorData[1] = Color::WHITE;
         
@@ -147,12 +148,12 @@ namespace Sagitta{
         
         m_bCounterClockWise = true;
         
-        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         m_pPosData[0] = Vector3(-1.0f, 0.0f, 0.0f);
 		m_pPosData[1] = Vector3(1.0f, 0.0f, 0.0f);
         m_pPosData[2] = Vector3(0.0f, 1.0f, 0.0f);
         
-		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         m_pColorData[0] = Color::WHITE;
         m_pColorData[1] = Color::WHITE;
         m_pColorData[2] = Color::WHITE;
@@ -246,7 +247,7 @@ namespace Sagitta{
 
 		Real halfLength = m_fEdgeLength * 0.5;
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		// setup vertecies
@@ -341,7 +342,7 @@ namespace Sagitta{
 		}
          */
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		Real RX2 = m_fRadius + m_fRadius;
@@ -459,7 +460,7 @@ namespace Sagitta{
 							"sgMeshCone::init");
 		}
 */
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		// setup vertices
@@ -529,7 +530,7 @@ namespace Sagitta{
 		int hHalfTotalLength = hTotalLength * 0.5;
 		int vHalfTotalLength = vTotalLength * 0.5;
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 

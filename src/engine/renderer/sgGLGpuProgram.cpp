@@ -6,6 +6,8 @@
 #include "engine/common/sgStringUtil.h"
 #include "engine/common/sgLogSystem.h"
 #include "engine/buffer/sgVertexBufferElement.h"
+#include "engine/buffer/sgBuffer.h"
+#include "sgRenderer.h"
 
 namespace Sagitta{
     
@@ -143,24 +145,6 @@ namespace Sagitta{
         return true;
     }
     
-    bool sgGLGpuProgram::setAttribute(sgVertexBufferElement *data)
-    {
-        sgAssert(data, "sgGLGpuProgram::setAttribute, NULL vertex data");
-        
-        AttributeList::iterator it = mAttributeList.find(data->getName());
-        if(it == mAttributeList.end())
-            return false;
-        
-        glVertexPointer(element->coordNum(), GL_FLOAT, 0, element->data());
-        glEnableClientState(GL_VERTEX_ARRAY);
-        
-        sgGpuAttribute &attr = it->second;
-        glVertexAttribPointer(attr.location, data->vertexNum(), );
-        
-        return true;
-        
-    }
-    
     bool sgGLGpuProgram::prepareProgram(void)
     {
         if(mProgramId == 0)
@@ -234,7 +218,6 @@ namespace Sagitta{
 		glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORMS, &count);
 		glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxChar);
         mParameterList.clear();
-        mParameterList.reserve(count);
 		char *name = (char*)sgMalloc(maxChar);
 		for(int i=0; i<count; ++i)
 		{
@@ -255,7 +238,8 @@ namespace Sagitta{
             param.name = strName;
 			param.type = sgGetRendererDataType(type);
             param.location = glGetUniformLocation(mProgramId, name);
-            mParameterList.push_back(param);
+
+            mParameterList.insert(std::make_pair(sgStrHandle(strName.c_str()), param));
             
 		}
 		sgFree(name);
@@ -294,7 +278,7 @@ namespace Sagitta{
             attr.name = strName;
 			attr.type = sgGetRendererDataType(type);
             attr.location = glGetAttribLocation(mProgramId, name);
-            mAttributeList.insert(std::make_pair(strName, attr));
+            mAttributeList.insert(std::make_pair(sgStrHandle(strName.c_str()), attr));
 		}
         sgFree(name);
         
@@ -305,5 +289,19 @@ namespace Sagitta{
             return true;
 		
     }
-    
+
+	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, sgBuffer *data )
+	{
+		if(!isActive())
+			return false;
+
+		ParameterList::iterator it = mParameterList.find(name);
+		if(it == mParameterList.end())
+			return false;
+
+		const sgGpuParameter &param = it->second;
+		sgGetRenderer()->setUniformForShader(param.type, param.location, 0, data);
+		return true;
+	}
+
 } // namespace Sagitta

@@ -1,8 +1,8 @@
 
-varying vec4 fragmentColor;
+varying vec4 vertexColor;
 
 void main(){
 
-	gl_FragColor = fragmentColor;
+	gl_FragColor = vertexColor;
 
 }

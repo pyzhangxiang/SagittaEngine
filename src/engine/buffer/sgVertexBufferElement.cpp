@@ -7,51 +7,58 @@
 // INCLUDES //////////////////////////////////////////
 #include "sgVertexBufferElement.h"
 #include "engine/common/sgException.h"
+#include "engine/common/sgUtil.h"
 
 // DECLARES //////////////////////////////////////////
 
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
-	sgVertexBufferElement::sgVertexBufferElement(int aType,
+	const sgStrHandle sgVertexBufferElement::VertexAttributeName("sg_vertex");
+	const sgStrHandle sgVertexBufferElement::ColorAttributeName("sg_color");
+	const sgStrHandle sgVertexBufferElement::NormalAttributeName("sg_normal");
+	const sgStrHandle sgVertexBufferElement::UV0AttributeName("sg_uv0");
+	const sgStrHandle sgVertexBufferElement::FogAttributeName("sg_fog");
+
+	sgVertexBufferElement::sgVertexBufferElement(const sgStrHandle &name,
+											UInt32 aDataType,
 											uShort aCoordNum,
 											size_t aVertexNum,
 											uShort aSource,
 											uShort aOffset)
-	: sgBuffer(), m_Type(aType),
+	: sgBuffer(), mName(name), mDataType(aDataType), 
+	m_Type(ET_UNKNOWN), mShouldNormalize(false),
 	m_iCoordNum(aCoordNum), m_iVertexNum(aVertexNum),
-	m_iSource(aSource), m_iOffset(aOffset){
+	m_iSource(aSource), m_iOffset(aOffset)
+	{
 
 		// Calculate vertex size
-		m_iVertexSize = _calculateVertexSize();
+		m_iVertexSize = m_iCoordNum * sgGetDataTypeSize(mDataType); //_calculateVertexSize();
 
 		size_t iSizeInBytes = m_iVertexSize * m_iVertexNum;
 		sgBuffer::resize(iSizeInBytes);
         
-        if(m_Type == ET_VERTEX)
+        if(mName == VertexAttributeName)
         {
-            setName("sg_vertex");
+            m_Type = ET_VERTEX;
         }
-        else if(m_Type == ET_NORMAL)
-        {
-            setName("sg_normal");
-        }
-        else if(m_Type == ET_TEXTURE_COORD)
-        {
-            setName("sg_tex0");
-        }
-        else if(m_Type == ET_FOG_COORDINATE)
-        {
-            setName("sg_fog");
-        }
-        else if(m_Type == ET_COLOR)
-        {
-            setName("sg_color");
-        }
-        else
-        {
-            setName("sg_unknown");
-        }
+		else if(mName == NormalAttributeName)
+		{
+			m_Type = ET_NORMAL;
+		}
+		else if(mName == ColorAttributeName)
+		{
+			m_Type = ET_COLOR;
+			mShouldNormalize = true;
+		}
+		else if(mName == UV0AttributeName)
+		{
+			m_Type = ET_TEXTURE_COORD;
+		}
+		else if(mName == FogAttributeName)
+		{
+			m_Type = ET_FOG_COORDINATE;
+		}
 	}
 
 	sgVertexBufferElement::~sgVertexBufferElement(void){
@@ -151,4 +158,14 @@ namespace Sagitta{
 		}
 	}
 
+	void sgVertexBufferElement::setShouldNormalize( bool norm )
+	{
+		mShouldNormalize = norm;
+	}
+	/*
+	void sgVertexBufferElement::setName( const sgStrHandle &name )
+	{
+		mName = name;
+	}
+	*/
 } // namespace Sagitta

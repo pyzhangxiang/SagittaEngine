@@ -26,14 +26,16 @@ namespace Sagitta{
         typedef sg_vector(sgRenderPass*) PassList;
         PassList mPassList;
         
-        typedef sg_map(std::string, sgBuffer*) DataMap;
+        typedef sg_map(sgStrHandle, sgBuffer*) DataMap;
         DataMap mDataMap;
         
 		sg_render::CurrentRenderParam *mCurrentRenderParam;
 
     protected:
         void addPass(const sgStrHandle &queueType = sgStrHandle::EmptyString);
-        
+		/// same name data will be replaced
+        void addData(const sgStrHandle &dataName, sgBuffer *data);
+
     public:
         sgRenderEffect(void);
         virtual ~sgRenderEffect(void) = 0;

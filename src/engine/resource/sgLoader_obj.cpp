@@ -16,6 +16,7 @@
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/common/sgStringUtil.h"
+#include "engine/common/sgUtil.h"
 #include "engine/common/sgException.h"
 
 #include <fstream>
@@ -148,15 +149,15 @@ namespace Sagitta{
                                     sgVertexData *vdata = mesh->getVertexData();
                                     sgIndexData *idata = mesh->getIndexData();
                                     if(gVCount > 0){
-                                        vdata->createElement(sgVertexBufferElement::ET_VERTEX, 3, gVCount);
+                                        vdata->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, gVCount);
                                         idata->createElement(sgVertexBufferElement::ET_VERTEX);
                                     }
                                     if(gNCount > 0){
-                                        vdata->createElement(sgVertexBufferElement::ET_NORMAL, 3, gNCount);
+                                        vdata->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, gNCount);
                                         idata->createElement(sgVertexBufferElement::ET_NORMAL);
                                     }
                                     if(gTCount > 0){
-                                        vdata->createElement(sgVertexBufferElement::ET_TEXTURE_COORD, 2, gTCount);
+                                        vdata->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, gTCount);
                                         idata->createElement(sgVertexBufferElement::ET_TEXTURE_COORD);
                                     }
                                     
@@ -297,15 +298,15 @@ namespace Sagitta{
                     sgVertexData *vdata = mesh->getVertexData();
                     sgIndexData *idata = mesh->getIndexData();
                     if(gVCount > 0){
-                        vdata->createElement(sgVertexBufferElement::ET_VERTEX, 3, gVCount);
+                        vdata->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, gVCount);
                         idata->createElement(sgVertexBufferElement::ET_VERTEX);
                     }
                     if(gNCount > 0){
-                        vdata->createElement(sgVertexBufferElement::ET_NORMAL, 3, gNCount);
+                        vdata->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, gNCount);
                         idata->createElement(sgVertexBufferElement::ET_NORMAL);
                     }
                     if(gTCount > 0){
-                        vdata->createElement(sgVertexBufferElement::ET_TEXTURE_COORD, 2, gTCount);
+                        vdata->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, gTCount);
                         idata->createElement(sgVertexBufferElement::ET_TEXTURE_COORD);
                     }
                     

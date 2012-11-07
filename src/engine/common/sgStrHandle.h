@@ -16,7 +16,10 @@ namespace Sagitta
     {
         friend class sgStrHandleCenter;
     public:
-        static sgStrHandle EmptyString;
+        static const sgStrHandle EmptyString;
+		static const sgStrHandle UnknownString;
+		static const sgStrHandle InvalidString;
+
     private:
         const char *mStr;
         

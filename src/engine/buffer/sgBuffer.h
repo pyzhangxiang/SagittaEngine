@@ -8,7 +8,7 @@
 #define __SGBUFFER_H__
 
 // INCLUDES //////////////////////////////////////////
-#include "engine/common/sgObject.h"
+#include "engine/common/sgMemObject.h"
 #include "math/SagittaPlatform.h"
 #include "math/sgTypeDef.h"
 
@@ -24,7 +24,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport sgBuffer : public sgObject{
+	class _SG_KernelExport sgBuffer : public sgMemObject{
 	// member variables
 	private:
 		/// the true data

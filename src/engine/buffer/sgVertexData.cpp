@@ -85,8 +85,8 @@ namespace Sagitta{
 	}
 
 	//  [1/3/2009 zhangxiang]
-	sgVertexBufferElement *sgVertexData::createElement(int aType, uShort aCoordNum, size_t aVertexNum){
-		sgVertexBufferElement *newelm = new sgVertexBufferElement(aType, aCoordNum, m_iVertexNum, m_iSourceCount++, 0);
+	sgVertexBufferElement *sgVertexData::createElement(const sgStrHandle &name, UInt32 aDataType, uShort aCoordNum, size_t aVertexNum){
+		sgVertexBufferElement *newelm = new sgVertexBufferElement(name, aDataType, aCoordNum, m_iVertexNum, m_iSourceCount++, 0);
 		addElement(newelm);
 		return newelm;
 	}

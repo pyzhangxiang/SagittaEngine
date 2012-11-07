@@ -32,6 +32,7 @@ namespace Sagitta{
 	class Matrix4;
     class sgRenderQueue;
     class sgGpuProgram;
+	class sgSceneRenderEffect;
 
 	namespace sg_render
 	{
@@ -78,33 +79,10 @@ namespace Sagitta{
     {
         SG_META_DECLARE_ABSTRACT(sgRenderer)
         
+		friend class sgSceneRenderEffect;
 //        friend sgRenderer *sgCreateRenderer(const sgStrHandle &type, bool useshader);
         
     public:
-        enum DataType
-        {
-            DT_F,
-            DT_FV2,
-            DT_FV3,
-            DT_FV4,
-            DT_I,
-            DT_IV2,
-            DT_IV3,
-            DT_IV4,
-            DT_UI,
-            DT_UIV2,
-            DT_UIV3,
-            DT_UIV4,
-            DT_B,
-            DT_BV2,
-            DT_BV3,
-            DT_BV4,
-            DT_FM22,
-            DT_FM33,
-            DT_FM44,
-            DT_TEXTURE,
-            DT_NIL,
-        };
 
 	protected:
 		// key_value is z-order value
@@ -210,7 +188,7 @@ namespace Sagitta{
 		/** Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
 		virtual int retMapping(int aRet) const = 0;
         
-    public:
+    //public:
         virtual void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                            , const Matrix4 &modelMatrix, int polyType) const{};
 

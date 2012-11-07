@@ -47,4 +47,20 @@ namespace Sagitta
         return mPassList[index];
     }
 
+	void sgRenderEffect::addData( const sgStrHandle &dataName, sgBuffer *data )
+	{
+		if(!data)
+			return ;
+
+		sgBuffer *refdata = new sgBuffer(*data, 0);
+
+		DataMap::iterator it = mDataMap.find(dataName);
+		if(it != mDataMap.end())
+		{
+			delete it->second;
+			mDataMap.erase(it);
+		}
+
+		mDataMap.insert(std::make_pair(dataName, refdata));
+	}
 } // namespace Sagitta

@@ -79,9 +79,8 @@ namespace Sagitta{
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                        , const Matrix4 &modelMatrix, int polyType) const;
-        
-    public:
-        void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+
+        virtual void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                    , const Matrix4 &modelMatrix, int polyType) const;
 
 	}; //#### end class sgGLRenderer

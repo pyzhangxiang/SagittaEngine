@@ -3,7 +3,6 @@
 #define __SGGUPPROGRAM_H__
 
 #include "engine/resource/sgResource.h"
-#include "engine/buffer/sgBuffer.h"
 #include <map>
 
 namespace Sagitta{
@@ -55,15 +54,19 @@ namespace Sagitta{
         int type;
         int location;
     };
+
+	class sgVertexBufferElement;
+	class sgBuffer;
     
     class _SG_KernelExport sgGpuProgram : public sgObject
     {
         SG_META_DECLARE_ABSTRACT(sgGpuProgram)
         
-    protected:
-        typedef sg_vector(sgGpuParameter) ParameterList;
-        typedef sg_map(std::string, sgGpuAttribute) AttributeList;
-        
+	public:
+        typedef sg_map(sgStrHandle, sgGpuParameter) ParameterList;
+        typedef sg_map(sgStrHandle, sgGpuAttribute) AttributeList;
+
+	protected:    
         UInt32 mProgramId;
         sgStrHandle mVertexShaderFileName;
         sgStrHandle mFragmentShaderFileName;
@@ -87,9 +90,12 @@ namespace Sagitta{
         
         bool setShader(const sgStrHandle &vertexShaderFilename,
                        const sgStrHandle &fragmentShaderFilename);
+
+		const AttributeList &getAttributeList(void) const{ return mAttributeList; }
         
+		virtual bool setParameter(const sgStrHandle &name, sgBuffer *data) = 0;
         virtual bool useProgram(void) = 0;
-        virtual bool setAttribute(sgVertexBufferElement *data) = 0;
+
     protected:
         // create, attach, link
         virtual bool prepareProgram(void) = 0;

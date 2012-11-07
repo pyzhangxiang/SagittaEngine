@@ -45,6 +45,7 @@ namespace Sagitta{
     
     
     class sgVertexBufferElement;
+	class sgBuffer;
     
     class _SG_KernelExport sgGLGpuProgram : public sgGpuProgram
     {
@@ -54,9 +55,10 @@ namespace Sagitta{
         sgGLGpuProgram(void);
         virtual ~sgGLGpuProgram(void);
         
+		virtual bool setParameter(const sgStrHandle &name, sgBuffer *data);
         virtual bool useProgram(void);
-        virtual bool setAttribute(sgVertexBufferElement *data);
-    protected:
+
+	protected:
         // create, attach, link
         virtual bool prepareProgram(void);
     private:

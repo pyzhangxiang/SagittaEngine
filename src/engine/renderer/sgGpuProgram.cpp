@@ -28,13 +28,12 @@ namespace Sagitta{
             return ;
         
         mShaderSource = "";
-        char buffer[256];
-		memset(buffer, 0, sizeof(buffer));
-        while(!file.eof())
-        {
-            file.read(buffer, 255);
-            mShaderSource += buffer;
-        }
+        char *buffer = (char*)sgMalloc(len+1);
+		memset(buffer, 0, len+1);
+		file.read(buffer, len);
+        mShaderSource = buffer;
+
+		sgFree(buffer);
         
         mActive = prepareShader();
     }

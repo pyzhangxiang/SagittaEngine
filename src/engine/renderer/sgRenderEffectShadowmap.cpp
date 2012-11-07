@@ -3,7 +3,7 @@
 
 namespace Sagitta{
 
-    SG_META_DEFINE(sgRenderEffectShadowmap, sgRenderEffect)
+    SG_META_DEFINE(sgRenderEffectShadowmap, sgSceneRenderEffect)
 
     sgRenderEffectShadowmap::sgRenderEffectShadowmap(void)
     : sgSceneRenderEffect()

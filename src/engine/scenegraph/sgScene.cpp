@@ -40,6 +40,10 @@ namespace Sagitta{
 		// physics step
 
 		mpRoot->update(deltaTime);
+		if(mRenderEffect)
+		{
+			mRenderEffect->update(deltaTime);
+		}
 	}
     
     const Color &sgScene::getAmbiantColor(void) const
