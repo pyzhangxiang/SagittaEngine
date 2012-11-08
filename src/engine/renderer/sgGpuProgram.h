@@ -93,7 +93,7 @@ namespace Sagitta{
 
 		const AttributeList &getAttributeList(void) const{ return mAttributeList; }
         
-		virtual bool setParameter(const sgStrHandle &name, size_t extra, sgBuffer *data) = 0;
+		virtual bool setParameter(const sgStrHandle &name, int extra, const void *data) = 0;
         virtual bool useProgram(void) = 0;
 
     protected:

@@ -55,7 +55,7 @@ namespace Sagitta{
         sgGLGpuProgram(void);
         virtual ~sgGLGpuProgram(void);
         
-		virtual bool setParameter(const sgStrHandle &name, size_t extra, sgBuffer *data);
+		virtual bool setParameter(const sgStrHandle &name, int extra, const void *data);
         virtual bool useProgram(void);
 
 	protected:

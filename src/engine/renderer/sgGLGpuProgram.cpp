@@ -290,7 +290,7 @@ namespace Sagitta{
 		
     }
 
-	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, size_t extra, sgBuffer *data )
+	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, int extra, const void *data )
 	{
 		if(!isActive())
 			return false;

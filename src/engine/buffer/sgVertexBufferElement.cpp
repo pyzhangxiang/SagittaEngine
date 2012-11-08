@@ -14,11 +14,11 @@
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
-	const sgStrHandle sgVertexBufferElement::VertexAttributeName("sg_vertex");
-	const sgStrHandle sgVertexBufferElement::ColorAttributeName("sg_color");
-	const sgStrHandle sgVertexBufferElement::NormalAttributeName("sg_normal");
-	const sgStrHandle sgVertexBufferElement::UV0AttributeName("sg_uv0");
-	const sgStrHandle sgVertexBufferElement::FogAttributeName("sg_fog");
+	const sgStrHandle sgVertexBufferElement::VertexAttributeName("sg_Vertex");
+	const sgStrHandle sgVertexBufferElement::ColorAttributeName("sg_Color");
+	const sgStrHandle sgVertexBufferElement::NormalAttributeName("sg_Normal");
+	const sgStrHandle sgVertexBufferElement::UV0AttributeName("sg_UV0");
+	const sgStrHandle sgVertexBufferElement::FogAttributeName("sg_Fog");
 
 	sgVertexBufferElement::sgVertexBufferElement(const sgStrHandle &name,
 											UInt32 aDataType,

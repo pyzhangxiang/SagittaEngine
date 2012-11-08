@@ -21,7 +21,7 @@ namespace Sagitta{
     
     class sgBuffer;
     // params, location, extra(matrix: if transpose; fv: count), data
-    typedef void(*SetShaderUniformFunc)(int, size_t, sgBuffer*);
+    typedef void(*SetShaderUniformFunc)(int, int, const void*);
 
 	class sgCameraComponent;
 	class sgLightComponent;
@@ -273,7 +273,7 @@ namespace Sagitta{
         
         virtual bool initShaderEnvironment(void){ return false; };
         
-        bool setUniformForShader(int type, int location, int extra, sgBuffer* data);
+        bool setUniformForShader(int type, int location, int extra, const void* data);
 
 	}; //#### end class sgRenderer
 

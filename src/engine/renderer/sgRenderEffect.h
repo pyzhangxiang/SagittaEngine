@@ -40,14 +40,31 @@ namespace Sagitta{
 		static const sgStrHandle Light3_Ambient;
 		static const sgStrHandle Light3_Diffuse;
 		static const sgStrHandle Light3_Specular;
-        
+
+		// material
+		static const sgStrHandle Material_Ambient;
+		static const sgStrHandle Material_Diffuse;
+		static const sgStrHandle Material_Specular;
+		static const sgStrHandle Material_Emission;
+		static const sgStrHandle Material_Shininess;
+		static const sgStrHandle Material_SpecularAmount;
+		static const sgStrHandle Material_ReflectFraction;
+
     protected:
      
 		struct FrameUniform
 		{
-			size_t extra;	// if transpose for matrix data, 1 - transpose, 0 - no transpose
+			int extra;	// if transpose for matrix data, 1 - transpose, 0 - no transpose
 			sgBuffer *data;
 			FrameUniform(void) : extra(0), data(NULL){}
+			void setMatrixExtra(size_t count, bool transpose)
+			{
+				extra = count << 1 | (int)transpose;
+			}
+			void setNonMatrixExtra(size_t count)
+			{
+				extra = (int)count;
+			}
 		};
 
         typedef sg_map(sgStrHandle, FrameUniform) FrameUniformMap;
@@ -85,7 +102,7 @@ namespace Sagitta{
 		void setUniformObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 
 	protected:
-		/// set extra uniform data, implement by subclasses
+		/// set extra user defined uniform data, implement by subclasses
 		virtual void setUniformObjectExtra(sg_render::CurrentRenderParam *param, sgSceneObject *object){};
 		/// render the object in the current pass
 		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);

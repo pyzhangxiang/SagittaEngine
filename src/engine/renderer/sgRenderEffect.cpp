@@ -22,22 +22,30 @@ namespace Sagitta
 {
     SG_META_DEFINE_ABSTRACT(sgRenderEffect, sgObject)
 
-	const sgStrHandle sgRenderEffect::Light0_Position("Light0_Position");
-	const sgStrHandle sgRenderEffect::Light0_Ambient("Light0_Ambient");
-	const sgStrHandle sgRenderEffect::Light0_Diffuse("Light0_Diffuse");
-	const sgStrHandle sgRenderEffect::Light0_Specular("Light0_Specular");
-	const sgStrHandle sgRenderEffect::Light1_Position("Light1_Position");
-	const sgStrHandle sgRenderEffect::Light1_Ambient("Light1_Ambient");
-	const sgStrHandle sgRenderEffect::Light1_Diffuse("Light1_Diffuse");
-	const sgStrHandle sgRenderEffect::Light1_Specular("Light1_Specular");
-	const sgStrHandle sgRenderEffect::Light2_Position("Light2_Position");
-	const sgStrHandle sgRenderEffect::Light2_Ambient("Light2_Ambient");
-	const sgStrHandle sgRenderEffect::Light2_Diffuse("Light2_Diffuse");
-	const sgStrHandle sgRenderEffect::Light2_Specular("Light2_Specular");
-	const sgStrHandle sgRenderEffect::Light3_Position("Light3_Position");
-	const sgStrHandle sgRenderEffect::Light3_Ambient("Light3_Ambient");
-	const sgStrHandle sgRenderEffect::Light3_Diffuse("Light3_Diffuse");
-	const sgStrHandle sgRenderEffect::Light3_Specular("Light3_Specular");
+	const sgStrHandle sgRenderEffect::Light0_Position("sg_Light0_Position");
+	const sgStrHandle sgRenderEffect::Light0_Ambient("sg_Light0_Ambient");
+	const sgStrHandle sgRenderEffect::Light0_Diffuse("sg_Light0_Diffuse");
+	const sgStrHandle sgRenderEffect::Light0_Specular("sg_Light0_Specular");
+	const sgStrHandle sgRenderEffect::Light1_Position("sg_Light1_Position");
+	const sgStrHandle sgRenderEffect::Light1_Ambient("sg_Light1_Ambient");
+	const sgStrHandle sgRenderEffect::Light1_Diffuse("sg_Light1_Diffuse");
+	const sgStrHandle sgRenderEffect::Light1_Specular("sg_Light1_Specular");
+	const sgStrHandle sgRenderEffect::Light2_Position("sg_Light2_Position");
+	const sgStrHandle sgRenderEffect::Light2_Ambient("sg_Light2_Ambient");
+	const sgStrHandle sgRenderEffect::Light2_Diffuse("sg_Light2_Diffuse");
+	const sgStrHandle sgRenderEffect::Light2_Specular("sg_Light2_Specular");
+	const sgStrHandle sgRenderEffect::Light3_Position("sg_Light3_Position");
+	const sgStrHandle sgRenderEffect::Light3_Ambient("sg_Light3_Ambient");
+	const sgStrHandle sgRenderEffect::Light3_Diffuse("sg_Light3_Diffuse");
+	const sgStrHandle sgRenderEffect::Light3_Specular("sg_Light3_Specular");
+
+	const sgStrHandle sgRenderEffect::Material_Ambient("sg_Material_Ambient");
+	const sgStrHandle sgRenderEffect::Material_Diffuse("sg_Material_Diffuse");
+	const sgStrHandle sgRenderEffect::Material_Specular("sg_Material_Specular");
+	const sgStrHandle sgRenderEffect::Material_Emission("sg_Material_Emission");
+	const sgStrHandle sgRenderEffect::Material_Shininess("sg_Material_Shininess");
+	const sgStrHandle sgRenderEffect::Material_SpecularAmount("sg_Material_SpecularAmount");
+	const sgStrHandle sgRenderEffect::Material_ReflectFraction("sg_Material_ReflectFraction");
 
     sgRenderEffect::sgRenderEffect(void)
 	: sgObject()
@@ -77,7 +85,7 @@ namespace Sagitta
 
 	void sgRenderEffect::addFrameUniform( const sgStrHandle &dataName, FrameUniform uniform )
 	{
-		if(!uniform.data)
+		if(uniform.data == NULL)
 			return ;
 
 		sgBuffer *refdata = new sgBuffer(*(uniform.data), 0);
@@ -132,37 +140,42 @@ namespace Sagitta
 		FrameUniformMap::iterator it = mFrameUniformMap.begin();
 		for(; it!=mFrameUniformMap.end(); ++it)
 		{
-			param->current_gpu_program->setParameter(it->first, it->second.extra, it->second.data);
+			param->current_gpu_program->setParameter(it->first, it->second.extra, it->second.data->data());
 		}
 		
 		// light data
-		sgBuffer *lightData = new sgBuffer(sizeof(Vector4));
-		Vector4 &vec4 = *((Vector4*)(lightData->data()));
 		for(size_t i=0; i<param->lightlist.size() && i<4; ++i)
 		{
 			sgLightComponent *light = param->lightlist[i];
 			if(i == 0)
 			{
-				vec4 = Vector4(light->getParent()->position());
-				param->current_gpu_program->setParameter(Light0_Position, 1, lightData);
-				
-				vec4 = light->ambientColor().toGLColor();
-				param->current_gpu_program->setParameter(Light0_Ambient, 1, lightData);
+				param->current_gpu_program->setParameter(Light0_Position, 1, Vector4(light->getParent()->position()).data());
+				param->current_gpu_program->setParameter(Light0_Ambient, 1, light->ambientColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light0_Diffuse, 1, light->diffuseColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light0_Specular, 1, light->specularColor().toGLColor().data());
 			}
 			else if(i == 1)
 			{
-
+				param->current_gpu_program->setParameter(Light1_Position, 1, Vector4(light->getParent()->position()).data());
+				param->current_gpu_program->setParameter(Light1_Ambient, 1, light->ambientColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light1_Diffuse, 1, light->diffuseColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light1_Specular, 1, light->specularColor().toGLColor().data());
 			}
 			else if(i == 2)
 			{
-
+				param->current_gpu_program->setParameter(Light2_Position, 1, Vector4(light->getParent()->position()).data());
+				param->current_gpu_program->setParameter(Light2_Ambient, 1, light->ambientColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light2_Diffuse, 1, light->diffuseColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light2_Specular, 1, light->specularColor().toGLColor().data());
 			}
 			else if(i == 3)
 			{
-
+				param->current_gpu_program->setParameter(Light3_Position, 1, Vector4(light->getParent()->position()).data());
+				param->current_gpu_program->setParameter(Light3_Ambient, 1, light->ambientColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light3_Diffuse, 1, light->diffuseColor().toGLColor().data());
+				param->current_gpu_program->setParameter(Light3_Specular, 1, light->specularColor().toGLColor().data());
 			}
 		}
-		delete lightData;
 	}
 
 	void sgRenderEffect::setUniformObject( sg_render::CurrentRenderParam *param, sgSceneObject *object )
@@ -170,5 +183,30 @@ namespace Sagitta
 		if(!param || !object)
 			return ;
 
+		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
+		sgMaterial *material = NULL;
+		if(renderState != NULL)
+		{
+			material = renderState->getMaterial();
+		}
+		if(material != NULL)
+		{
+			param->current_gpu_program->setParameter(Material_Ambient, 1, material->ambientColor().toGLColor().data());
+			param->current_gpu_program->setParameter(Material_Diffuse, 1, material->diffuseColor().toGLColor().data());
+			param->current_gpu_program->setParameter(Material_Specular, 1, material->specularColor().toGLColor().data());
+			param->current_gpu_program->setParameter(Material_Emission, 1, material->emissionColor().toGLColor().data());
+			
+			Real shininess = material->shininess();
+			param->current_gpu_program->setParameter(Material_Shininess, 1, &shininess);
+
+			Real specularAmount = material->specularAmount();
+			param->current_gpu_program->setParameter(Material_Ambient, 1, &specularAmount);
+
+			Real reflectFraction = material->reflectFraction();
+			param->current_gpu_program->setParameter(Material_Ambient, 1, &reflectFraction);
+		}
+
+		// uniform user defined
+		setUniformObjectExtra(param, object);
 	}
 } // namespace Sagitta

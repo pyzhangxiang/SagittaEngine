@@ -184,7 +184,7 @@ namespace Sagitta{
         sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
         sgMaterial *material = 0;
         if(renderState)
-            material = (sgMaterial*)(renderState->getMaterial());
+            material = renderState->getMaterial();
         
 		// setup material
 		if( (renderState && material) && (aGlobalRop.isLightEnable() || 
