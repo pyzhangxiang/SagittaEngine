@@ -16,31 +16,31 @@ namespace Sagitta{
     
     class sgBuffer;
     
-    void sgSetUniform1f(int location, int extra, sgBuffer *data);
-    void sgSetUniform2fv(int location, int extra, sgBuffer *data);
-    void sgSetUniform3fv(int location, int extra, sgBuffer *data);
-    void sgSetUniform4fv(int location, int extra, sgBuffer *data);
+    void sgSetUniform1f(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform2fv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform3fv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform4fv(int location, size_t extra, sgBuffer *data);
     
-    void sgSetUniform1i(int location, int extra, sgBuffer *data);
-    void sgSetUniform2iv(int location, int extra, sgBuffer *data);
-    void sgSetUniform3iv(int location, int extra, sgBuffer *data);
-    void sgSetUniform4iv(int location, int extra, sgBuffer *data);
+    void sgSetUniform1i(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform2iv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform3iv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform4iv(int location, size_t extra, sgBuffer *data);
     /*
-    void sgSetUniform1ui(int location, int extra, sgBuffer *data);
-    void sgSetUniform2uiv(int location, int extra, sgBuffer *data);
-    void sgSetUniform3uiv(int location, int extra, sgBuffer *data);
-    void sgSetUniform4uiv(int location, int extra, sgBuffer *data);
+    void sgSetUniform1ui(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform2uiv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform3uiv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform4uiv(int location, size_t extra, sgBuffer *data);
     */
     /*
-    void sgSetUniform1b(int location, int extra, sgBuffer *data);
-    void sgSetUniform2bv(int location, int extra, sgBuffer *data);
-    void sgSetUniform3bv(int location, int extra, sgBuffer *data);
-    void sgSetUniform4bv(int location, int extra, sgBuffer *data);
+    void sgSetUniform1b(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform2bv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform3bv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform4bv(int location, size_t extra, sgBuffer *data);
     */
     
-    void sgSetUniformMatrixf22(int location, int extra, sgBuffer *data);
-    void sgSetUniformMatrixf33(int location, int extra, sgBuffer *data);
-    void sgSetUniformMatrixf44(int location, int extra, sgBuffer *data);
+    void sgSetUniformMatrixf22(int location, size_t extra, sgBuffer *data);
+    void sgSetUniformMatrixf33(int location, size_t extra, sgBuffer *data);
+    void sgSetUniformMatrixf44(int location, size_t extra, sgBuffer *data);
 
 	
 } // namespace Sagitta

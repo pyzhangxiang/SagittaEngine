@@ -20,8 +20,8 @@ namespace Sagitta{
         virtual ~sgObjectRenderEffect(void) = 0;
         
     protected:
-		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
-  		virtual void setUniforms(sg_render::CurrentRenderParam *param, sgSceneObject *object){}
+		/// render the object pass by pass
+		void render(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 
 	};
 

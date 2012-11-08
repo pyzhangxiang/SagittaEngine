@@ -121,91 +121,91 @@ namespace Sagitta{
 		}
     }
     
-    void sgSetUniform1f(int location, int extra, sgBuffer *data)
+    void sgSetUniform1f(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / sizeof(Float32);
         glUniform1fv(location, count, (Float32*)(data->data()));
     }
-    void sgSetUniform2fv(int location, int extra, sgBuffer *data)
+    void sgSetUniform2fv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(Float32) * 2);
         glUniform2fv(location, count, (Float32*)(data->data()));
     }
-    void sgSetUniform3fv(int location, int extra, sgBuffer *data)
+    void sgSetUniform3fv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(Float32) * 3);
         glUniform3fv(location, count, (Float32*)(data->data()));
     }
-    void sgSetUniform4fv(int location, int extra, sgBuffer *data)
+    void sgSetUniform4fv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(Float32) * 4);
         glUniform4fv(location, count, (Float32*)(data->data()));
     }
     
-    void sgSetUniform1i(int location, int extra, sgBuffer *data)
+    void sgSetUniform1i(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / sizeof(int);
         glUniform1iv(location, count, (int*)(data->data()));
     }
-    void sgSetUniform2iv(int location, int extra, sgBuffer *data)
+    void sgSetUniform2iv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(int) * 2);
         glUniform2iv(location, count, (int*)(data->data()));
     }
-    void sgSetUniform3iv(int location, int extra, sgBuffer *data)
+    void sgSetUniform3iv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(int) * 3);
         glUniform3iv(location, count, (int*)(data->data()));
     }
-    void sgSetUniform4iv(int location, int extra, sgBuffer *data)
+    void sgSetUniform4iv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(int) * 4);
         glUniform4iv(location, count, (int*)(data->data()));
     }
     /*
-    void sgSetUniform1ui(int location, int extra, sgBuffer *data)
+    void sgSetUniform1ui(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / sizeof(UInt32);
         glUniform1uiv(location, count, (UInt32*)(data->data()));
     }
-    void sgSetUniform2uiv(int location, int extra, sgBuffer *data)
+    void sgSetUniform2uiv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(UInt32) * 2);
         glUniform2uiv(location, count, (UInt32*)(data->data()));
     }
-    void sgSetUniform3uiv(int location, int extra, sgBuffer *data)
+    void sgSetUniform3uiv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(UInt32) * 3);
         glUniform3uiv(location, count, (UInt32*)(data->data()));
     }
-    void sgSetUniform4uiv(int location, int extra, sgBuffer *data)
+    void sgSetUniform4uiv(int location, size_t extra, sgBuffer *data)
     {
         int count = data->getSizeInBytes() / (sizeof(UInt32) * 4);
         glUniform4uiv(location, count, (UInt32*)(data->data()));
     }
     */
     /*
-    void sgSetUniform1b(int location, int extra, sgBuffer *data);
-    void sgSetUniform2bv(int location, int extra, sgBuffer *data);
-    void sgSetUniform3bv(int location, int extra, sgBuffer *data);
-    void sgSetUniform4bv(int location, int extra, sgBuffer *data);
+    void sgSetUniform1b(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform2bv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform3bv(int location, size_t extra, sgBuffer *data);
+    void sgSetUniform4bv(int location, size_t extra, sgBuffer *data);
     */
     
-    void sgSetUniformMatrixf22(int location, int extra, sgBuffer *data)
+    void sgSetUniformMatrixf22(int location, size_t extra, sgBuffer *data)
     {
-        int transpose = extra;
+        int transpose = (int)extra;
         int count = data->getSizeInBytes() / (sizeof(Float32) * 4);
         glUniformMatrix2fv(location, count, transpose, (Float32*)(data->data()));
     }
-    void sgSetUniformMatrixf33(int location, int extra, sgBuffer *data)
+    void sgSetUniformMatrixf33(int location, size_t extra, sgBuffer *data)
     {
-        int transpose = extra;
+        int transpose = (int)extra;
         int count = data->getSizeInBytes() / (sizeof(Float32) * 9);
         glUniformMatrix3fv(location, count, transpose, (Float32*)(data->data()));
     }
-    void sgSetUniformMatrixf44(int location, int extra, sgBuffer *data)
+    void sgSetUniformMatrixf44(int location, size_t extra, sgBuffer *data)
     {
-        int transpose = extra;
+        int transpose = (int)extra;
         int count = data->getSizeInBytes() / (sizeof(Float32) * 16);
         glUniformMatrix4fv(location, count, transpose, (Float32*)(data->data()));
     }

@@ -21,7 +21,7 @@ namespace Sagitta{
     
     class sgBuffer;
     // params, location, extra(matrix: if transpose; fv: count), data
-    typedef void(*SetShaderUniformFunc)(int, int, sgBuffer*);
+    typedef void(*SetShaderUniformFunc)(int, size_t, sgBuffer*);
 
 	class sgCameraComponent;
 	class sgLightComponent;
@@ -79,7 +79,7 @@ namespace Sagitta{
     {
         SG_META_DECLARE_ABSTRACT(sgRenderer)
         
-		friend class sgSceneRenderEffect;
+		friend class sgRenderEffect;
 //        friend sgRenderer *sgCreateRenderer(const sgStrHandle &type, bool useshader);
         
     public:

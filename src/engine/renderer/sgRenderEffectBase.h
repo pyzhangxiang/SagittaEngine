@@ -11,16 +11,11 @@ namespace Sagitta{
 	class _SG_KernelExport sgRenderEffectBase : public sgSceneRenderEffect
 	{
         SG_META_DECLARE(sgRenderEffectBase)
-        sgBuffer *scale;
+        
     public:
         sgRenderEffectBase(void);
         virtual ~sgRenderEffectBase(void);
-        
-        virtual void update(Float32 deltaTime);
-      
-		// test uniform
-		virtual void setUniformScene(void);
-		virtual void setUniformObject(sgSceneObject *object);
+     
 	};
     
 } // namespace Sagitta

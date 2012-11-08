@@ -290,7 +290,7 @@ namespace Sagitta{
 		
     }
 
-	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, sgBuffer *data )
+	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, size_t extra, sgBuffer *data )
 	{
 		if(!isActive())
 			return false;
@@ -300,7 +300,7 @@ namespace Sagitta{
 			return false;
 
 		const sgGpuParameter &param = it->second;
-		sgGetRenderer()->setUniformForShader(param.type, param.location, 0, data);
+		sgGetRenderer()->setUniformForShader(param.type, param.location, extra, data);
 		return true;
 	}
 

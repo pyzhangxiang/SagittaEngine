@@ -25,7 +25,7 @@ namespace Sagitta
     SG_META_DEFINE_ABSTRACT(sgSceneRenderEffect, sgRenderEffect)
 
     sgSceneRenderEffect::sgSceneRenderEffect(void)
-	: sgRenderEffect(), mCurrentPass(0)
+	: sgRenderEffect(), mCurrentRenderParam(NULL)
     {
         
     }
@@ -34,26 +34,30 @@ namespace Sagitta
     {
     }
     
-	void sgSceneRenderEffect::renderScene( sg_render::CurrentRenderParam *param )
+	void sgSceneRenderEffect::render( sg_render::CurrentRenderParam *param )
 	{
 		if(mPassList.empty())
 			return ;
 
 		mCurrentRenderParam = param;
+		mCurrentRenderParam->last_gpu_program = NULL;
 
-		for(mCurrentPass=0; mCurrentPass<mPassList.size(); ++mCurrentPass)
+		for(size_t i=0; i<mPassList.size(); ++i)
 		{
-			sgRenderPass *rp = mPassList[mCurrentPass];
+			sgRenderPass *rp = mPassList[i];
+
+			this->setCurrentPass(i);
 			
+			sgGpuProgram *program = rp->getGpuProgram();
+			if(!program || !program->isActive())
+				continue;
+
+			mCurrentRenderParam->current_gpu_program =
+				mCurrentRenderParam->scene_gpu_program = program;
+
 			mCurrentRenderParam->resetRenderQueue(rp->getRenderQueue());
 			// cull objects
 			mCurrentRenderParam->cullObjects(mCurrentRenderParam->pcamera);
-
-			mCurrentRenderParam->last_gpu_program = NULL;
-			mCurrentRenderParam->current_gpu_program =
-				mCurrentRenderParam->scene_gpu_program = rp->getGpuProgram();
-
-			setUniformScene();
 
 			// render
 			const sgRenderQueue::ObjectList &objects = mCurrentRenderParam->renderqueue->getObjectList();
@@ -70,11 +74,11 @@ namespace Sagitta
                 
                 if(re)
                 {
-                    re->renderObject(mCurrentRenderParam, object);
+                    re->render(mCurrentRenderParam, object);
                 }
                 else
                 {
-                    renderObject(object);
+                    renderObject(mCurrentRenderParam, object);
                 }
                 
 			}
@@ -84,38 +88,6 @@ namespace Sagitta
 
 		// reset render parameters
 		mCurrentRenderParam = NULL;
-	}
-
-	void sgSceneRenderEffect::renderObject( sgSceneObject *object )
-	{
-        sgMeshComponent *meshComp = (sgMeshComponent*)(object->getComponent(sgMeshComponent::GetClassName()));
-        if(!meshComp)
-            return ;
-        sgMesh *mesh = meshComp->getMesh();
-        if(!mesh)
-            return ;
-        
-        if(mCurrentRenderParam->last_gpu_program != mCurrentRenderParam->scene_gpu_program)
-        {
-            mCurrentRenderParam->current_gpu_program = mCurrentRenderParam->scene_gpu_program;
-            mCurrentRenderParam->current_gpu_program->useProgram();
-            setUniformScene();
-        }
-        setUniformObject(object);
-
-        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
-        sgMaterial *material = 0;
-        if(renderState)
-            material = (sgMaterial*)(renderState->getMaterial());
-        
-        sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
-		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-        //	mesh->getVertexBuffer(pvb, pvib);
-        const Matrix4 &modelMatrix = object->getFullTransform();
-        
-        sgGetRenderer()->renderProgramPipeline(pvb, pvib, modelMatrix, mesh->polyType());
-        
-        mCurrentRenderParam->last_gpu_program = mCurrentRenderParam->current_gpu_program;
 	}
 
 } // namespace Sagitta

@@ -5,6 +5,7 @@
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgCameraComponent.h"
 #include "engine/common/sgException.h"
+#include "engine/common/sgLogSystem.h"
 #include "engine/component/sgMeshComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
 #include "engine/resource/sgMesh.h"
@@ -130,9 +131,17 @@ namespace Sagitta{
 		// set view matrix
 		setViewMatrix(m_CurRenderParam.pcamera->getViewMatrix());
 
+		// [temp] for log render type
+		static int s_temp_shader = -1;
+
 		sgSceneRenderEffect *sceneRenderEffect = m_CurRenderParam.pscene->getRenderEffect();
 		if(!sceneRenderEffect)
 		{
+			if(s_temp_shader != 0)
+			{
+				s_temp_shader = 0;
+				sgLogSystem::instance()->info("sgRenderer::render, traditional pipeline");
+			}
 			// traditional pipeline
 
 			// setup lights
@@ -158,7 +167,13 @@ namespace Sagitta{
 		}
 		else
 		{
-			sceneRenderEffect->renderScene(&m_CurRenderParam);
+			if(s_temp_shader != 1)
+			{
+				s_temp_shader = 1;
+				sgLogSystem::instance()->info("sgRenderer::render, program pipeline");
+			}
+			// program pipeline
+			sceneRenderEffect->render(&m_CurRenderParam);
 		}
 
 		// draw to target
