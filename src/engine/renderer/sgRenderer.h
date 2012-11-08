@@ -52,6 +52,10 @@ namespace Sagitta{
 
 			// own by the param
 			sgRenderQueue *mDefaultRenderQueue;
+            
+            Matrix4 view_matrix;
+            Matrix4 projection_matrix;
+            Matrix4 vp_matrix;
 
 			CurrentRenderParam(void);
 			~CurrentRenderParam(void);

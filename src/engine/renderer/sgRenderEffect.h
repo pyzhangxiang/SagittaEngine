@@ -24,6 +24,14 @@ namespace Sagitta{
         SG_META_DECLARE_ABSTRACT(sgRenderEffect)
 
 	public:
+        // matrices
+        static const sgStrHandle ModelMatrix;
+		static const sgStrHandle ViewMatrix;
+		static const sgStrHandle ProjectionMatrix;
+        static const sgStrHandle MVMatrix;
+        static const sgStrHandle MVPMatrix;
+        
+        // light
 		static const sgStrHandle Light0_Position;
 		static const sgStrHandle Light0_Ambient;
 		static const sgStrHandle Light0_Diffuse;
@@ -59,7 +67,7 @@ namespace Sagitta{
 			FrameUniform(void) : extra(0), data(NULL){}
 			void setMatrixExtra(size_t count, bool transpose)
 			{
-				extra = count << 1 | (int)transpose;
+				extra = (count << 1) | (int)transpose;
 			}
 			void setNonMatrixExtra(size_t count)
 			{

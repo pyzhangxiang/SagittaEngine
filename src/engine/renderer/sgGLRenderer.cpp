@@ -368,12 +368,12 @@ namespace Sagitta{
 		}
         
 		// model transform
-		glPushMatrix();
-		glMultMatrixf(modelMatrix.transpose().arr());
+		//glPushMatrix();
+		//glMultMatrixf(modelMatrix.transpose().arr());
         
 		glDrawElements(retMapping(polyType), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
 		
-		glPopMatrix();
+		//glPopMatrix();
         
 		for(size_t i=0; i<vertexAttrEnabledList.size(); ++i)
 		{

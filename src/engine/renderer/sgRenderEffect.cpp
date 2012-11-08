@@ -14,6 +14,7 @@
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
+#include "engine/component/sgCameraComponent.h"
 #include "engine/component/sgMeshComponent.h"
 #include "engine/resource/sgMaterial.h"
 #include "engine/resource/sgMesh.h"
@@ -22,6 +23,12 @@ namespace Sagitta
 {
     SG_META_DEFINE_ABSTRACT(sgRenderEffect, sgObject)
 
+    const sgStrHandle sgRenderEffect::ModelMatrix("sg_ModelMatrix");
+	const sgStrHandle sgRenderEffect::ViewMatrix("sg_ViewMatrix");
+	const sgStrHandle sgRenderEffect::ProjectionMatrix("sg_ProjectionMatrix");
+    const sgStrHandle sgRenderEffect::MVMatrix("sg_MVMatrix");
+	const sgStrHandle sgRenderEffect::MVPMatrix("sg_MVPMatrix");
+    
 	const sgStrHandle sgRenderEffect::Light0_Position("sg_Light0_Position");
 	const sgStrHandle sgRenderEffect::Light0_Ambient("sg_Light0_Ambient");
 	const sgStrHandle sgRenderEffect::Light0_Diffuse("sg_Light0_Diffuse");
@@ -136,6 +143,10 @@ namespace Sagitta
 	{
 		if(!param)
 			return ;
+        
+        // view and projection matrix
+        param->current_gpu_program->setParameter(ViewMatrix, (1<<1)|0, param->view_matrix.arr());
+        param->current_gpu_program->setParameter(ProjectionMatrix, (1<<1)|0, param->projection_matrix.arr());
 
 		FrameUniformMap::iterator it = mFrameUniformMap.begin();
 		for(; it!=mFrameUniformMap.end(); ++it)
@@ -182,6 +193,14 @@ namespace Sagitta
 	{
 		if(!param || !object)
 			return ;
+        
+        // set model matrix
+        Matrix4 modelMatrix = object->getFullTransform().transpose();
+        Matrix4 mvMatrix = param->view_matrix * modelMatrix;
+        Matrix4 mvpMatrix = param->vp_matrix * modelMatrix;
+        param->current_gpu_program->setParameter(ModelMatrix, (1<<1)|0, modelMatrix.arr());
+        param->current_gpu_program->setParameter(MVMatrix, (1<<1)|0, mvMatrix.arr());
+        param->current_gpu_program->setParameter(MVPMatrix, (1<<1)|0, mvpMatrix.arr());
 
 		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
 		sgMaterial *material = NULL;

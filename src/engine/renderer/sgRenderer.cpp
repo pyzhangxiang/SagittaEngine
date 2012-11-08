@@ -123,13 +123,12 @@ namespace Sagitta{
 		m_CurRenderParam.pscene->getRoot()->getAllObjects(m_CurRenderParam.objlist);
 
 		collectLights();
-		
-
-		// set projection matrix
-		setProjMatrix(m_CurRenderParam.pcamera->getProjectionMatrix());
-
-		// set view matrix
-		setViewMatrix(m_CurRenderParam.pcamera->getViewMatrix());
+        
+        // store matrices
+        m_CurRenderParam.view_matrix = m_CurRenderParam.pcamera->getViewMatrix();
+        m_CurRenderParam.projection_matrix = m_CurRenderParam.pcamera->getProjectionMatrix();
+        m_CurRenderParam.vp_matrix =
+            m_CurRenderParam.projection_matrix * m_CurRenderParam.view_matrix;
 
 		// [temp] for log render type
 		static int s_temp_shader = -1;
@@ -143,6 +142,12 @@ namespace Sagitta{
 				sgLogSystem::instance()->info("sgRenderer::render, traditional pipeline");
 			}
 			// traditional pipeline
+            
+            // set projection matrix
+            setProjMatrix(m_CurRenderParam.pcamera->getProjectionMatrix());
+            
+            // set view matrix
+            setViewMatrix(m_CurRenderParam.pcamera->getViewMatrix());
 
 			// setup lights
 			if(!(m_CurRenderParam.lightlist.empty())
