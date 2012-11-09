@@ -22,7 +22,7 @@
 
 namespace Sagitta
 {
-    SG_META_DEFINE_ABSTRACT(sgSceneRenderEffect, sgRenderEffect)
+    SG_META_DEFINE(sgSceneRenderEffect, sgRenderEffect)
 
     sgSceneRenderEffect::sgSceneRenderEffect(void)
 	: sgRenderEffect(), mCurrentRenderParam(NULL)

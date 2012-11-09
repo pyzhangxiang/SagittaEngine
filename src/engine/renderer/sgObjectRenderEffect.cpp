@@ -10,7 +10,7 @@
 
 namespace Sagitta
 {
-    SG_META_DEFINE_ABSTRACT(sgObjectRenderEffect, sgRenderEffect)
+    SG_META_DEFINE(sgObjectRenderEffect, sgRenderEffect)
 
     sgObjectRenderEffect::sgObjectRenderEffect(void)
 	: sgRenderEffect()

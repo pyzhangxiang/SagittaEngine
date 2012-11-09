@@ -11,13 +11,13 @@ namespace Sagitta{
     
 	class _SG_KernelExport sgObjectRenderEffect : public sgRenderEffect
 	{
-        SG_META_DECLARE_ABSTRACT(sgObjectRenderEffect)
+        SG_META_DECLARE(sgObjectRenderEffect)
         
         friend class sgSceneRenderEffect;
         
     public:
         sgObjectRenderEffect(void);
-        virtual ~sgObjectRenderEffect(void) = 0;
+        virtual ~sgObjectRenderEffect(void);
         
     protected:
 		/// render the object pass by pass

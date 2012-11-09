@@ -11,7 +11,7 @@ namespace Sagitta
     
 	class _SG_KernelExport sgSceneRenderEffect : public sgRenderEffect
 	{
-        SG_META_DECLARE_ABSTRACT(sgSceneRenderEffect)
+        SG_META_DECLARE(sgSceneRenderEffect)
         
         friend class sgRenderer;
 
@@ -20,7 +20,7 @@ namespace Sagitta
         
     public:
         sgSceneRenderEffect(void);
-        virtual ~sgSceneRenderEffect(void) = 0;
+        virtual ~sgSceneRenderEffect(void);
 		
 	protected:
 		/// render scene pass by pass

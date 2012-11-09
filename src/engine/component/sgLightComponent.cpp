@@ -12,6 +12,7 @@ namespace Sagitta
 	sgLightComponent::sgLightComponent( void )
 	:  m_Ambient(Color::BLACK),
 	m_Diffuse(Color::WHITE), m_Specular(Color::WHITE)
+	, mIntensity(1.0f)
 	{
 
 	}

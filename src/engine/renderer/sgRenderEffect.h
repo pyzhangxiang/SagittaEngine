@@ -33,21 +33,30 @@ namespace Sagitta{
         
         // light
 		static const sgStrHandle Light0_Position;
-		static const sgStrHandle Light0_Ambient;
-		static const sgStrHandle Light0_Diffuse;
-		static const sgStrHandle Light0_Specular;
 		static const sgStrHandle Light1_Position;
-		static const sgStrHandle Light1_Ambient;
-		static const sgStrHandle Light1_Diffuse;
-		static const sgStrHandle Light1_Specular;
 		static const sgStrHandle Light2_Position;
-		static const sgStrHandle Light2_Ambient;
-		static const sgStrHandle Light2_Diffuse;
-		static const sgStrHandle Light2_Specular;
 		static const sgStrHandle Light3_Position;
+
+		static const sgStrHandle Light0_Ambient;
+		static const sgStrHandle Light1_Ambient;
+		static const sgStrHandle Light2_Ambient;
 		static const sgStrHandle Light3_Ambient;
+
+		static const sgStrHandle Light0_Diffuse;
+		static const sgStrHandle Light1_Diffuse;
+		static const sgStrHandle Light2_Diffuse;
 		static const sgStrHandle Light3_Diffuse;
+
+		static const sgStrHandle Light0_Specular;
+		static const sgStrHandle Light1_Specular;
+		static const sgStrHandle Light2_Specular;
 		static const sgStrHandle Light3_Specular;
+
+		static const sgStrHandle Light0_Intensity;
+		static const sgStrHandle Light1_Intensity;
+		static const sgStrHandle Light2_Intensity;
+		static const sgStrHandle Light3_Intensity;
+		
 
 		// material
 		static const sgStrHandle Material_Ambient;
@@ -88,8 +97,10 @@ namespace Sagitta{
 		size_t getCurrentPass(void) const{ return mCurrentPass; }
 		void setCurrentPass(size_t pass){ mCurrentPass = pass; }
 
-    protected:
-        void addPass(const sgStrHandle &queueType = sgStrHandle::EmptyString);
+    public:
+        sgRenderPass *addPass(const sgStrHandle &queueType = sgStrHandle::EmptyString);
+
+	protected:
 		/// same name data will be replaced
         void addFrameUniform(const sgStrHandle &dataName, FrameUniform uniform);
 

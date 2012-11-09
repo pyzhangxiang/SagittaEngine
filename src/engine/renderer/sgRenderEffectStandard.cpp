@@ -1,5 +1,5 @@
 
-#include "sgRenderEffectBase.h"
+#include "sgRenderEffectStandard.h"
 #include "sgRenderPass.h"
 #include "sgRenderQueue.h"
 #include "engine/buffer/sgBuffer.h"
@@ -8,15 +8,15 @@
 
 namespace Sagitta{
 
-    SG_META_DEFINE(sgRenderEffectBase, sgSceneRenderEffect)
+    SG_META_DEFINE(sgRenderEffectStandard, sgSceneRenderEffect)
 
-    sgRenderEffectBase::sgRenderEffectBase(void)
+    sgRenderEffectStandard::sgRenderEffectStandard(void)
     : sgSceneRenderEffect()
     {
         addPass(sgRenderQueue::GetClassName());
     }
     
-    sgRenderEffectBase::~sgRenderEffectBase(void)
+    sgRenderEffectStandard::~sgRenderEffectStandard(void)
     {
         
     }
