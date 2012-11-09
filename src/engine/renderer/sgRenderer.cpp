@@ -125,7 +125,7 @@ namespace Sagitta{
 		collectLights();
         
         // store matrices
-        m_CurRenderParam.view_matrix = m_CurRenderParam.pcamera->getViewMatrix();
+        m_CurRenderParam.view_matrix = m_CurRenderParam.pcamera->getViewMatrix().transpose();
         m_CurRenderParam.projection_matrix = m_CurRenderParam.pcamera->getProjectionMatrix();
         m_CurRenderParam.vp_matrix =
             m_CurRenderParam.projection_matrix * m_CurRenderParam.view_matrix;

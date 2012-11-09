@@ -12,6 +12,8 @@ varying vec4 vertexColor;
 
 void main()
 {	
-	gl_Position = sg_ProjectionMatrix * sg_ViewMatrix * sg_ModelMatrix * (sg_Vertex, 1); //sg_MVPMatrix * vec4(sg_Vertex, 1);
+	gl_Position = sg_MVPMatrix * vec4(sg_Vertex, 1.0);
+	//gl_Position = sg_ProjectionMatrix * sg_ViewMatrix * sg_ModelMatrix * vec4(sg_Vertex, 1.0);
+	//gl_Position = sg_ModelMatrix * sg_ViewMatrix * sg_ProjectionMatrix * vec4(sg_Vertex, 1.0);
 	vertexColor = sg_Color;
 }
