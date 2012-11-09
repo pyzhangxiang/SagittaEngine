@@ -128,6 +128,8 @@ namespace Sagitta{
         // otherwise, use the traditional pipe line
 //        bool mUseShader;
 //        void setUseShader(bool use){ mUseShader = use; }
+		bool mShaderEnvironmentPrepared;
+		//bool isShaderEnvironmentPrepared(void) const{ return mShaderEnvironmentPrepared; }
     public:
         //bool isUseShader(void) const{ return mUseShader; }
 
@@ -275,7 +277,8 @@ namespace Sagitta{
 		/** Renders viewports */
 		void render(void) const;
         
-        virtual bool initShaderEnvironment(void){ return false; };
+        bool initShaderEnvironment(void);
+		virtual bool initShaderEnvironmentImpl(void){ return false; }
         
         bool setUniformForShader(int type, int location, int extra, const void* data);
 

@@ -48,7 +48,7 @@ void DemoGLSL::prepare(void)
         if(sgGetRenderer()->initShaderEnvironment())
         {
             sgShader *vsColor = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/VertexColor.vs");
-            sgShader *fsColor = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/Color.fs");
+            sgShader *fsColor = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/VertexColor.fs");
             
             sgGpuProgram *program = (sgGpuProgram*)sgObject::createObject(sgGLGpuProgram::GetClassName());
             if(program->setShader(vsColor->getFilename(), fsColor->getFilename()))

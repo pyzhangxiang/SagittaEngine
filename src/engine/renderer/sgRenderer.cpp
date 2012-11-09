@@ -55,6 +55,7 @@ namespace Sagitta{
 	: m_bSwapBufferSelf(false)
 	, m_iTargetWidth(800)
 	, m_iTargetHeight(600)
+	, mShaderEnvironmentPrepared(false)
 	{
         
 	}
@@ -128,13 +129,13 @@ namespace Sagitta{
         m_CurRenderParam.view_matrix = m_CurRenderParam.pcamera->getViewMatrix().transpose();
         m_CurRenderParam.projection_matrix = m_CurRenderParam.pcamera->getProjectionMatrix();
         m_CurRenderParam.vp_matrix =
-            m_CurRenderParam.projection_matrix * m_CurRenderParam.view_matrix;
+            m_CurRenderParam.view_matrix * m_CurRenderParam.projection_matrix;
 
 		// [temp] for log render type
 		static int s_temp_shader = -1;
 
 		sgSceneRenderEffect *sceneRenderEffect = m_CurRenderParam.pscene->getRenderEffect();
-		if(!sceneRenderEffect)
+		if(!sceneRenderEffect || !mShaderEnvironmentPrepared)
 		{
 			if(s_temp_shader != 0)
 			{
@@ -354,6 +355,11 @@ namespace Sagitta{
         return true;
     }
 
+	bool sgRenderer::initShaderEnvironment( void )
+	{
+		mShaderEnvironmentPrepared = initShaderEnvironmentImpl();
+		return mShaderEnvironmentPrepared;
+	}
 
 	sg_render::CurrentRenderParam::CurrentRenderParam( void )
 	{

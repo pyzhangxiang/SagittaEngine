@@ -196,10 +196,8 @@ namespace Sagitta
         
         // set model matrix
         Matrix4 modelMatrix = object->getFullTransform().transpose();
-        Matrix4 mvMatrix = param->view_matrix * modelMatrix;
-        //Matrix4 mvpMatrix = param->vp_matrix * modelMatrix;
-		//Matrix4 mvpMatrix = param->projection_matrix * param->view_matrix * modelMatrix;
-		Matrix4 mvpMatrix = modelMatrix * param->view_matrix * param->projection_matrix;
+        Matrix4 mvMatrix = modelMatrix * param->view_matrix;
+        Matrix4 mvpMatrix = modelMatrix * param->vp_matrix;
         param->current_gpu_program->setParameter(ModelMatrix, (1<<1)|0, modelMatrix.arr());
         param->current_gpu_program->setParameter(MVMatrix, (1<<1)|0, mvMatrix.arr());
         param->current_gpu_program->setParameter(MVPMatrix, (1<<1)|0, mvpMatrix.arr());

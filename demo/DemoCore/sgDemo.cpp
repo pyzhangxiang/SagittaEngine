@@ -10,6 +10,7 @@
 #include <engine/sgEngine.h>
 #include <engine/scenegraph/sgScene.h>
 #include <engine/renderer/sgGLRenderer.h>
+#include <engine/renderer/SagiRenderer.h>
 #include <engine/renderer/sgViewport.h>
 #include <engine/component/sgCameraComponent.h>
 #include <engine/component/sgLightComponent.h>

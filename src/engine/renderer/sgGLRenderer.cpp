@@ -257,7 +257,7 @@ namespace Sagitta{
 		}
 	}
     
-    bool sgGLRenderer::initShaderEnvironment(void)
+    bool sgGLRenderer::initShaderEnvironmentImpl(void)
     {
         glewInit();
         bool gl2_0 = glewIsSupported("GL_VERSION_2_0") != 0;

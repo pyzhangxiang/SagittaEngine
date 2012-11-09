@@ -74,7 +74,7 @@ namespace Sagitta{
 		/** Overridden from sgRenderer. Reset graphics attributes when the window's size changed. */
 	//	void resize(int aWidth, int aHeight);
         
-        virtual bool initShaderEnvironment(void);
+        virtual bool initShaderEnvironmentImpl(void);
         
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
