@@ -58,7 +58,10 @@ namespace Sagitta{
 		m_pColor = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
+		// juse is this variable
 		*pIndex = 0;
+
+		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -106,7 +109,7 @@ namespace Sagitta{
 		pIndex[0] = 0;
 		pIndex[1] = 1;
         
-		calCenterAndRadius();
+		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -133,7 +136,8 @@ namespace Sagitta{
         m_pColorData[0] = c1;
 		m_pColorData[1] = c2;
         
-        calCenterAndRadius();
+        prepareGeometry();
+
     }
     
 	// sgLine //////////////////////////////////////////////////////////////////////////
@@ -163,10 +167,10 @@ namespace Sagitta{
 		pIndex[1] = 1;
 		pIndex[2] = 2;
         
-		calCenterAndRadius();
 		setupNormals();
-        
 		m_pFaceNormal = static_cast<Vector3*>(m_pFaceNormalBuffer->data());
+
+		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -215,8 +219,8 @@ namespace Sagitta{
 		m_pColorData[1] = c2;
         m_pColorData[2] = c3;
         
-        calCenterAndRadius();
 		setupNormals();
+		prepareGeometry();
         
     }
     
@@ -310,9 +314,9 @@ namespace Sagitta{
 		pIndexData[34] = 5;
 		pIndexData[35] = 2;
 
-		calCenterAndRadius();
 		setupNormals();
 		//	computeEdgeNormal(); for future ...
+		prepareGeometry();
 	}
 
 	// sgMeshCube //////////////////////////////////////////////////////////////////////////
@@ -411,6 +415,7 @@ namespace Sagitta{
 
 		// will calculate normals 
 		trianglate();
+		prepareGeometry();
 	}
 
 	//  [8/18/2008 zhangxiang]
@@ -501,9 +506,9 @@ namespace Sagitta{
 			++slice;
 		}
 
-		calCenterAndRadius();
 		setupNormals();
 	//	setupEdgeNormal(); // for future ...
+		prepareGeometry();
 	}
 
 	// sgMeshCone //////////////////////////////////////////////////////////////////////////
@@ -581,7 +586,7 @@ namespace Sagitta{
 
 		m_bNormalOuter = false;
 
-		calCenterAndRadius();
+		prepareGeometry();
 	}
 
 	//  [8/18/2008 zhangxiang]

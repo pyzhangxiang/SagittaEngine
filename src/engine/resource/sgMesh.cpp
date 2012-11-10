@@ -31,17 +31,16 @@ namespace Sagitta
 	: sgResource(), m_bGeometryPrepared(false),
 	m_iPolyType(0), m_iPolyNum(0),
 	m_iVertexNum(0), m_bSmooth(true), m_bNormalOuter(true),
-	m_bCounterClockWise(true), m_pVertexData(0),
-    m_pIndexData(0), m_pFaceNormalBuffer(0)
+	m_bCounterClockWise(true), m_pVertexData(NULL),
+    m_pIndexData(NULL), m_pFaceNormalBuffer(NULL)
+	, mpVertexDataFlat(NULL), mpIndexDataFlat(NULL)
     {
 
     }
 
 	void sgMesh::reset(uInt aPolyType,
 		size_t aVertexNum,
-		size_t aPolyNum,
-		bool aSmooth/* = true*/,
-		bool aCounterClockWise/* = true*/)
+		size_t aPolyNum)
 	{
         release();
         
@@ -49,11 +48,11 @@ namespace Sagitta
 		m_iPolyType = aPolyType;
 		m_iPolyNum = aPolyNum;
 		m_iVertexNum = aVertexNum;
-		m_bSmooth = aSmooth;
+		m_bSmooth = true;
 		m_bNormalOuter = true;
-		m_bCounterClockWise = aCounterClockWise;
+		m_bCounterClockWise = true;
 
-		m_pFaceNormalBuffer = 0;
+		m_pFaceNormalBuffer = NULL;
 		m_pVertexData = new sgVertexData(m_iVertexNum);
 		m_pIndexData = new sgIndexData(m_iPolyType, m_iPolyNum);
 	}
@@ -114,16 +113,27 @@ namespace Sagitta
     {
         if(m_pVertexData){
 			delete m_pVertexData;
-            m_pVertexData = 0;
+            m_pVertexData = NULL;
 		}
 		if(m_pIndexData){
 			delete m_pIndexData;
-            m_pIndexData = 0;
+            m_pIndexData = NULL;
 		}
 		if(m_pFaceNormalBuffer){
 			delete m_pFaceNormalBuffer;
-            m_pFaceNormalBuffer = 0;
+            m_pFaceNormalBuffer = NULL;
 		}
+		if(mpVertexDataFlat)
+		{
+			delete mpVertexDataFlat;
+			mpVertexDataFlat = NULL;
+		}
+		if(mpIndexDataFlat)
+		{
+			delete mpIndexDataFlat;
+			mpIndexDataFlat = NULL;
+		}
+		
     }
     
 	bool sgMesh::geometryPrepared(void) const{
@@ -131,10 +141,15 @@ namespace Sagitta
 	}
     
 	//  [1/6/2009 zhangxiang]
-	void sgMesh::prepareGeometry(void){
+	bool sgMesh::prepareGeometry(void){
 		if(!m_bGeometryPrepared){
+			if(!prepareFlatData())
+				return false;
+
 			calCenterAndRadius();
+			m_bGeometryPrepared = true;
 		}
+		return true;
 	}
     
 	//  [1/4/2009 zhangxiang]
@@ -556,6 +571,7 @@ namespace Sagitta
         
     }
     
+	/*
 	//  [8/1/2008 zhangxiang]
 	//  [1/5/2009 zhangxiang]
 	void sgMesh::getVertexBuffer(sgVertexData *outVBuffer, sgVertexIndexBuffer *outIBuffer) const{
@@ -705,6 +721,7 @@ namespace Sagitta
 		// for future ...
         
 	} //#### end getVertexBuffer
+	*/
     
 	sgBuffer *sgMesh::getFaceNormalBuffer(void) const{
 		return m_pFaceNormalBuffer;
@@ -781,7 +798,155 @@ namespace Sagitta
         archive & SG_MAKE_NVP("m_bNormalOuter", m_bNormalOuter);
         archive & SG_MAKE_NVP("m_bCounterClockWise", m_bCounterClockWise);
     }
-    
+
+	bool sgMesh::prepareFlatData( void )
+	{
+		if(!m_pVertexData || !m_pIndexData)
+		{
+			return false;
+		}
+
+		if(m_bSmooth)
+			return true;
+
+		sgVertexBufferElement *vBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_VERTEX);
+		sgVertexIndexBuffer *vIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_VERTEX);
+		if(!vBuffer || !vIndex)
+		{
+			return false;
+		}
+
+		if(vBuffer->vertexNum() != m_iVertexNum || vIndex->polyNum() != m_iPolyNum){
+			THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
+				"Invalid entity with difference between vertex num or polygon num and their expression.",
+				"sgMesh::getVertexBuffer");
+		}
+
+		if(mpVertexDataFlat)
+		{
+			delete mpVertexDataFlat;
+			mpVertexDataFlat = NULL;
+		}
+		if(mpIndexDataFlat)
+		{
+			delete mpIndexDataFlat;
+			mpIndexDataFlat = NULL;
+		}
+
+		mpVertexDataFlat = new sgVertexData();
+		mpIndexDataFlat = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX, m_iPolyType, m_iPolyNum);
+
+		size_t outVertexNum = m_iPolyType * m_iPolyNum;
+		mpVertexDataFlat->setVertexNum(outVertexNum);
+
+		// original buffer data
+		Vector3 *vBufferData = static_cast<Vector3*>(vBuffer->data());
+		size_t *vIndexData = static_cast<size_t*>(vIndex->data());
+
+		// vertices
+		Vector3 *outvBufferData = static_cast<Vector3*>(mpVertexDataFlat->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, outVertexNum)->data());
+		size_t *outIBufferData = static_cast<size_t*>(mpIndexDataFlat->data());
+		{
+			// for flat entity, have to store duplicate vertices
+			size_t vi = 0;
+			for(size_t i=0; i<m_iPolyNum; ++i){
+				for(size_t j=0; j<m_iPolyType; ++j){
+					vi = i * m_iPolyType + j;
+					outvBufferData[vi] = vBufferData[vIndexData[vi]];
+					outIBufferData[vi] = vi;
+				}
+			}
+		}
+
+		// colors
+		sgVertexBufferElement *cBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_COLOR);
+		if(cBuffer)
+		{
+			Color *cBufferData = static_cast<Color*>(cBuffer->data());
+			Color *outcBufferData = static_cast<Color*>(mpVertexDataFlat->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, outVertexNum)->data());
+			{
+				// for flat entity, have to store duplicate colors
+				size_t vi = 0;
+				for(size_t i=0; i<m_iPolyNum; ++i)
+				{
+					for(size_t j=0; j<m_iPolyType; ++j)
+					{
+						vi = i * m_iPolyType + j;
+						outcBufferData[vi] = cBufferData[vIndexData[vi]];
+					}
+				}
+			}
+		}
+
+		// normals
+		sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_NORMAL);
+		if(m_pFaceNormalBuffer)
+		{
+			Vector3 *outnBufferData = static_cast<Vector3*>(mpVertexDataFlat->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, outVertexNum)->data());
+			{
+				// for flat entity, have to store duplicate normals
+				Vector3 *fnBufferData = static_cast<Vector3*>(m_pFaceNormalBuffer->data());
+				for(size_t i=0; i<m_iPolyNum; ++i)
+				{
+					for(size_t j=0; j<m_iPolyType; ++j)
+					{
+						// every vertex's normal is the same as the face normal it belong to
+						outnBufferData[i * m_iPolyType + j] = fnBufferData[i];
+					}
+				}
+			}
+		}
+
+		// texture coordinates
+		sgVertexBufferElement *tBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_TEXTURE_COORD);
+		sgVertexIndexBuffer *tIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_TEXTURE_COORD);
+		if(tBuffer && tIndex)
+		{
+			Vector2 *tBufferData = static_cast<Vector2*>(tBuffer->data());
+			size_t *tIndexData = static_cast<size_t*>(tIndex->data());
+				
+			Vector2 *outtBufferData = static_cast<Vector2*>(mpVertexDataFlat->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, outVertexNum)->data());
+			size_t vi = 0;
+			for(size_t i=0; i<m_iPolyNum; ++i)
+			{
+				for(size_t j=0; j<m_iPolyType; ++j)
+				{
+					vi = i * m_iPolyType + 1;
+					outtBufferData[vi] = tBufferData[tIndexData[vi]];
+				}
+			}
+		}
+
+		// fog coordinate
+		// for future ...
+
+		return true;
+	}
+
+	bool sgMesh::getVertexBuffer( sgVertexData **outVBuffer, sgVertexIndexBuffer **outIBuffer )
+	{
+		if(!outVBuffer || !outIBuffer)
+			return false;
+
+		if(!m_bGeometryPrepared)
+		{
+			if(!prepareGeometry())
+				return false;
+		}
+
+		if(m_bSmooth)
+		{
+			*outVBuffer = m_pVertexData;
+			*outIBuffer = m_pIndexData->getElement(sgVertexBufferElement::ET_VERTEX);
+		}
+		else
+		{
+			*outVBuffer = mpVertexDataFlat;
+			*outIBuffer = mpIndexDataFlat;
+		}
+		return true;
+	}
+
 	//  [1/5/2009 zhangxiang]
 	/*Matrix4 sgMesh::getModelMatrix(void) const{
 		if(isAttached())

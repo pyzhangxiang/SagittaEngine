@@ -244,6 +244,11 @@ namespace Sagitta{
 		/// face normal list
 		sgBuffer *m_pFaceNormalBuffer;
 		
+		// if the number of vertics and normals and texture coordinates are defferent
+		// we will prepare a flat vertion data
+		sgVertexData *mpVertexDataFlat;
+		sgVertexIndexBuffer *mpIndexDataFlat;
+		//sgBuffer *mpFaceNormalFlat;
 		
 		/// edge normal list, the size is equal to the number index data
         //	sgBuffer *m_pEdgeNormalList;	// no need now, for ray tracing
@@ -276,22 +281,21 @@ namespace Sagitta{
          
          */
 		void calCenterAndRadius(void);
-        
+        bool prepareFlatData(void);
+
         void release(void);
 	public:
 
 		void reset(uInt aPolyType,
 			size_t aVertexNum,
-			size_t aPolyNum,
-			bool aSmooth = true,
-			bool aCounterClockWise = true);
+			size_t aPolyNum);
 		
 		/** Gets if geometry prepared. */
 		bool geometryPrepared(void) const;
 		/** Prepare center and radius. */
-		void prepareGeometry(void);
+		bool prepareGeometry(void);
         
-		/** Locates this object to it's center. Overrides from sgRenderable. */
+		/** Locates this object to it's center. */
 		void locateToCenter(void);
         
 		/** Gets polygon type. */
@@ -350,7 +354,9 @@ namespace Sagitta{
          @param
          outIBuffer Where copied indices data stored, should has been malloced.
          */
-		void getVertexBuffer(sgVertexData *outVBuffer, sgVertexIndexBuffer *outIBuffer) const;
+		//void getVertexBuffer(sgVertexData *outVBuffer, sgVertexIndexBuffer *outIBuffer) const;
+
+		bool getVertexBuffer(sgVertexData **outVBuffer, sgVertexIndexBuffer **outIBuffer);
         
 		/** Gets face normal buffer 
          */

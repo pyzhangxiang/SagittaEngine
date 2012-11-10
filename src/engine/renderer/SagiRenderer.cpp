@@ -143,9 +143,10 @@ namespace Sagitta{
         m_CurVertexBuffers.mesh = mesh;
         m_CurVertexBuffers.material = material;
 
-		sgVertexData *pvb = new sgVertexData();
-		sgVertexIndexBuffer *pvib = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-		mesh->getVertexBuffer(pvb, pvib);
+		sgVertexData *pvb;// = new sgVertexData();
+		sgVertexIndexBuffer *pvib;// = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		if(!mesh->getVertexBuffer(&pvb, &pvib))
+			return ;
 
 		// vertex buffers
 		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
