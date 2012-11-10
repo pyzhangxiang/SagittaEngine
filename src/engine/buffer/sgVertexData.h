@@ -32,7 +32,7 @@ namespace Sagitta{
 	class _SG_KernelExport sgVertexData : public sgMemObject{
 	private:
 		// mapped by element type
-		typedef sg_map(int, sgVertexBufferElement*) ElementList;
+		typedef sg_map(sgStrHandle, sgVertexBufferElement*) ElementList;
 
 	public:
 		typedef sgMapIterator<ElementList> Iterator;
@@ -81,7 +81,7 @@ namespace Sagitta{
 		sgVertexBufferElement *createElement(const sgStrHandle &name, UInt32 aDataType, uShort aCoordNum, size_t aVertexNum);
 
 		/** Gets an element by type. */
-		sgVertexBufferElement *getElement(int aType) const;
+		sgVertexBufferElement *getElement(sgStrHandle aType) const;
 
 		/** Gets the iterator of the element list. */
 		Iterator getIterator(void);

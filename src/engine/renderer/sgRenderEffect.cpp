@@ -129,6 +129,12 @@ namespace Sagitta
 		if(!mesh)
 			return ;
 
+		sgVertexData *pvb = NULL;// = mesh->getVertexData(); //new sgVertexData();
+		sgVertexIndexBuffer *pvib = NULL; // = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		if(!mesh->getVertexBuffer(&pvb, &pvib))
+			return ;
+		const Matrix4 &modelMatrix = object->getFullTransform();
+
 		if(param->last_gpu_program != param->current_gpu_program)
 		{
 			param->current_gpu_program->useProgram();
@@ -141,10 +147,7 @@ namespace Sagitta
 		if(renderState)
 			material = (sgMaterial*)(renderState->getMaterial());
 
-		sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
-		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-		//	mesh->getVertexBuffer(pvb, pvib);
-		const Matrix4 &modelMatrix = object->getFullTransform();
+		
 
 		sgGetRenderer()->renderProgramPipeline(pvb, pvib, modelMatrix, mesh->polyType());
 

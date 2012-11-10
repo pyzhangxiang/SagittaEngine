@@ -284,6 +284,8 @@ namespace Sagitta{
         bool prepareFlatData(void);
 
         void release(void);
+
+		void _setDirty(void){ m_bGeometryPrepared = false; }
 	public:
 
 		void reset(uInt aPolyType,

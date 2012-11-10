@@ -404,14 +404,14 @@ namespace Sagitta{
                                 sgIndexData *idata = nextMesh->getIndexData();
                                 
                                 // vertex
-                                vertices = static_cast<Vector3*>(vdata->getElement(sgVertexBufferElement::ET_VERTEX)->data());
+                                vertices = static_cast<Vector3*>(vdata->getElement(sgVertexBufferElement::VertexAttributeName)->data());
                                 vindices = static_cast<IndexedTriangle*>(idata->getElement(sgVertexBufferElement::ET_VERTEX)->data());
                                 if(ncounts[gCount]){
-                                    normals = static_cast<Vector3*>(vdata->getElement(sgVertexBufferElement::ET_NORMAL)->data());
+                                    normals = static_cast<Vector3*>(vdata->getElement(sgVertexBufferElement::NormalAttributeName)->data());
                                     nindices = static_cast<IndexedTriangle*>(idata->getElement(sgVertexBufferElement::ET_NORMAL)->data());
                                 }
                                 if(tcounts[gCount]){
-                                    texcoords = static_cast<Vector2*>(vdata->getElement(sgVertexBufferElement::ET_TEXTURE_COORD)->data());
+                                    texcoords = static_cast<Vector2*>(vdata->getElement(sgVertexBufferElement::UV0AttributeName)->data());
                                     tindices = static_cast<IndexedTriangle*>(idata->getElement(sgVertexBufferElement::ET_TEXTURE_COORD)->data());
                                 }
                                 

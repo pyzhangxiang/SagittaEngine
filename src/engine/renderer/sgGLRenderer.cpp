@@ -188,6 +188,12 @@ namespace Sagitta{
         if(renderState)
             material = renderState->getMaterial();
         
+		sgVertexData *pvb = NULL;// = mesh->getVertexData(); //new sgVertexData();
+		sgVertexIndexBuffer *pvib = NULL; // = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		if(!mesh->getVertexBuffer(&pvb, &pvib))
+			return ;
+		const Matrix4 &modelMatrix = aRenderable->getFullTransform();
+
 		// setup material
 		if( (renderState && material) && (aGlobalRop.isLightEnable() || 
            (renderState->getRenderState().isLightEnable())) )
@@ -199,10 +205,7 @@ namespace Sagitta{
 			glMaterialfv(GL_FRONT, GL_EMISSION, material->emissionColor().toGLColor().data());
 		}
 
-        sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
-		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-        //	mesh->getVertexBuffer(pvb, pvib);
-        const Matrix4 &modelMatrix = aRenderable->getFullTransform();
+        
 		
 		renderTraditionalPipeline(pvb, pvib, modelMatrix, mesh->polyType());
 

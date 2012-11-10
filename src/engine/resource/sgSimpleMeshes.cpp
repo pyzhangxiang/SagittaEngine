@@ -130,6 +130,8 @@ namespace Sagitta{
     void sgMeshLine::setVertecies(const Vector3 &p1, const Color &c1,
                                   const Vector3 &p2, const Color &c2)
     {
+		_setDirty();
+
         m_pPosData[0] = p1;
 		m_pPosData[1] = p2;
         
@@ -211,6 +213,9 @@ namespace Sagitta{
                                       const Vector3 &p2, const Color &c2,
                                       const Vector3 &p3, const Color &c3)
     {
+
+		_setDirty();
+
         m_pPosData[0] = p1;
 		m_pPosData[1] = p2;
         m_pPosData[2] = p3;

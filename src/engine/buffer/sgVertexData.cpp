@@ -74,25 +74,28 @@ namespace Sagitta{
 							"Different vertex num.", "sgVertexData::addElement");
 		}
 
-		ElementList::iterator it = m_ElementList.find(aElement->type());
+		ElementList::iterator it = m_ElementList.find(aElement->getName());
 		if(it != m_ElementList.end()){
 			THROW_SAGI_EXCEPT(sgException::ERR_DUPLICATE_ITEM,
 							"Such type element is existed.",
 							"sgVertexData::addElement");
 		}
 
-		m_ElementList.insert(std::make_pair(aElement->type(), aElement));
+		m_ElementList.insert(std::make_pair(aElement->getName(), aElement));
 	}
 
 	//  [1/3/2009 zhangxiang]
 	sgVertexBufferElement *sgVertexData::createElement(const sgStrHandle &name, UInt32 aDataType, uShort aCoordNum, size_t aVertexNum){
-		sgVertexBufferElement *newelm = new sgVertexBufferElement(name, aDataType, aCoordNum, m_iVertexNum, m_iSourceCount++, 0);
+		sgVertexBufferElement *newelm = getElement(name);
+		if(newelm)
+			return newelm;
+		newelm = new sgVertexBufferElement(name, aDataType, aCoordNum, m_iVertexNum, m_iSourceCount++, 0);
 		addElement(newelm);
 		return newelm;
 	}
 
 	//  [1/3/2009 zhangxiang]
-	sgVertexBufferElement *sgVertexData::getElement(int aType) const{
+	sgVertexBufferElement *sgVertexData::getElement(sgStrHandle aType) const{
 		ElementList::const_iterator it = m_ElementList.find(aType);
 		if(it == m_ElementList.end()){
 			return 0;
@@ -202,7 +205,11 @@ namespace Sagitta{
 
 	//  [1/3/2009 zhangxiang]
 	sgVertexIndexBuffer *sgIndexData::createElement(int aType){
-		sgVertexIndexBuffer *newelm = new sgVertexIndexBuffer(aType, m_iPolyType, m_iPolyNum);
+		sgVertexIndexBuffer *newelm = getElement(aType);
+		if(newelm)
+			return newelm;
+
+		newelm = new sgVertexIndexBuffer(aType, m_iPolyType, m_iPolyNum);
 		addElement(newelm);
 		return newelm;
 	}
