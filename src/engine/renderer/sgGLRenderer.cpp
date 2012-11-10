@@ -7,6 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "sgGLRenderer.h"
 #include "sgViewport.h"
+#include "engine/buffer/sgFrameBuffer.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
@@ -18,6 +19,7 @@
 #include "engine/component/sgMeshComponent.h"
 #include "engine/resource/sgMaterial.h"
 #include "engine/resource/sgMesh.h"
+#include "engine/resource/sgTexture.h"
 #include "sgGLInclude.h"
 #include "sgGLUtil.h"
 
@@ -379,6 +381,29 @@ namespace Sagitta{
 		{
 			glDisableVertexAttribArray(vertexAttrEnabledList[i]);
 		}
+    }
+    
+    bool sgGLRenderer::createTexure(sgTexture *pTexture)
+    {
+        if(pTexture == NULL ||
+           ! (pTexture->isActive()) )
+        {
+            return false;
+        }
+        sgFrameBuffer *buffer = pTexture->getBuffer();
+        
+        GLuint textureId = 0;
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, buffer->width(), buffer->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)buffer->data() );
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+        
+        return true;
     }
 
 } // namespace Sagitta

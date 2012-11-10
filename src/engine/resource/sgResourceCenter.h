@@ -67,6 +67,7 @@ namespace Sagitta{
         
         const std::string &getRootDir(void) const{ return mRootDir; }
         void setRootDir(const std::string &dir);
+        std::string getResourcePath(const std::string &subname);
 
 	}; //#### end class sgResourceCenter
 

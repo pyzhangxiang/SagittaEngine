@@ -16,9 +16,9 @@
 
 namespace Sagitta{
 
-	class SColorBuffer;
-	class SDepthBuffer;
-	class SStencilBuffer;
+	class sgColorBuffer;
+	class sgDepthBuffer;
+	class sgStencilBuffer;
 
 	/** class representation
 	@remarks
@@ -32,9 +32,9 @@ namespace Sagitta{
 	// member variables
 	private:
 		/// frame buffers
-		SColorBuffer *m_pColorBuffer;
-		SDepthBuffer *m_pDepthBuffer;
-		SStencilBuffer *m_pStencilBuffer;
+		sgColorBuffer *m_pColorBuffer;
+		sgDepthBuffer *m_pDepthBuffer;
+		sgStencilBuffer *m_pStencilBuffer;
 
 	// constructors & destructor
 	public:
@@ -56,13 +56,13 @@ namespace Sagitta{
 								size_t aWidth, size_t aHeight);
 
 		/** Gets color buffer. */
-		SColorBuffer *getColorBuffer(void) const;
+		sgColorBuffer *getColorBuffer(void) const;
 
 		/** Gets depth buffer. */
-		SDepthBuffer *getDepthBuffer(void) const;
+		sgDepthBuffer *getDepthBuffer(void) const;
 
 		/** Gets stencil buffer. */
-		SStencilBuffer *getStencilBuffer(void) const;
+		sgStencilBuffer *getStencilBuffer(void) const;
 
 		/** Clears color buffer. */
 		void clearColor(const Color::GLColor &aValue);

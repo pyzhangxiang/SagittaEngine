@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////
-// file: SFrameBuffer.h 
+// file: sgFrameBuffer.h 
 // created by zhangxiang on 09-01-14
-// declare of the class SFrameBuffer
-// SFrameBuffer is a class ...
+// declare of the class sgFrameBuffer
+// sgFrameBuffer is a class ...
 //////////////////////////////////////////////////////
 #ifndef __SGFRAMEBUFFER_H__
 #define __SGFRAMEBUFFER_H__
@@ -32,7 +32,7 @@ namespace Sagitta{
 	@par
 
 	*/
-	class _SG_KernelExport SFrameBuffer : public sgBuffer{
+	class _SG_KernelExport sgFrameBuffer : public sgBuffer{
 	// member variables
 	private:
 		/// left-top corner
@@ -49,11 +49,12 @@ namespace Sagitta{
 
 	// constructors & destructor
 	public:
-		SFrameBuffer(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes);
-		SFrameBuffer(const SFrameBuffer &aParentBuffer,
+        sgFrameBuffer(void);
+		sgFrameBuffer(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes);
+		sgFrameBuffer(const sgFrameBuffer &aParentBuffer,
 					size_t aLeft, size_t aTop,
 					size_t aWidth, size_t aHeight);
-		~SFrameBuffer(void);
+		~sgFrameBuffer(void);
 
 	// member functions
 	public:
@@ -75,10 +76,13 @@ namespace Sagitta{
 		/** Gets offset in width. */
 		size_t getTopParentWidth(void) const;
 
-		/** Resizes with new width and height. */
-		void resize(size_t aWidth, size_t aHeight);
+		/** Resizes with new width and height. 
+            if aDataSizeInBytes == 0 then
+                use the original data size in bytes
+         */
+		void resize(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes = 0);
 
-	}; //#### end class SFrameBuffer
+	}; //#### end class sgFrameBuffer
 
 
 	/** ColorBuffer
@@ -89,20 +93,20 @@ namespace Sagitta{
 	 @par
 	 
 	 */
-	class _SG_KernelExport SColorBuffer : public SFrameBuffer{
+	class _SG_KernelExport sgColorBuffer : public sgFrameBuffer{
 	// member variables
 		
 	// constructors & destructor
 	public:
-		SColorBuffer(size_t aWidth, size_t aHeight);
-		SColorBuffer(const SColorBuffer &aParentBuffer,
+		sgColorBuffer(size_t aWidth, size_t aHeight);
+		sgColorBuffer(const sgColorBuffer &aParentBuffer,
 					size_t aLeft, size_t aTop,
 					size_t aWidth, size_t aHeight);
-		~SColorBuffer(void);
+		~sgColorBuffer(void);
 		
 	// member functions
 		
-	}; //#### end class SColorBuffer
+	}; //#### end class sgColorBuffer
 
 
 	/** DepthBuffer
@@ -113,20 +117,20 @@ namespace Sagitta{
 	 @par
 	 
 	 */
-	class _SG_KernelExport SDepthBuffer : public SFrameBuffer{
+	class _SG_KernelExport sgDepthBuffer : public sgFrameBuffer{
 	// member variables
 		
 	// constructors & destructor
 	public:
-		SDepthBuffer(size_t aWidth, size_t aHeight);
-		SDepthBuffer(const SDepthBuffer &aParentBuffer,
+		sgDepthBuffer(size_t aWidth, size_t aHeight);
+		sgDepthBuffer(const sgDepthBuffer &aParentBuffer,
 					size_t aLeft, size_t aTop,
 					size_t aWidth, size_t aHeight);
-		~SDepthBuffer(void);
+		~sgDepthBuffer(void);
 		
 	// member functions
 		
-	}; //#### end class SDepthBuffer
+	}; //#### end class sgDepthBuffer
 
 
 	/** StencilBuffer
@@ -137,20 +141,20 @@ namespace Sagitta{
 	 @par
 	 
 	 */
-	class _SG_KernelExport SStencilBuffer : public SFrameBuffer{
+	class _SG_KernelExport sgStencilBuffer : public sgFrameBuffer{
 	// member variables
 		
 	// constructors & destructor
 	public:
-		SStencilBuffer(size_t aWidth, size_t aHeight);
-		SStencilBuffer(const SStencilBuffer &aParentBuffer,
+		sgStencilBuffer(size_t aWidth, size_t aHeight);
+		sgStencilBuffer(const sgStencilBuffer &aParentBuffer,
 					size_t aLeft, size_t aTop,
 					size_t aWidth, size_t aHeight);
-		~SStencilBuffer(void);
+		~sgStencilBuffer(void);
 		
 	// member functions
 		
-	}; //#### end class SStencilBuffer
+	}; //#### end class sgStencilBuffer
 
 } // namespace Sagitta
 

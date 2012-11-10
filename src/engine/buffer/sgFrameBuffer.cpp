@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////
-// file: SFrameBuffer.cpp 
+// file: sgFrameBuffer.cpp 
 // created by zhangxiang on 09-01-14
-// define of the class SFrameBuffer
-// SFrameBuffer is a class ...
+// define of the class sgFrameBuffer
+// sgFrameBuffer is a class ...
 //////////////////////////////////////////////////////
 
 // INCLUDES //////////////////////////////////////////
@@ -15,17 +15,26 @@
 // DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
-	// SFrameBuffer //////////////////////////////////////////////////////////////////////////
+	// sgFrameBuffer //////////////////////////////////////////////////////////////////////////
 
+    //  [10/11/2012 zhangxiang]
+    sgFrameBuffer::sgFrameBuffer(void)
+    : sgBuffer()
+    , m_iLeft(0), m_iWidth(0), m_iHeight(0)
+    , m_iDataSizeInBytes(0), m_iTopParentWidth(0)
+    {
+        
+    }
+    
 	//  [1/14/2009 zhangxiang]
-	SFrameBuffer::SFrameBuffer(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes) :
+	sgFrameBuffer::sgFrameBuffer(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes) :
 	sgBuffer(aWidth * aHeight * aDataSizeInBytes), m_iLeft(0), m_iTop(0), m_iWidth(aWidth),
 	m_iHeight(aHeight), m_iDataSizeInBytes(aDataSizeInBytes), m_iTopParentWidth(aWidth){
 
 	}
 
 	//  [1/14/2009 zhangxiang]
-	SFrameBuffer::SFrameBuffer(const SFrameBuffer &aParentBuffer,
+	sgFrameBuffer::sgFrameBuffer(const sgFrameBuffer &aParentBuffer,
 							size_t aLeft, size_t aTop,
 							size_t aWidth, size_t aHeight) :
 	sgBuffer(aParentBuffer, (aParentBuffer.m_iWidth * aTop + aLeft) * aParentBuffer.m_iDataSizeInBytes),
@@ -37,128 +46,133 @@ namespace Sagitta{
 			release();
 			THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
 				"Cannot ask for a bigger width or height than the parent one.",
-				"SFrameBuffer::SFrameBuffer");
+				"sgFrameBuffer::sgFrameBuffer");
 		}
 
 	}
 
 	//  [1/14/2009 zhangxiang]
-	SFrameBuffer::~SFrameBuffer(void){
+	sgFrameBuffer::~sgFrameBuffer(void){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::left(void) const{
+	size_t sgFrameBuffer::left(void) const{
 		return m_iLeft;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::top(void) const{
+	size_t sgFrameBuffer::top(void) const{
 		return m_iTop;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::width(void) const{
+	size_t sgFrameBuffer::width(void) const{
 		return m_iWidth;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::height(void) const{
+	size_t sgFrameBuffer::height(void) const{
 		return m_iHeight;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::getDataSizeInBytes(void) const{
+	size_t sgFrameBuffer::getDataSizeInBytes(void) const{
 		return m_iDataSizeInBytes;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	size_t SFrameBuffer::getTopParentWidth(void) const{
+	size_t sgFrameBuffer::getTopParentWidth(void) const{
 		return m_iTopParentWidth;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	void SFrameBuffer::resize(size_t aWidth, size_t aHeight){
+	void sgFrameBuffer::resize(size_t aWidth, size_t aHeight, size_t aDataSizeInBytes){
 		// if not the top parent frame buffer, will not succeed
-		size_t iSizeInBytes = aWidth * aHeight * m_iDataSizeInBytes;
+        if(aDataSizeInBytes == 0)
+            aDataSizeInBytes = m_iDataSizeInBytes;
+        else
+            m_iDataSizeInBytes = aDataSizeInBytes;
+        
+		size_t iSizeInBytes = aWidth * aHeight * aDataSizeInBytes;
 		sgBuffer::resize(iSizeInBytes);
 
 		m_iWidth = m_iTopParentWidth = aWidth;
 		m_iHeight = aHeight;
 	}
 
-	// SFrameBuffer //////////////////////////////////////////////////////////////////////////
+	// sgFrameBuffer //////////////////////////////////////////////////////////////////////////
 
 
-	// SColorBuffer //////////////////////////////////////////////////////////////////////////
+	// sgColorBuffer //////////////////////////////////////////////////////////////////////////
 
 	//  [1/15/2009 zhangxiang]
-	SColorBuffer::SColorBuffer(size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aWidth, aHeight, sizeof(Color::GLColor)){
+	sgColorBuffer::sgColorBuffer(size_t aWidth, size_t aHeight) :
+	sgFrameBuffer(aWidth, aHeight, sizeof(Color::GLColor)){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SColorBuffer::SColorBuffer(const SColorBuffer &aParentBuffer,
+	sgColorBuffer::sgColorBuffer(const sgColorBuffer &aParentBuffer,
 							size_t aLeft, size_t aTop,
 							size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
+	sgFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SColorBuffer::~SColorBuffer(void){
+	sgColorBuffer::~sgColorBuffer(void){
 
 	}
 
-	// SColorBuffer //////////////////////////////////////////////////////////////////////////
+	// sgColorBuffer //////////////////////////////////////////////////////////////////////////
 
 
-	// SDepthBuffer //////////////////////////////////////////////////////////////////////////
+	// sgDepthBuffer //////////////////////////////////////////////////////////////////////////
 
 	//  [1/15/2009 zhangxiang]
-	SDepthBuffer::SDepthBuffer(size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aWidth, aHeight, sizeof(Real)){
+	sgDepthBuffer::sgDepthBuffer(size_t aWidth, size_t aHeight) :
+	sgFrameBuffer(aWidth, aHeight, sizeof(Real)){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SDepthBuffer::SDepthBuffer(const SDepthBuffer &aParentBuffer,
+	sgDepthBuffer::sgDepthBuffer(const sgDepthBuffer &aParentBuffer,
 							size_t aLeft, size_t aTop,
 							size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
+	sgFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SDepthBuffer::~SDepthBuffer(void){
+	sgDepthBuffer::~sgDepthBuffer(void){
 
 	}
 
 	// DepthBuffer //////////////////////////////////////////////////////////////////////////
 
 
-	// SStencilBuffer //////////////////////////////////////////////////////////////////////////
+	// sgStencilBuffer //////////////////////////////////////////////////////////////////////////
 
 	//  [1/15/2009 zhangxiang]
-	SStencilBuffer::SStencilBuffer(size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aWidth, aHeight, sizeof(int)){
+	sgStencilBuffer::sgStencilBuffer(size_t aWidth, size_t aHeight) :
+	sgFrameBuffer(aWidth, aHeight, sizeof(int)){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SStencilBuffer::SStencilBuffer(const SStencilBuffer &aParentBuffer,
+	sgStencilBuffer::sgStencilBuffer(const sgStencilBuffer &aParentBuffer,
 							size_t aLeft, size_t aTop,
 							size_t aWidth, size_t aHeight) :
-	SFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
+	sgFrameBuffer(aParentBuffer, aLeft, aTop, aWidth, aHeight){
 
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SStencilBuffer::~SStencilBuffer(void){
+	sgStencilBuffer::~sgStencilBuffer(void){
 
 	}
 
-	// SStencilBuffer //////////////////////////////////////////////////////////////////////////
+	// sgStencilBuffer //////////////////////////////////////////////////////////////////////////
 
 } // namespace Sagitta

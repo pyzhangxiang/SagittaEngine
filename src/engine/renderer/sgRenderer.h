@@ -33,6 +33,7 @@ namespace Sagitta{
     class sgRenderQueue;
     class sgGpuProgram;
 	class sgSceneRenderEffect;
+    class sgTexture;
 
 	namespace sg_render
 	{
@@ -281,6 +282,9 @@ namespace Sagitta{
 		virtual bool initShaderEnvironmentImpl(void){ return false; }
         
         bool setUniformForShader(int type, int location, int extra, const void* data);
+        
+        /// create a texture for api
+        virtual bool createTexure(sgTexture *pTexture){ return false; }
 
 	}; //#### end class sgRenderer
 

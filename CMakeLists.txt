@@ -61,4 +61,4 @@ endfunction(sg_create_vcproj_userfile)
 
 add_subdirectory(src)
 add_subdirectory(demo)
-#add_subdirectory(test)
+add_subdirectory(deps)
