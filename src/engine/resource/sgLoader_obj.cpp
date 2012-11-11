@@ -372,10 +372,8 @@ namespace Sagitta{
                                     // have a last group
                                     sgSceneObject *obj = objGroups[gCount];
                                     sgMesh *mesh = groups[gCount];
-                                    mesh->prepareGeometry();
-                                    //	if(!entity->isSmooth()){
                                     mesh->setupNormals();
-                                    //	}
+                                    mesh->prepareGeometry();
                                     obj->translate(mesh->center());
                                     mesh->locateToCenter();
                                     
@@ -538,10 +536,8 @@ namespace Sagitta{
                     // have a last group
                     sgSceneObject *obj = objGroups[gCount];
                     sgMesh *mesh = groups[gCount];
-                    mesh->prepareGeometry();
-                    //	if(!entity->isSmooth()){
                     mesh->setupNormals();
-                    //	}
+                    mesh->prepareGeometry();
                     obj->translate(mesh->center());
                     mesh->locateToCenter();
                     

@@ -309,7 +309,7 @@ namespace Sagitta{
 		/** If I'm smooth. */
 		bool isSmooth(void) const;
 		/** Sets smooth property. */
-		void setSmooth(bool aSmooth);
+		bool setSmooth(bool aSmooth);
         
 		/** If my normals radiate out. */
 		bool normalOuter(void) const;

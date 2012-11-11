@@ -167,8 +167,39 @@ namespace Sagitta
 		return m_bSmooth;
 	}
     
-	void sgMesh::setSmooth(bool aSmooth){
-		m_bSmooth = aSmooth;
+	bool sgMesh::setSmooth(bool aSmooth)
+    {
+        if(m_bSmooth == aSmooth)
+            return m_bSmooth;
+        
+        _setDirty();
+        if(aSmooth)
+        {
+            sgVertexBufferElement *vBuffer = m_pVertexData->getElement(sgVertexBufferElement::VertexAttributeName);
+            sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::NormalAttributeName);
+            if(!vBuffer || !nBuffer)
+            {
+                m_bSmooth = aSmooth;
+                return m_bSmooth;
+            }
+            sgVertexBufferElement *tBuffer = m_pVertexData->getElement(sgVertexBufferElement::UV0AttributeName);
+            // if data number of vertex buffer and normal buffer or uv buffer are different
+            // force flat
+            if(vBuffer->vertexNum() != nBuffer->vertexNum())
+            {
+                m_bSmooth = false;
+            }
+            else if(tBuffer && tBuffer->vertexNum() != vBuffer->vertexNum())
+            {
+                m_bSmooth = false;
+            }
+        }
+        else
+        {
+            m_bSmooth = aSmooth;
+        }
+        
+        return m_bSmooth;
 	}
     
 	bool sgMesh::normalOuter(void) const{
@@ -201,14 +232,16 @@ namespace Sagitta
                               "sgMesh::setupNormals");
 		}
         
-		if(m_iPolyType != 3){
-			THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
+		if(m_iPolyType > 3){
+			/*THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
                               "Not a triangle based entity.",
-                              "sgMesh::setupNormals");
+                              "sgMesh::setupNormals"); */
+            trianglate();
 		}
         
-		sgVertexIndexBuffer *vnIndex = m_pIndexData->createElement(sgVertexBufferElement::ET_NORMAL);
-		vnIndex->resize(m_iPolyNum);
+        sgVertexIndexBuffer *vnIndex = m_pIndexData->createElement(sgVertexBufferElement::ET_NORMAL);
+        //size_t *vnIndexData = static_cast<size_t*>(vnIndex->data());
+        vIndex->readData(0, vnIndex->getSizeInBytes(), vnIndex->data());
         
 		// face normal buffer, we always need it
 		if(!m_pFaceNormalBuffer){
@@ -217,11 +250,12 @@ namespace Sagitta
 			m_pFaceNormalBuffer->resize(m_iPolyNum * sizeof(Vector3));
 		}
         
-		// buffer data
+        // buffer data
 		Vector3 *vBufferData = static_cast<Vector3*>(vBuffer->data());
 		IndexedTriangle *vIndexData = static_cast<IndexedTriangle*>(vIndex->data());
 		Vector3 *fnBufferData = static_cast<Vector3*>(m_pFaceNormalBuffer->data());
 		Vector3 *vnBufferData;
+        
         
 		size_t normalNum = m_iVertexNum;
 
@@ -232,44 +266,57 @@ namespace Sagitta
 		vnBufferData = static_cast<Vector3*>(vnBuffer->data());
 		memset(static_cast<void*>(vnBufferData), 0, sizeof(Vector3) * normalNum);
 
-        
-		Vector3 btoa, btoc, t;
-		// calculate normal of each face
-		{
-			// for smooth entity, the number of vertex normals is the same as vertices
-			// and the vertex normal indices is the same as vertex indices
-			for(size_t i=0; i<m_iPolyNum; ++i)
-			{
-				// determine vectors parallel to two edges of face
-				btoa = vBufferData[vIndexData[i].a] - vBufferData[vIndexData[i].b];
-				btoc = vBufferData[vIndexData[i].c] - vBufferData[vIndexData[i].b];
+        if(m_iPolyType == 3)
+        {
+            Vector3 btoa, btoc, t;
+            // calculate normal of each face
+            {
+                // for smooth entity, the number of vertex normals is the same as vertices
+                // and the vertex normal indices is the same as vertex indices
+                for(size_t i=0; i<m_iPolyNum; ++i)
+                {
+                    // determine vectors parallel to two edges of face
+                    btoa = vBufferData[vIndexData[i].a] - vBufferData[vIndexData[i].b];
+                    btoc = vBufferData[vIndexData[i].c] - vBufferData[vIndexData[i].b];
+                    
+                    // find cross-product between these vectors
+                    if(!(m_bCounterClockWise ^ m_bNormalOuter))			// to the front face
+                        t = btoc.crossProduct(btoa);
+                    else												// to the back face
+                        t = btoa.crossProduct(btoc);
+                    
+                    // normalize the vector
+                    t.normalise();
+                    
+                    fnBufferData[i] = t;
+                    
+                    // add this face normal to each vertex that is adjacent to face
+                    for(int j=0; j<3; ++j){
+                        // normal index is the same as vertex index
+                        size_t vi = vIndexData[i][j];
+                        vnBufferData[vi] += t;
+                    }
+                    
+                } //#### end for face
                 
-				// find cross-product between these vectors
-				if(!(m_bCounterClockWise ^ m_bNormalOuter))			// to the front face
-					t = btoc.crossProduct(btoa);
-				else												// to the back face
-					t = btoa.crossProduct(btoc);
+                // normalize all the normals at the vertices
+                for(size_t i=0; i<m_iVertexNum; ++i){
+                    vnBufferData[i].normalise();
+                }
                 
-				// normalize the vector
-				t.normalise();
-				
-				fnBufferData[i] = t;
-                
-				// add this face normal to each vertex that is adjacent to face
-				for(int j=0; j<3; ++j){
-					// normal index is the same as vertex index
-					size_t vi = vIndexData[i][j];
-					vnBufferData[vi] += t;
-				}
-                
-			} //#### end for face
-            
-			// normalize all the normals at the vertices
-			for(size_t i=0; i<m_iVertexNum; ++i){
-				vnBufferData[i].normalise();
-			}
-            
-		}
+            }
+        }
+        else
+        {
+            for(size_t i=0; i<m_iPolyNum; ++i)
+            {
+                fnBufferData[i] = Vector3::UNIT_Y;
+            }
+            for(size_t i=0; i<m_iVertexNum; ++i)
+            {
+                vnBufferData[i] = Vector3::UNIT_Y;
+            }
+        }
 		
 		// if all geometry are prepared
 		// just update the flat normal buffer
@@ -375,7 +422,8 @@ namespace Sagitta
                               "sgMesh::trianglate");
 		}
 
-		m_bGeometryPrepared = false;
+		//m_bGeometryPrepared = false;
+        _setDirty();
         
 		// store original values
 		uInt oriPolyType = m_iPolyType;
@@ -383,15 +431,15 @@ namespace Sagitta
         
 		// store original index datas
 		size_t elemNum = m_pIndexData->elementNum();
-		std::vector<int> oriIndexTypeList(elemNum);
-		std::vector< size_t* > oriIndexDataList(elemNum);
+		sg_vector(int) oriIndexTypeList(elemNum);
+		sg_vector(size_t*) oriIndexDataList(elemNum);
         
 		sgIndexData::ConstIterator it = m_pIndexData->getConstIterator();
 		for(int i=0; it.hasMoreElements(); ++it, ++i){
 			sgVertexIndexBuffer *indexBuffer = it.value();
 			oriIndexTypeList[i] = indexBuffer->type();
 			// we will free this memories
-			oriIndexDataList[i] = new size_t[indexBuffer->dataNum()];
+			oriIndexDataList[i] = (size_t*)sgMalloc(indexBuffer->getSizeInBytes()); //new size_t[indexBuffer->dataNum()];
 			indexBuffer->readData(0, indexBuffer->getSizeInBytes(), static_cast<void*>(oriIndexDataList[i]));
 		}
         
@@ -400,7 +448,7 @@ namespace Sagitta
 		size_t prelastVertexInOnePoly = oriPolyType - 2;
 		// because we don't know how many faces after trianglate,
 		// so use a std::vector to store the data temporarily
-		std::vector< std::vector<IndexedTriangle> > newIndexDataList(elemNum);
+		sg_vector( sg_vector(IndexedTriangle) ) newIndexDataList(elemNum);
 		
 		// trianglate
 		for(size_t el=0; el<elemNum; ++el){
@@ -423,7 +471,8 @@ namespace Sagitta
 			}
             
 			// free original data
-			delete oriIndexDataList[el];
+			//delete oriIndexDataList[el];
+            sgFree(oriIndexDataList[el]);
 		}
         
         
@@ -446,11 +495,11 @@ namespace Sagitta
         
 		//m_RenderOption.setRenderElementType(sgRenderState::RET_TRIANGLES);
         
-		setupNormals();
+	//	setupNormals();
 		// for future ...
         //	computeEdgeNormals();
 
-		prepareGeometry();
+	//	prepareGeometry();
         
 	}
     
@@ -784,26 +833,60 @@ namespace Sagitta
 
 	bool sgMesh::prepareFlatData( void )
 	{
+        _setDirty();
+        
 		if(!m_pVertexData || !m_pIndexData)
 		{
 			return false;
 		}
-
-		if(m_bSmooth)
-			return true;
-
-		sgVertexBufferElement *vBuffer = m_pVertexData->getElement(sgVertexBufferElement::VertexAttributeName);
+        
+        sgVertexBufferElement *vBuffer = m_pVertexData->getElement(sgVertexBufferElement::VertexAttributeName);
 		sgVertexIndexBuffer *vIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_VERTEX);
 		if(!vBuffer || !vIndex)
 		{
 			return false;
 		}
-
-		if(vBuffer->vertexNum() != m_iVertexNum || vIndex->polyNum() != m_iPolyNum){
+        
+        if(vBuffer->vertexNum() != m_iVertexNum || vIndex->polyNum() != m_iPolyNum){
 			THROW_SAGI_EXCEPT(sgException::ERR_INVALID_STATE,
-				"Invalid entity with difference between vertex num or polygon num and their expression.",
-				"sgMesh::getVertexBuffer");
+                              "Invalid entity with difference between vertex num or polygon num and their expression.",
+                              "sgMesh::getVertexBuffer");
 		}
+        
+        // we only process triangle based mesh
+        if(m_iPolyType > 3)
+            trianglate();
+        
+        sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::NormalAttributeName);
+        sgVertexIndexBuffer *nIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_NORMAL);
+        // if there's no normal buffer, create it
+        // every mesh should have normals
+        if(!nBuffer)
+        {
+            setupNormals();
+            nBuffer = m_pVertexData->getElement(sgVertexBufferElement::NormalAttributeName);
+            nIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_NORMAL);
+        }
+        sgVertexBufferElement *tBuffer = m_pVertexData->getElement(sgVertexBufferElement::UV0AttributeName);
+		sgVertexIndexBuffer *tIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_TEXTURE_COORD);
+        
+		if(m_bSmooth)
+        {
+            // if data number of vertex buffer and normal buffer or uv buffer are different
+            // force flat
+            if(vBuffer->vertexNum() != nBuffer->vertexNum())
+            {
+                m_bSmooth = false;
+            }
+            else if(tBuffer && tBuffer->vertexNum() != vBuffer->vertexNum())
+            {
+                m_bSmooth = false;
+            }
+            if(m_bSmooth)
+                return true;
+        }
+
+		
 
 		if(mpVertexDataFlat)
 		{
@@ -845,6 +928,17 @@ namespace Sagitta
 		sgVertexBufferElement *cBuffer = m_pVertexData->getElement(sgVertexBufferElement::ColorAttributeName);
 		if(cBuffer)
 		{
+            sgVertexIndexBuffer *cIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_COLOR);
+            size_t *cIndexData = NULL;
+            if(cIndex)
+            {
+                cIndexData = static_cast<size_t*>(cIndex->data());
+            }
+            else
+            {
+                cIndexData = vIndexData;
+            }
+            
 			Color *cBufferData = static_cast<Color*>(cBuffer->data());
 			Color *outcBufferData = static_cast<Color*>(mpVertexDataFlat->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, outVertexNum)->data());
 			{
@@ -855,15 +949,33 @@ namespace Sagitta
 					for(size_t j=0; j<m_iPolyType; ++j)
 					{
 						vi = i * m_iPolyType + j;
-						outcBufferData[vi] = cBufferData[vIndexData[vi]];
+						outcBufferData[vi] = cBufferData[cIndexData[vi]];
 					}
 				}
 			}
 		}
 
 		// normals
-		//sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::ET_NORMAL);
-		if(m_pFaceNormalBuffer)
+        if( ( nBuffer && nIndex && nBuffer->vertexNum() != m_iVertexNum )
+            || !m_pFaceNormalBuffer)
+        {
+            size_t *nIndexData = static_cast<size_t*>(nIndex->data());
+            Vector3 *nBufferData = static_cast<Vector3*>(nBuffer->data());
+            Vector3 *outnBufferData = static_cast<Vector3*>(mpVertexDataFlat->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, outVertexNum)->data());
+            {
+				// for flat entity, have to store duplicate colors
+				size_t vi = 0;
+				for(size_t i=0; i<m_iPolyNum; ++i)
+				{
+					for(size_t j=0; j<m_iPolyType; ++j)
+					{
+						vi = i * m_iPolyType + j;
+						outnBufferData[vi] = nBufferData[nIndexData[vi]];
+					}
+				}
+			}
+        }
+		else if(m_pFaceNormalBuffer)
 		{
 			Vector3 *outnBufferData = static_cast<Vector3*>(mpVertexDataFlat->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, outVertexNum)->data());
 			{
@@ -881,8 +993,6 @@ namespace Sagitta
 		}
 
 		// texture coordinates
-		sgVertexBufferElement *tBuffer = m_pVertexData->getElement(sgVertexBufferElement::UV0AttributeName);
-		sgVertexIndexBuffer *tIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_TEXTURE_COORD);
 		if(tBuffer && tIndex)
 		{
 			Vector2 *tBufferData = static_cast<Vector2*>(tBuffer->data());

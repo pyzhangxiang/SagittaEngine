@@ -169,10 +169,9 @@ namespace Sagitta{
 		pIndex[1] = 1;
 		pIndex[2] = 2;
         
-		setupNormals();
+		//setupNormals();
+        prepareGeometry();
 		m_pFaceNormal = static_cast<Vector3*>(m_pFaceNormalBuffer->data());
-
-		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -224,7 +223,7 @@ namespace Sagitta{
 		m_pColorData[1] = c2;
         m_pColorData[2] = c3;
         
-		setupNormals();
+		//setupNormals();
 		prepareGeometry();
         
     }
@@ -319,7 +318,8 @@ namespace Sagitta{
 		pIndexData[34] = 5;
 		pIndexData[35] = 2;
 
-		setupNormals();
+        setSmooth(false);
+		//setupNormals();
 		//	computeEdgeNormal(); for future ...
 		prepareGeometry();
 	}
@@ -416,10 +416,9 @@ namespace Sagitta{
 
 		m_Center = Vector3::ZERO;
 		m_fAverageRadius = m_fMaxRadius = m_fRadius;
-		m_bGeometryPrepared = true;
 
 		// will calculate normals 
-		trianglate();
+		//trianglate();
 		prepareGeometry();
 	}
 
@@ -511,7 +510,7 @@ namespace Sagitta{
 			++slice;
 		}
 
-		setupNormals();
+		//setupNormals();
 	//	setupEdgeNormal(); // for future ...
 		prepareGeometry();
 	}
