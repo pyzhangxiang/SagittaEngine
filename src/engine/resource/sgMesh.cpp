@@ -572,14 +572,23 @@ namespace Sagitta
                               "sgMesh::locateToCenter");
 		}
         
-		Vector3 *vBufferData = static_cast<Vector3*>(vBuffer->data());
-        
+		
 		if(!m_bGeometryPrepared)
-			calCenterAndRadius();
+			prepareGeometry();
         
+        Vector3 *vBufferData = static_cast<Vector3*>(vBuffer->data());
 		for(size_t i=0; i<m_iVertexNum; ++i){
 			vBufferData[i] -= m_Center;
 		}
+        
+        if(mpVertexDataFlat)
+        {
+            sgVertexBufferElement *vFlatBuffer = mpVertexDataFlat->getElement(sgVertexBufferElement::VertexAttributeName);
+            Vector3 *vFlatBufferData = static_cast<Vector3*>(vFlatBuffer->data());
+            for(size_t i=0; i<vFlatBuffer->vertexNum(); ++i){
+                vFlatBufferData[i] -= m_Center;
+            }
+        }
         
 		m_Center = Vector3::ZERO;
 	}

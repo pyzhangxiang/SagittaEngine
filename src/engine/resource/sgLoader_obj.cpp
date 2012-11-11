@@ -579,5 +579,391 @@ namespace Sagitta{
         
     }
     
+    struct _MeshInfo
+    {
+        std::string name;
+        sg_vector(Vector3) vertex;
+        sg_vector(Vector3) normal;
+        sg_vector(Vector2) uv0;
+        sg_vector(size_t) vertexIndex;
+        sg_vector(size_t) normalIndex;
+        sg_vector(size_t) uv0Index;
+        UInt8 polyType;
+        size_t faceNum;
+    };
+    typedef sg_vector(_MeshInfo) _MeshInfoList;
+    
+    sgSceneObject *sgLoader::load_obj2(const std::string &filename)
+    {
+        sgSceneObject *sceneRoot = NULL;
+        
+        size_t lastslash = filename.find_last_of("\\/");
+		size_t lastdot = filename.find_last_of(".");
+        
+        bool isobj = true;
+        if(lastdot != std::string::npos)
+        {
+            std::string ext = filename.substr(lastdot);
+            if(ext != ".obj")
+            {
+                isobj = false;
+            }
+			else
+            {
+                isobj = true;
+                
+                std::ifstream file((sgResourceCenter::instance()->getRootDir() + filename).c_str());
+                if(file.fail())
+                {
+                    THROW_SAGI_EXCEPT(sgException::ERR_NOT_IMPLEMENTED,
+                                      "cannot open the obj file: " + filename + ".",
+                                      "sgLoaderObj");
+                    
+                }
+                
+                // load from obj
+                std::string sceneName;
+                if(lastslash == std::string::npos)
+                {
+                    sceneName = filename.substr(0, lastdot);
+                }
+                else
+                {
+                    sceneName = filename.substr(lastslash + 1, lastdot);
+                }
+                
+                size_t gCount = 0;			// group count
+                size_t gVCount = 0;			// current group vertex count
+                size_t gTCount = 0;			// current group texcoord count
+                size_t gNCount = 0;			// current group normal count
+                //size_t gFCount = 0;			// current group face count
+                
+                size_t tVCount = 0;			// total vertex count till current
+                size_t tTCount = 0;			// total texcoord count till current
+                size_t tNCount = 0;			// total normal count till current
+            
+                
+                // store the state
+                // 1 - in v, 2 - in face
+                int state = 2;
+                
+                _MeshInfo *currentMesh = NULL;
+                _MeshInfoList meshList;
+                
+                Real x, y, z;
+                int v, n, t;
+                
+                // for get line
+                std::vector<std::string> words;
+                
+                std::string strLine;
+                
+                char c;
+                while(file >> c){
+                    switch(c){
+                        case '#':		// comment
+                        {
+                            // eat up rest of line
+                            std::getline(file, strLine);
+                            break;
+                        }
+                            
+                        case 'v':		// v, vn, vt
+                        {
+                            if(state != 1)
+                            {
+                                // start a new group
+                                // first take charge latest group
+                                meshList.push_back(_MeshInfo());
+                                currentMesh = &(meshList[meshList.size()-1]);
+                                currentMesh->name = sceneName + "_mesh_" + sgStringUtil::to_string(meshList.size());
+                                currentMesh->faceNum = 0;
+                                
+                                ++gCount;
+                                
+                                tVCount += gVCount;
+                                tNCount += gNCount;
+                                tTCount += gTCount;
+                                
+                                gVCount = 0;
+                                gNCount = 0;
+                                gTCount = 0;
+                                
+                                // now we are in 'v' area
+                                state = 1;
+                            }
+                            
+                            c = file.get();
+                            switch(c){
+                                case ' ':	// vertex
+                                {
+                                    file >> x >> y >> z;
+                                    currentMesh->vertex.push_back(Vector3(x, y, z));
+                                    
+                                    ++gVCount;
+                                    
+                                    break;
+                                }
+                                    
+                                case 'n':	// normal
+                                {
+                                    file >> x >> y >> z;
+                                    currentMesh->normal.push_back(Vector3(x, y, z));
+                                    
+                                    ++gNCount;
+                                    
+                                    break;
+                                }
+                                    
+                                case 't':	// texcoord
+                                {
+                                    file >> x >> y;
+                                    currentMesh->uv0.push_back(Vector2(x, y));
+                                    
+                                    ++gTCount;
+                                    
+                                    break;
+                                }
+                                    
+                                default:	// unknown
+                                {
+                                    file.close();
+                                    THROW_SAGI_EXCEPT(sgException::ERR_INVALIDPARAMS,
+                                                      "Unknown token after \"v\".",
+                                                      "sgSceneDelegate::loadScene_obj");
+                                }
+                            }
+                            
+                            break;
+                        } //#### end v switch
+                            
+                        case 'm':		// mtl file
+                        {
+                            // read mtl file
+                            // for future ...
+                            // eat up rest of line
+                            std::getline(file, strLine);
+                            break;
+                        }
+                            
+                        case 'u':		// nothing
+                        {
+                            // eat up rest of line
+                            std::getline(file, strLine);
+                            break;
+                        }
+                            
+                        case 'g':		// group
+                        {
+                            if(state == 1)
+                            {
+                                // next into 'f' area
+                                //file.getLine(&words);
+                                std::getline(file, strLine);
+                                sgStringUtil::split(words, strLine);
+                                if(!words.empty()){
+                                    currentMesh->name = words[0];
+                                }
+                            }
+                            else
+                            {
+                                // eat up rest of line
+                                std::getline(file, strLine);
+                            }
+                            
+                            break;
+                        }
+                            
+                        case 'p':   // point
+                        case 'l':   // line
+                        case 'f':		// face
+                        {
+                            if(state != 2)
+                            {
+                                // start a group
+                                state = 2;
+                                
+                                currentMesh->polyType =
+                                    (c == 'f' ? 3 : ( c== 'l' ? 2 : 1));
+                            }
+                            
+                            v = t = n = 0xffffffff;
+                            for(uInt i=0; i<currentMesh->polyType; ++i){
+                                if(gTCount == 0 && gNCount == 0)
+                                {
+                                    // v
+                                    file >> v;
+                                }
+                                else if(gTCount > 0 && gNCount == 0)
+                                {
+                                    // v/t
+                                    file >> v >> c >> t;
+                                }
+                                else if(gTCount == 0 && gNCount > 0)
+                                {
+                                    // v//n
+                                    file >> v >> c >> c >> n;
+                                }
+                                else
+                                {
+                                    // v/t/n
+                                    file >> v >> c >> t >> c >> n;
+                                }
+                                if(v > 0)
+                                {
+                                    v = v - tVCount - 1;
+                                    if(gTCount > 0)
+                                        t = t - tTCount - 1;
+                                    if(gNCount > 0)
+                                        n = n - tNCount - 1;
+                                }
+                                else
+                                {
+                                    v = v + gVCount;
+                                    if(gTCount > 0)
+                                        t = t + gTCount;
+                                    if(gNCount > 0)
+                                        n = n + gNCount;
+                                }
+                                if(gVCount > 0)
+                                    currentMesh->vertexIndex.push_back(v);
+                                if(gTCount > 0)
+                                    currentMesh->uv0Index.push_back(t);
+                                if(gNCount > 0)
+                                    currentMesh->normalIndex.push_back(n);
+                                
+                                
+                            }
+                            
+                            //++gFCount;
+                            ++(currentMesh->faceNum);
+                            
+                            break;
+                        }
+                            
+                        default:
+                        {
+                            // eat up rest of line
+                            std::getline(file, strLine);
+                            break;
+                        }
+                            
+                    }
+                }
+                // loading end
+                
+                // construct meshes
+                sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                sceneRoot->setName(sceneName + "_Node");
+                
+                for(size_t i=0; i<meshList.size(); ++i)
+                {
+                    _MeshInfo &meshInfo = meshList[i];
+                    
+                    if(meshInfo.vertex.empty()
+                       || meshInfo.vertexIndex.empty()
+                       || meshInfo.faceNum == 0)
+                    {
+                        continue ;
+                    }
+                    
+                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + meshInfo.name + "_mesh").c_str());
+                    mesh->reset(meshInfo.polyType, meshInfo.vertex.size(), meshInfo.faceNum);
+                    
+                    sgVertexData *vdata = mesh->getVertexData();
+                    sgIndexData *idata = mesh->getIndexData();
+                    
+                    Vector3 *vertices = NULL;
+                    Vector3 *normals = NULL;
+                    Vector2 *uv0s = NULL;
+                    size_t *vindices = NULL;
+                    size_t *nindices = NULL;
+                    size_t *tindices = NULL;
+                    
+                    // vertex
+                    {
+                        vertices = static_cast<Vector3*>( vdata->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, meshInfo.vertex.size())->data() );
+                        vindices = static_cast<size_t*>( idata->createElement(sgVertexBufferElement::ET_VERTEX)->data() );
+                        
+                        for(size_t i=0; i<meshInfo.vertex.size(); ++i)
+                        {
+                            vertices[i] = meshInfo.vertex[i];
+                        }
+                        for(size_t i=0; i<meshInfo.vertexIndex.size(); ++i)
+                        {
+                            vindices[i] = meshInfo.vertexIndex[i];
+                        }
+                    }
+                    
+                    // normal
+                    if(!meshInfo.normal.empty() && !meshInfo.normalIndex.empty())
+                    {
+                        normals = static_cast<Vector3*>( vdata->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, meshInfo.normal.size())->data() );
+                        nindices = static_cast<size_t*>( idata->createElement(sgVertexBufferElement::ET_NORMAL)->data() );
+                        
+                        for(size_t i=0; i<meshInfo.normal.size(); ++i)
+                        {
+                            normals[i] = meshInfo.normal[i];
+                        }
+                        for(size_t i=0; i<meshInfo.normalIndex.size(); ++i)
+                        {
+                            nindices[i] = meshInfo.normalIndex[i];
+                        }
+                    }
+                    
+                    // uv0
+                    if(!meshInfo.uv0.empty() && !meshInfo.uv0Index.empty())
+                    {
+                        uv0s = static_cast<Vector2*>( vdata->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, meshInfo.uv0.size())->data() );
+                        tindices = static_cast<size_t*>( idata->createElement(sgVertexBufferElement::ET_TEXTURE_COORD)->data() );
+                        
+                        for(size_t i=0; i<meshInfo.uv0.size(); ++i)
+                        {
+                            uv0s[i] = meshInfo.uv0[i];
+                        }
+                        for(size_t i=0; i<meshInfo.uv0Index.size(); ++i)
+                        {
+                            tindices[i] = meshInfo.uv0Index[i];
+                        }
+                    }
+                    
+                    mesh->prepareGeometry();
+                    
+                    Vector3 originalMeshCenter = mesh->center();
+                    
+                    mesh->locateToCenter();
+                    
+                    // create scene objects
+                    sgSceneObject *object = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                    object->setName(meshInfo.name + "_node");
+                    object->setParent(sceneRoot);
+                    sgMeshComponent *meshComp = (sgMeshComponent*)object->createComponent(sgMeshComponent::GetClassName());
+                    meshComp->setMeshFile(mesh->getFilename());
+                    object->translate(originalMeshCenter);
+                    
+                }
+                
+                
+                
+                
+            }
+		}
+        else
+        {
+            isobj = false;
+			
+		}
+        
+        if(!isobj)
+        {
+            THROW_SAGI_EXCEPT(sgException::ERR_NOT_IMPLEMENTED,
+                              "The file is not .obj file.",
+                              "sgLoaderObj");
+        }
+        
+        return sceneRoot;
+        
+    }
+    
 } // namespace Sagitta
 

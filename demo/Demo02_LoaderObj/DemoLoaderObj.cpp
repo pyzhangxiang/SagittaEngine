@@ -31,7 +31,7 @@ void DemoLoaderObj::prepare(void)
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
 		light1->setParent(mScene->getRoot());
-		light1->translate(Vector3(3.0f, 3.0f, 75.0f));
+		light1->translate(Vector3(-40.0f, 53.0f, 75.0f));
 		mLight = light1;
 
 		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
@@ -44,7 +44,7 @@ void DemoLoaderObj::prepare(void)
 		light1->setShowDebug(true);
 
 		// load .obj
-		sgSceneObject *objRoot = sgLoader::load_obj("models/jiedao.obj");
+		sgSceneObject *objRoot = sgLoader::load_obj2("models/jiedao.obj");
 		objRoot->setParent(mScene->getRoot());
 	}
 }
