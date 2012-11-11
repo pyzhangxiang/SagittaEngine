@@ -253,7 +253,7 @@ namespace Sagitta{
 	//  [1/5/2009 zhangxiang]
 	void sgMeshCube::init(void){
 
-		Real halfLength = m_fEdgeLength * 0.5;
+		Real halfLength = m_fEdgeLength * 0.5f;
 
 		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());

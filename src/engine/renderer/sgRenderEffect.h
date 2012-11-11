@@ -66,6 +66,15 @@ namespace Sagitta{
 		static const sgStrHandle Material_Shininess;
 		static const sgStrHandle Material_SpecularAmount;
 		static const sgStrHandle Material_ReflectFraction;
+        
+        // texture
+        //static const size_t Texture_Max = 4;
+        enum{ Texture_Max = 4 };
+        static const sgStrHandle Texture0;
+        static const sgStrHandle Texture1;
+        static const sgStrHandle Texture2;
+        static const sgStrHandle Texture3;
+
 
     protected:
      

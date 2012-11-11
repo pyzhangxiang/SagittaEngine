@@ -89,7 +89,7 @@ namespace Sagitta{
 		sgVertexBufferElement *newelm = getElement(name);
 		if(newelm)
 			return newelm;
-		newelm = new sgVertexBufferElement(name, aDataType, aCoordNum, m_iVertexNum, m_iSourceCount++, 0);
+		newelm = new sgVertexBufferElement(name, aDataType, aCoordNum, aVertexNum, m_iSourceCount++, 0);
 		addElement(newelm);
 		return newelm;
 	}

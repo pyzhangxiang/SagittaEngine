@@ -9,6 +9,7 @@
 #include "engine/common/sgUtil.h"
 #include "engine/common/sgException.h"
 #include "engine/common/sgLogSystem.h"
+#include "engine/renderer/sgRenderer.h"
 #include <stb_image/stb_image.h>
 
 namespace Sagitta{
@@ -31,7 +32,9 @@ namespace Sagitta{
         
         sgFrameBuffer *buffer = pTexture->getBuffer();
         buffer->resize(width, height, comps * sizeof(uByte));
-        memcpy(buffer->data(), imgData, width * height * comps * sizeof(uByte));
+        memcpy(buffer->data(), imgData, buffer->getSizeInBytes());
+        
+        sgGetRenderer()->createTexture(pTexture);
         
         stbi_image_free(imgData);
         

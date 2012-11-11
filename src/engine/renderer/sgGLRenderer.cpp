@@ -7,6 +7,7 @@
 // INCLUDES //////////////////////////////////////////
 #include "sgGLRenderer.h"
 #include "sgViewport.h"
+#include "sgRenderEffect.h"
 #include "engine/buffer/sgFrameBuffer.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
@@ -44,6 +45,8 @@ namespace Sagitta{
         mUniformFuncMap[RDT_IV2] = sgSetUniform2iv;
         mUniformFuncMap[RDT_IV3] = sgSetUniform3iv;
         mUniformFuncMap[RDT_IV4] = sgSetUniform4iv;
+        
+        mUniformFuncMap[RDT_TEXTURE] = sgSetUniform1i;
         /*
         mUniformFuncMap[RDT_UI] = sgSetUniform1ui;
         mUniformFuncMap[RDT_UIV2] = sgSetUniform2uiv;
@@ -349,14 +352,28 @@ namespace Sagitta{
         if(!pvb || !pvib)
             return ;
         
+        // enable texture
+        size_t texture_num = m_CurRenderParam.textures.size();
+        if(texture_num > 0)
+        {
+            for(size_t i=0; i<texture_num && i<sgRenderEffect::Texture_Max; ++i)
+            {
+                glActiveTexture(GL_TEXTURE0 + i);
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, m_CurRenderParam.textures[i]);
+            }
+            
+        }
+        
 		// render
 		sg_vector(int) vertexAttrEnabledList;
 		vertexAttrEnabledList.reserve(pvb->getElementNum());
 
 		const sgGpuProgram::AttributeList &attrList = m_CurRenderParam.current_gpu_program->getAttributeList();
-
+        
+        int count = 0;
 		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
-		for(; elemIt.hasMoreElements(); elemIt++)
+		for(; elemIt.hasMoreElements(); elemIt++, ++count)
         {
 			sgVertexBufferElement *element = elemIt.value();
 
@@ -384,28 +401,50 @@ namespace Sagitta{
 		{
 			glDisableVertexAttribArray(vertexAttrEnabledList[i]);
 		}
+    //    glDisable(GL_TEXTURE_2D);
     }
     
-    bool sgGLRenderer::createTexure(sgTexture *pTexture)
+    bool sgGLRenderer::createTexture(sgTexture *pTexture)
     {
         if(pTexture == NULL ||
-           ! (pTexture->isActive()) )
+           ! (pTexture->hasData()) )
         {
             return false;
         }
         sgFrameBuffer *buffer = pTexture->getBuffer();
-        
+        GLint pixelFormat = GL_RGBA;
+        if(buffer->getDataSizeInBytes() == 4)
+        {
+            pixelFormat = GL_RGBA;
+        }
+        else if(buffer->getDataSizeInBytes() == 3)
+        {
+            pixelFormat = GL_RGB;
+        }
+        else
+        {
+            return false;
+        }
         GLuint textureId = 0;
         glGenTextures(1, &textureId);
         glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, buffer->width(), buffer->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)buffer->data() );
+        glTexImage2D( GL_TEXTURE_2D, 0, buffer->getDataSizeInBytes(), buffer->width(), buffer->height(), 0, pixelFormat, GL_UNSIGNED_BYTE, (GLvoid*)buffer->data() );
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         //glGenerateMipmap(GL_TEXTURE_2D);
         
+        pTexture->_setTextureId(textureId);
+        
+        return true;
+    }
+    
+    bool sgGLRenderer::deleteTexture(UInt32 textureId)
+    {
+        glDeleteTextures(1, &textureId);
         return true;
     }
 

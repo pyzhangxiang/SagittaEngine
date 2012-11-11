@@ -199,22 +199,22 @@ void sgDemo::keyPressEvent( sgKeyEvent &event )
 		{
 		case 'W':
 		case 'w':
-			mCamera->translate(Vector3(0, 0, -2));
+            mCamera->translate(Vector3(0, 0, -2), sgNode::TS_LOCAL);
 			break;
 
 		case 'S':
 		case 's':
-			mCamera->translate(Vector3(0, 0, 2));
+			mCamera->translate(Vector3(0, 0, 2), sgNode::TS_LOCAL);
 			break;
 
 		case 'A':
 		case 'a':
-			mCamera->translate(Vector3(-2, 0, 0));
+			mCamera->translate(Vector3(-2, 0, 0), sgNode::TS_LOCAL);
 			break;
 
 		case 'D':
 		case 'd':
-			mCamera->translate(Vector3(2, 0, 0));
+			mCamera->translate(Vector3(2, 0, 0), sgNode::TS_LOCAL);
 			break;
 
 		case Sagitta::Key_Up:

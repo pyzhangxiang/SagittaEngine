@@ -2,6 +2,7 @@
 
 #include "sgTexture.h"
 #include "engine/buffer/sgFrameBuffer.h"
+#include "engine/renderer/sgRenderer.h"
 
 namespace Sagitta{
 
@@ -9,13 +10,18 @@ namespace Sagitta{
 
 	sgTexture::sgTexture()
     : sgResource(), mBuffer(NULL)
-    , mTextureId(0)
+    , mTextureId(-1)
     {
         mBuffer = new sgFrameBuffer();
 	}
 
 	sgTexture::~sgTexture(void)
     {
+        if(mTextureId >= 0)
+        {
+            sgGetRenderer()->deleteTexture(mTextureId);
+            mTextureId = -1;
+        }
         if(mBuffer)
         {
             delete mBuffer;
@@ -29,6 +35,11 @@ namespace Sagitta{
     }
 
     bool sgTexture::isActive(void) const
+    {
+        return mTextureId >= 0;
+    }
+    
+    bool sgTexture::hasData(void) const
     {
         return mBuffer != NULL && mBuffer->data() != NULL;
     }

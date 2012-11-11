@@ -153,12 +153,12 @@ namespace Sagitta{
          */
         void removeChild(sgNode *apChild);
 
-    protected:
+    public:
 		/** Sets my active property.
 			@remarks Notify children to set active.
 		*/
 		void setActive(bool aActive);
-
+    protected:
         /// do something in the inherited class
         virtual void onSetParent(sgNode *aParent);
 	public:
@@ -388,6 +388,7 @@ namespace Sagitta{
 				return the first one found.
 		*/
 		sgNode *getChild(id_type aId) const;
+        sgNode *getFirstChild(void) const;
 
 		/** Gets the full transformation matrix for this node.
             @remarks

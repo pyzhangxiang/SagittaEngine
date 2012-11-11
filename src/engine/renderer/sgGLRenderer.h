@@ -76,7 +76,8 @@ namespace Sagitta{
         
         virtual bool initShaderEnvironmentImpl(void);
         
-        virtual bool createTexure(sgTexture *pTexture);
+        virtual bool createTexture(sgTexture *pTexture);
+        virtual bool deleteTexture(UInt32 textureId);
         
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib

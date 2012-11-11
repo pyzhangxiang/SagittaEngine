@@ -471,8 +471,15 @@ namespace Sagitta{
     {
         ChildNodeMap::const_iterator it = m_Children.find(aId);
         if(it == m_Children.end())
-            return 0;
+            return NULL;
         return it->second;
+    }
+    
+    sgNode *sgNode::getFirstChild(void) const
+    {
+        if(m_Children.empty())
+            return NULL;
+        return m_Children.begin()->second;
     }
 
 	//  [1/6/2009 zhangxiang]

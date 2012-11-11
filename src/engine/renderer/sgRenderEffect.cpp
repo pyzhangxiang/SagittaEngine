@@ -11,6 +11,7 @@
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/common/sgException.h"
+#include "engine/common/sgUtil.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
@@ -18,6 +19,7 @@
 #include "engine/component/sgMeshComponent.h"
 #include "engine/resource/sgMaterial.h"
 #include "engine/resource/sgMesh.h"
+#include "engine/resource/sgTexture.h"
 
 namespace Sagitta
 {
@@ -54,8 +56,7 @@ namespace Sagitta
 	const sgStrHandle sgRenderEffect::Light2_Intensity("sg_Light2_Intensity");
 	const sgStrHandle sgRenderEffect::Light3_Intensity("sg_Light3_Intensity");
 	
-	
-
+    
 	const sgStrHandle sgRenderEffect::Material_Ambient("sg_Material_Ambient");
 	const sgStrHandle sgRenderEffect::Material_Diffuse("sg_Material_Diffuse");
 	const sgStrHandle sgRenderEffect::Material_Specular("sg_Material_Specular");
@@ -63,6 +64,12 @@ namespace Sagitta
 	const sgStrHandle sgRenderEffect::Material_Shininess("sg_Material_Shininess");
 	const sgStrHandle sgRenderEffect::Material_SpecularAmount("sg_Material_SpecularAmount");
 	const sgStrHandle sgRenderEffect::Material_ReflectFraction("sg_Material_ReflectFraction");
+    
+    
+    const sgStrHandle sgRenderEffect::Texture0("sg_Sampler0");
+    const sgStrHandle sgRenderEffect::Texture1("sg_Sampler1");
+    const sgStrHandle sgRenderEffect::Texture2("sg_Sampler2");
+    const sgStrHandle sgRenderEffect::Texture3("sg_Sampler3");
 
     sgRenderEffect::sgRenderEffect(void)
 	: sgObject()
@@ -244,6 +251,38 @@ namespace Sagitta
 			Real reflectFraction = material->reflectFraction();
 			param->current_gpu_program->setParameter(Material_ReflectFraction, 1, &reflectFraction);
 		}
+        // texture
+        param->textures.clear();
+        if(renderState != NULL)
+        {
+            size_t texture_num = sgMin(renderState->getTextureNum(), Texture_Max);
+            for(size_t i=0; i<texture_num; ++i)
+            {
+                sgTexture *texture = renderState->getTexture(i);
+                if(texture == NULL || !(texture->isActive()) )
+                    continue;
+                
+                param->textures.push_back(texture->getTextureId());
+                
+                if(i == 0)
+                {
+                    param->current_gpu_program->setParameter(Texture0, 1, &i);
+                }
+                else if(i == 1)
+                {
+                    param->current_gpu_program->setParameter(Texture1, 1, &i);
+                }
+                else if(i == 2)
+                {
+                    param->current_gpu_program->setParameter(Texture2, 1, &i);
+                }
+                else if(i == 3)
+                {
+                    param->current_gpu_program->setParameter(Texture3, 1, &i);
+                }
+            }
+        }
+        
 
 		// uniform user defined
 		setUniformObjectExtra(param, object);

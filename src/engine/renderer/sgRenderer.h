@@ -57,6 +57,8 @@ namespace Sagitta{
             Matrix4 view_matrix;
             Matrix4 projection_matrix;
             Matrix4 vp_matrix;
+            
+            sg_vector(Int32) textures;
 
 			CurrentRenderParam(void);
 			~CurrentRenderParam(void);
@@ -284,7 +286,8 @@ namespace Sagitta{
         bool setUniformForShader(int type, int location, int extra, const void* data);
         
         /// create a texture for api
-        virtual bool createTexure(sgTexture *pTexture){ return false; }
+        virtual bool createTexture(sgTexture *pTexture){ return false; }
+        virtual bool deleteTexture(UInt32 textureId){ return false; }
 
 	}; //#### end class sgRenderer
 

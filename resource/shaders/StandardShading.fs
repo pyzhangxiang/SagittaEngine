@@ -1,11 +1,12 @@
 #version 120
 
 // Interpolated values from the vertex shaders
-//varying vec2 UV;
+varying vec2 UV0;
 varying vec3 Position_worldspace;
 varying vec3 Normal_cameraspace;
 varying vec3 EyeDirection_cameraspace;
 varying vec3 LightDirection_cameraspace;
+varying vec3 vertexColor;
 
 // Values that stay constant for the whole mesh.
 uniform vec4 sg_Material_Ambient;
@@ -16,7 +17,7 @@ uniform float sg_Material_Shininess;
 uniform float sg_Material_SpecularAmount;
 uniform float sg_Material_ReflectFraction;
 
-//uniform sampler2D myTextureSampler;
+uniform sampler2D sg_Sampler0;
 uniform vec3 sg_Light0_Position;	// in world space
 uniform vec4 sg_Light0_Diffuse;
 uniform float sg_Light0_Intensity;
@@ -27,6 +28,7 @@ void main(){
 	// You probably want to put them as uniforms
 	float LightPower = 20.0 * sg_Light0_Intensity;
 
+	vec4 MaterialDiffuseColor =  texture2D( sg_Sampler0, UV0);
 
 	// Distance to the light
 	float distance = length( sg_Light0_Position - Position_worldspace );
@@ -52,14 +54,14 @@ void main(){
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
 	
-	gl_FragColor = 
-	
+	gl_FragColor = MaterialDiffuseColor;
+	/*
 		// Ambiant : simulates indirect lighting
 		sg_Material_Ambient +
 		// Diffuse : "color" of the object
-		sg_Material_Diffuse * sg_Light0_Diffuse * LightPower * cosTheta / (distance*distance) +
+		MaterialDiffuseColor * sg_Light0_Diffuse * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
 		sg_Material_Specular * sg_Light0_Diffuse * LightPower * pow(cosAlpha,5) / (distance*distance);
-		
+	*/	
 
 }

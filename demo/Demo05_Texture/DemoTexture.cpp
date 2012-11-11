@@ -82,29 +82,30 @@ void DemoTexture::prepare(void)
 		
 
 		// prepare resources
-		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
-		sgMeshSphere *meshSphere = (sgMeshSphere*)sgResourceCenter::instance()->createResource(sgMeshSphere::GetClassName(), sgMeshSphere::InternalFileName);
-		sgMeshCone *meshCone = (sgMeshCone*)sgResourceCenter::instance()->createResource(sgMeshCone::GetClassName(), sgMeshCone::InternalFileName);
 		sgMeshTriangle *meshTriangle = (sgMeshTriangle*)sgResourceCenter::instance()->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
 		meshTriangle->setVertecies(Vector3(-1.0f, 0.0, 0.0f), Color::RED, 
 			Vector3(1.0f, 0.0f, 0.0f), Color::GREEN, 
 			Vector3(0.0f, 1.0f, 0.0f), Color::BLUE);
 
 		// place cube 
-		sgSceneObject *objCube = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-		objCube->setParent(mScene->getRoot());
-		objCube->translate(Vector3(-2.5f, 0.0f, -2.5f));
-		objCube->yaw(Radian(Math::PI_DIV_4));
-		objCube->pitch(Radian(-Math::PI_DIV_3));
+		sgSceneObject *objRoot = sgLoader::load_obj("models/cube.obj");
+        objRoot->setParent(mScene->getRoot());
+		objRoot->translate(Vector3(-2.5f, 0.0f, -2.5f));
+		objRoot->yaw(Radian(Math::PI_DIV_4));
+		objRoot->pitch(Radian(-Math::PI_DIV_3));
 
-		sgMeshComponent *cubeMeshComp = (sgMeshComponent*)objCube->createComponent(sgMeshComponent::GetClassName());
-		cubeMeshComp->setMeshFile(meshCube->getFilename());
-
+        sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
 		sgRenderStateComponent *cubeRsComp = (sgRenderStateComponent*)objCube->createComponent(sgRenderStateComponent::GetClassName());
 		cubeRsComp->setMaterialFile(mat1->getFilename());
+        // load textures
+        sgTexture *texture = sgLoader::load_texture("images/tex2.tga");
+        if(texture)
+        {
+            cubeRsComp->addTexture(texture->getFilename());
+        }
 
-		// triangle    
-		sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		// triangle
+	/*	sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		triangle->setParent(mScene->getRoot());
 		triangle->yaw(Radian(Math::PI_DIV_4));
 		//triangle->scale(Vector3(5, 5, 5));
@@ -116,6 +117,6 @@ void DemoTexture::prepare(void)
 		sgObjectRenderEffect *triRe = triRsComp->createRenderEffect(sgObjectRenderEffect::GetClassName());
 		sgRenderPass *triRs0 = triRe->addPass();
 		triRs0->setProgram(programColor);      
-        
+      */  
 	}
 }

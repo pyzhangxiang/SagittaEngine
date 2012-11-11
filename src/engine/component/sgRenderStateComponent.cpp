@@ -71,4 +71,22 @@ namespace Sagitta
             mRenderEffect = NULL;
         }
     }
+    
+    void sgRenderStateComponent::addTexture(const sgStrHandle &filename)
+    {
+        mTextureList.push_back(filename);
+    }
+    
+    void sgRenderStateComponent::clearTexture(void)
+    {
+        mTextureList.clear();
+    }
+    
+    sgTexture *sgRenderStateComponent::getTexture(size_t index) const
+    {
+        if(mTextureList.empty() || index >= mTextureList.size())
+            return NULL;
+        
+        return (sgTexture*)sgResourceCenter::instance()->findResource(mTextureList[index]);
+    }
 }

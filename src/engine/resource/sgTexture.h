@@ -17,7 +17,7 @@ namespace Sagitta{
         
     private:
         sgFrameBuffer *mBuffer;
-        UInt32 mTextureId;
+        Int32 mTextureId;
 
 	public:
 		sgTexture(void);
@@ -25,11 +25,15 @@ namespace Sagitta{
 
         sgFrameBuffer *getBuffer(void) const{ return mBuffer; }
         
-        UInt32 getTextureId(void) const{ return mTextureId; }
+        Int32 getTextureId(void) const{ return mTextureId; }
         /// should only be called by renderer implementations
         void _setTexureId(UInt32 tid);
         
         bool isActive(void) const;
+        bool hasData(void) const;
+        
+        // temp
+        void _setTextureId(int ID){ mTextureId = ID; }
 
 	}; 
 

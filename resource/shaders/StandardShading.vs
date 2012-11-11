@@ -1,15 +1,16 @@
 
 // Input vertex data, different for all executions of this shader.
 attribute vec3 sg_Vertex;	// in model space
-//attribute vec2 sg_UV0;
+attribute vec2 sg_UV0;
 attribute vec3 sg_Normal;
 
 // Output data ; will be interpolated for each fragment.
-varying vec2 UV;
+varying vec2 UV0;
 varying vec3 Position_worldspace;
 varying vec3 Normal_cameraspace;
 varying vec3 EyeDirection_cameraspace;
 varying vec3 LightDirection_cameraspace;
+varying vec3 vertexColor;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 sg_MVPMatrix;
@@ -40,6 +41,7 @@ void main(){
 	Normal_cameraspace = ( sg_ViewMatrix * sg_ModelMatrix * vec4(sg_Normal,0)).xyz; 
 	
 	// UV of the vertex. No special space for this one.
-	//UV = sg_UV0;
+	UV0 = sg_UV0;
+	//vertexColor = Normal_cameraspace;
 }
 

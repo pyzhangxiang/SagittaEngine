@@ -39,6 +39,17 @@ namespace Sagitta{
 	};
     
 	_SG_KernelExport UInt32 sgGetDataTypeSize(UInt32 type);
+    
+    template<typename T, typename U>
+    T sgMin(const T &a, const U &b)
+    {
+        return a < b ? a : b;
+    }
+    template<typename T, typename U>
+    T sgMax(const T &a, const U &b)
+    {
+        return a > b ? a : b;
+    }
 
 } // namespace Sagitta
 

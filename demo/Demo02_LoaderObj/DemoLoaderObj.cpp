@@ -44,7 +44,7 @@ void DemoLoaderObj::prepare(void)
 		light1->setShowDebug(true);
 
 		// load .obj
-		sgSceneObject *objRoot = sgLoader::load_obj2("models/jiedao.obj");
+		sgSceneObject *objRoot = sgLoader::load_obj("models/jiedao.obj");
 		objRoot->setParent(mScene->getRoot());
 	}
 }
