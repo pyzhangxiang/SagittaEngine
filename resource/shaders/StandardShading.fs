@@ -28,7 +28,7 @@ void main(){
 	// You probably want to put them as uniforms
 	float LightPower = 20.0 * sg_Light0_Intensity;
 
-	vec4 MaterialDiffuseColor =  texture2D( sg_Sampler0, UV0);
+	vec4 MaterialDiffuseColor =  sg_Material_Diffuse * texture2D( sg_Sampler0, UV0);
 
 	// Distance to the light
 	float distance = length( sg_Light0_Position - Position_worldspace );
@@ -54,14 +54,14 @@ void main(){
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
 	
-	gl_FragColor = MaterialDiffuseColor;
-	/*
+	gl_FragColor = 
+	
 		// Ambiant : simulates indirect lighting
 		sg_Material_Ambient +
 		// Diffuse : "color" of the object
 		MaterialDiffuseColor * sg_Light0_Diffuse * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
 		sg_Material_Specular * sg_Light0_Diffuse * LightPower * pow(cosAlpha,5) / (distance*distance);
-	*/	
+	
 
 }

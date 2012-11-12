@@ -404,12 +404,12 @@ namespace Sagitta{
     //    glDisable(GL_TEXTURE_2D);
     }
     
-    bool sgGLRenderer::createTexture(sgTexture *pTexture)
+    int sgGLRenderer::createTexture(sgTexture *pTexture)
     {
         if(pTexture == NULL ||
            ! (pTexture->hasData()) )
         {
-            return false;
+            return -1;
         }
         sgFrameBuffer *buffer = pTexture->getBuffer();
         GLint pixelFormat = GL_RGBA;
@@ -423,7 +423,7 @@ namespace Sagitta{
         }
         else
         {
-            return false;
+            return -1;
         }
         GLuint textureId = 0;
         glGenTextures(1, &textureId);
@@ -432,19 +432,20 @@ namespace Sagitta{
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         //glGenerateMipmap(GL_TEXTURE_2D);
         
-        pTexture->_setTextureId(textureId);
-        
-        return true;
+        return (int)textureId;
     }
     
-    bool sgGLRenderer::deleteTexture(UInt32 textureId)
+    bool sgGLRenderer::deleteTexture(int textureId)
     {
-        glDeleteTextures(1, &textureId);
+		if(textureId < 0)
+			return false;
+		GLuint tid = (GLuint)textureId;
+        glDeleteTextures(1, &tid);
         return true;
     }
 

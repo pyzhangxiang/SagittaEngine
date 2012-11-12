@@ -65,7 +65,7 @@ void DemoTexture::prepare(void)
 
 		// prepare materials
 		sgMaterial *mat1 = (sgMaterial*)sgResourceCenter::instance()->createResource(sgMaterial::GetClassName(), "material_test_1");
-		mat1->setDiffuseColor(Color(255, 255, 0));
+		mat1->setDiffuseColor(Color(255, 125, 75));
 		
 
 		// prepare camera
@@ -77,8 +77,8 @@ void DemoTexture::prepare(void)
 		light1->setParent(mScene->getRoot());
 		light1->translate(Vector3(3.0f, 3.0f, 5.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
-		lightComp1->setDiffuseColor(Color(0, 125, 11));
-		lightComp1->setIntensity(3.0f);
+		//lightComp1->setDiffuseColor(Color(0, 125, 11));
+		lightComp1->setIntensity(8.0f);
 		
 
 		// prepare resources
@@ -90,15 +90,15 @@ void DemoTexture::prepare(void)
 		// place cube 
 		sgSceneObject *objRoot = sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mScene->getRoot());
-		objRoot->translate(Vector3(-2.5f, 0.0f, -2.5f));
+		objRoot->translate(Vector3(-1.0f, 0.0f, -2.5f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
-		objRoot->pitch(Radian(-Math::PI_DIV_3));
+		//objRoot->pitch(Radian(-Math::PI_DIV_3));
 
         sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
 		sgRenderStateComponent *cubeRsComp = (sgRenderStateComponent*)objCube->createComponent(sgRenderStateComponent::GetClassName());
 		cubeRsComp->setMaterialFile(mat1->getFilename());
         // load textures
-        sgTexture *texture = sgLoader::load_texture("images/tex2.tga");
+        sgTexture *texture = (sgTexture*)sgResourceCenter::instance()->createResource(sgTexture::GetClassName(), "images/cube.png");
         if(texture)
         {
             cubeRsComp->addTexture(texture->getFilename());

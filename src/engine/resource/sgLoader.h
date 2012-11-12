@@ -19,9 +19,11 @@ namespace Sagitta{
         static sgSceneObject *load_obj2(const std::string &filename);
         static sgSkeleton *load_bvh_skeleton(const std::string &filename);
         static sgAnimation *load_bvh_animation(const std::string &filename);
-        static sgTexture *load_texture(const std::string &filename);
+
+        static uByte *load_image(const std::string &filename, int &width, int &height, int &comps);
+		static void free_image_data(uByte *data);
 	};
-	
+
 	
 } // namespace Sagitta
 

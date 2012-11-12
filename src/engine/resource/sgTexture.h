@@ -31,9 +31,9 @@ namespace Sagitta{
         
         bool isActive(void) const;
         bool hasData(void) const;
-        
-        // temp
-        void _setTextureId(int ID){ mTextureId = ID; }
+
+	protected:
+		virtual void onSetFilename(void);
 
 	}; 
 

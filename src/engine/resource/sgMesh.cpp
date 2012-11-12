@@ -1013,7 +1013,7 @@ namespace Sagitta
 			{
 				for(size_t j=0; j<m_iPolyType; ++j)
 				{
-					vi = i * m_iPolyType + 1;
+					vi = i * m_iPolyType + j;
 					outtBufferData[vi] = tBufferData[tIndexData[vi]];
 				}
 			}

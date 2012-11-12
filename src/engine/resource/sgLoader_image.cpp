@@ -14,33 +14,24 @@
 
 namespace Sagitta{
 
-	sgTexture *sgLoader::load_texture(const std::string &filename)
+	uByte *sgLoader::load_image(const std::string &filename, int &width, int &height, int &comps)
     {
-
-        
         std::string fullpath = sgResourceCenter::instance()->getResourcePath(filename);
         
-        int width, height, comps;
         uByte *imgData = stbi_load(fullpath.c_str(), &width, &height, &comps, 0);
         if(imgData == NULL)
         {
             sgLogSystem::instance()->error(stbi_failure_reason());
             return NULL;
         }
-        
-        sgTexture *pTexture = (sgTexture*)sgResourceCenter::instance()->createResource(sgTexture::GetClassName(), filename.c_str());
-        
-        sgFrameBuffer *buffer = pTexture->getBuffer();
-        buffer->resize(width, height, comps * sizeof(uByte));
-        memcpy(buffer->data(), imgData, buffer->getSizeInBytes());
-        
-        sgGetRenderer()->createTexture(pTexture);
-        
-        stbi_image_free(imgData);
-        
-        return pTexture;
-        
+		return imgData;
     }
+
+	void sgLoader::free_image_data( uByte *data )
+	{
+		if(data)
+			stbi_image_free(data);
+	}
     
 } // namespace Sagitta
 

@@ -286,8 +286,8 @@ namespace Sagitta{
         bool setUniformForShader(int type, int location, int extra, const void* data);
         
         /// create a texture for api
-        virtual bool createTexture(sgTexture *pTexture){ return false; }
-        virtual bool deleteTexture(UInt32 textureId){ return false; }
+        virtual int createTexture(sgTexture *pTexture){ return -1; }
+        virtual bool deleteTexture(int textureId){ return false; }
 
 	}; //#### end class sgRenderer
 
