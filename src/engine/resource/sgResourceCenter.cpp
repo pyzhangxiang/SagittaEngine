@@ -140,7 +140,7 @@ namespace Sagitta{
     
     std::string sgResourceCenter::getResourcePath(const std::string &subname)
     {
-        if(subname.find_first_of(mRootDir) == 0)
+        if(subname.find(mRootDir) == 0)
             return subname;
         return mRootDir + subname;
     }
