@@ -22,6 +22,8 @@ namespace Sagitta{
 
         static uByte *load_image(const std::string &filename, int &width, int &height, int &comps);
 		static void free_image_data(uByte *data);
+
+		static sgSceneObject *load_pod(const std::string &filename);
 	};
 
 	
