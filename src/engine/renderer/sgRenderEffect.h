@@ -74,6 +74,7 @@ namespace Sagitta{
         static const sgStrHandle Texture1;
         static const sgStrHandle Texture2;
         static const sgStrHandle Texture3;
+        static const sgStrHandle TextureDepth;
 
 
     protected:
@@ -132,6 +133,7 @@ namespace Sagitta{
 	protected:
 		/// set extra user defined uniform data, implement by subclasses
 		virtual void setUniformObjectExtra(sg_render::CurrentRenderParam *param, sgSceneObject *object){};
+        
 		/// render the object in the current pass
 		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 

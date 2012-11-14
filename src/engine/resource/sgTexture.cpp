@@ -11,7 +11,8 @@ namespace Sagitta{
 
 	sgTexture::sgTexture()
     : sgResource(), mBuffer(NULL)
-    , mTextureId(-1)
+    , mTextureId(-1), mWidth(0)
+    , mHeight(0), mPixelComponents(0)
     {
         mBuffer = new sgFrameBuffer();
 	}
@@ -29,11 +30,6 @@ namespace Sagitta{
             mBuffer = NULL;
         }
 	}
-    
-    void sgTexture::_setTexureId(UInt32 tid)
-    {
-        mTextureId = tid;
-    }
 
     bool sgTexture::isActive(void) const
     {
@@ -51,9 +47,13 @@ namespace Sagitta{
 		uByte *imageData = sgLoader::load_image(getFilename().getStr(), width, height, comps);
 		if(imageData == NULL)
 			return ;
+        
+        mWidth = width;
+        mHeight = height;
+        mPixelComponents = comps;
 	
 		sgFrameBuffer *buffer = this->getBuffer();
-		buffer->resize(width, height, comps * sizeof(uByte));
+		buffer->resize(mWidth, mHeight, mPixelComponents * sizeof(uByte));
 		memcpy(buffer->data(), imageData, buffer->getSizeInBytes());
 
 		mTextureId = sgGetRenderer()->createTexture(this);

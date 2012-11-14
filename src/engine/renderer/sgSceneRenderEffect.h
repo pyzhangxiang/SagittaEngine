@@ -26,6 +26,10 @@ namespace Sagitta
 		/// render scene pass by pass
         void render(sg_render::CurrentRenderParam *param);
         
+        /// do something before and after the render pass
+        virtual void preRenderPass(void){}
+        virtual void postRenderPass(void){}
+        
 	};
 
 } // namespace Sagitta

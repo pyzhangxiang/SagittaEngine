@@ -45,8 +45,9 @@ namespace Sagitta
 		for(size_t i=0; i<mPassList.size(); ++i)
 		{
 			sgRenderPass *rp = mPassList[i];
-
 			this->setCurrentPass(i);
+            mCurrentRenderParam->scene_program_only = rp->isUseSceneProgramOnly();
+            this->preRenderPass();
 			
 			sgGpuProgram *program = rp->getGpuProgram();
 			if(!program || !program->isActive())
@@ -83,6 +84,7 @@ namespace Sagitta
                 
 			}
 
+            this->postRenderPass();
 			
 		}
 

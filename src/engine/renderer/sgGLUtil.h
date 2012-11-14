@@ -12,6 +12,7 @@ namespace Sagitta{
     _SG_KernelExport std::string sgCheckGLError(const std::string &file, int line);
     _SG_KernelExport int sgGetRendererDataType(GLenum glType);
     _SG_KernelExport GLenum sgGetGLDataType(int sgType);
+    _SG_KernelExport GLenum sgGetGLPixelFormat(int sgPixelFormat);
 #define SG_CHECK_GL_ERROR() sgCheckGLError(__FILE__, __LINE__)
     
     void sgSetUniform1f(int location, int extra, const void *data);

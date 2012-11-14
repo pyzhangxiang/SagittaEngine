@@ -7,15 +7,26 @@
 
 namespace Sagitta{
 
-	class _SG_KernelExport sgRenderEffectShadowmap : public sgSceneRenderEffect
+    class sgRenderTarget;
+    
+	class _SG_KernelExport sgRenderEffectShadowMap : public sgSceneRenderEffect
 	{
-        SG_META_DECLARE(sgRenderEffectShadowmap)
+        SG_META_DECLARE(sgRenderEffectShadowMap)
+        
+    protected:
+        sgRenderTarget *mDepthRT;
         
     public:
-        sgRenderEffectShadowmap(void);
-        virtual ~sgRenderEffectShadowmap(void);
+        sgRenderEffectShadowMap(void);
+        virtual ~sgRenderEffectShadowMap(void);
         
         virtual void update(Float32 deltaTime);
+        
+    protected:
+        virtual void setUniformObjectExtra(sg_render::CurrentRenderParam *param, sgSceneObject *object);
+        
+        virtual void preRenderPass(void);
+        virtual void postRenderPass(void);
 	};
 
 } // namespace Sagitta

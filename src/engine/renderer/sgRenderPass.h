@@ -20,6 +20,8 @@ namespace Sagitta{
         // only for scene effect, like shadow map
         sgRenderQueue *mRenderQueue;
         
+        bool mUseSceneProgramOnly;
+        
 	public:
         sgRenderPass(const sgStrHandle &queueTypeName = sgStrHandle::EmptyString);
 		virtual ~sgRenderPass(void);
@@ -30,6 +32,8 @@ namespace Sagitta{
         void setProgram(sgGpuProgram *program);
 
 
+        bool isUseSceneProgramOnly(void) const{ return mUseSceneProgramOnly; }
+        void setUseSceneProgramOnly(bool onlyScene);
 	};
 
 } // namespace Sagitta

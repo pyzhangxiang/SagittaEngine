@@ -114,6 +114,7 @@ namespace Sagitta{
 		m_CurRenderParam.pscene = aViewport->camera()->getParent()->getScene();
         m_CurRenderParam.last_gpu_program = m_CurRenderParam.current_gpu_program =
             m_CurRenderParam.scene_gpu_program = NULL;
+        m_CurRenderParam.scene_program_only = false;
         m_CurRenderParam.textures.clear();
         
         if(!m_CurRenderParam.pscene)

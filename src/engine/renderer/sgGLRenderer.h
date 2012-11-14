@@ -75,9 +75,21 @@ namespace Sagitta{
 	//	void resize(int aWidth, int aHeight);
         
         virtual bool initShaderEnvironmentImpl(void);
-        
+    
+    protected:
         virtual int createTexture(sgTexture *pTexture);
         virtual bool deleteTexture(int textureId);
+        
+        virtual bool deleteRenderTarget(sgRenderTarget *rt);
+    public:
+        virtual sgRenderTarget *createRenderTarget(UInt32 width, UInt32 height
+                                                   , UInt32 components
+                                                   , PixelFormat pixelFormat
+                                                   , RenderDataType dataType);
+        
+        // temp
+        virtual void beginRenderTarget(sgRenderTarget *rt);
+        virtual void endRenderTarget(void);
         
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib

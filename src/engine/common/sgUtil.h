@@ -40,6 +40,16 @@ namespace Sagitta{
     
 	_SG_KernelExport UInt32 sgGetDataTypeSize(UInt32 type);
     
+    enum PixelFormat
+    {
+        PIXEL_FORMAT_RED,
+        PIXEL_FORMAT_RG,
+        PIXEL_FORMAT_RGB,
+        PIXEL_FORMAT_BGR,
+        PIXEL_FORMAT_RGBA,
+        PIXEL_FORMAT_BGRA,
+    };
+    
     template<typename T, typename U>
     T sgMin(const T &a, const U &b)
     {

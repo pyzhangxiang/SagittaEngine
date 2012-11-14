@@ -5,6 +5,7 @@
 
 #include "engine/common/sgObject.h"
 #include "engine/common/sgStlAllocator.h"
+#include "engine/common/sgUtil.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "sgRenderState.h"
 #include "math/sgColor.h"
@@ -34,6 +35,7 @@ namespace Sagitta{
     class sgGpuProgram;
 	class sgSceneRenderEffect;
     class sgTexture;
+    class sgRenderTarget;
 
 	namespace sg_render
 	{
@@ -50,6 +52,8 @@ namespace Sagitta{
 			sgGpuProgram *scene_gpu_program;
 			sgGpuProgram *current_gpu_program;
 			sgGpuProgram *last_gpu_program;
+            
+            bool scene_program_only;
 
 			// own by the param
 			sgRenderQueue *mDefaultRenderQueue;
@@ -87,6 +91,8 @@ namespace Sagitta{
         SG_META_DECLARE_ABSTRACT(sgRenderer)
         
 		friend class sgRenderEffect;
+        friend class sgRenderTarget;
+        friend class sgTexture;
 //        friend sgRenderer *sgCreateRenderer(const sgStrHandle &type, bool useshader);
         
     public:
@@ -285,9 +291,21 @@ namespace Sagitta{
         
         bool setUniformForShader(int type, int location, int extra, const void* data);
         
+    protected:
         /// create a texture for api
         virtual int createTexture(sgTexture *pTexture){ return -1; }
         virtual bool deleteTexture(int textureId){ return false; }
+        
+        // render target
+        virtual bool deleteRenderTarget(sgRenderTarget *rt){ return false; }
+    public:
+        virtual sgRenderTarget *createRenderTarget(UInt32 width, UInt32 height
+                                                   , UInt32 components
+                                                   , PixelFormat pixelFormat
+                                                   , RenderDataType dataType){ return NULL; }
+        // temp
+        virtual void beginRenderTarget(sgRenderTarget *rt){}
+        virtual void endRenderTarget(void){}
 
 	}; //#### end class sgRenderer
 

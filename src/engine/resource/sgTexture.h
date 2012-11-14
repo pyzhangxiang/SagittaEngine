@@ -19,6 +19,10 @@ namespace Sagitta{
         sgFrameBuffer *mBuffer;
         Int32 mTextureId;
 
+        UInt32 mWidth;
+        UInt32 mHeight;
+        UInt32 mPixelComponents;
+        
 	public:
 		sgTexture(void);
 		virtual ~sgTexture(void);
@@ -26,11 +30,13 @@ namespace Sagitta{
         sgFrameBuffer *getBuffer(void) const{ return mBuffer; }
         
         Int32 getTextureId(void) const{ return mTextureId; }
-        /// should only be called by renderer implementations
-        void _setTexureId(UInt32 tid);
         
         bool isActive(void) const;
         bool hasData(void) const;
+        
+        UInt32 getWidth(void) const{ return mWidth; }
+        UInt32 getHeight(void) const{ return mHeight; }
+        UInt32 getPixelComponents(void) const{ return mPixelComponents; }
 
 	protected:
 		virtual void onSetFilename(void);

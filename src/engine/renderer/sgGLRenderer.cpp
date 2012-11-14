@@ -8,12 +8,14 @@
 #include "sgGLRenderer.h"
 #include "sgViewport.h"
 #include "sgRenderEffect.h"
+#include "sgRenderTarget.h"
 #include "engine/buffer/sgFrameBuffer.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/common/sgUtil.h"
 #include "engine/common/sgException.h"
+#include "engine/common/sgLogSystem.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
@@ -447,6 +449,132 @@ namespace Sagitta{
 		GLuint tid = (GLuint)textureId;
         glDeleteTextures(1, &tid);
         return true;
+    }
+    
+    sgRenderTarget *sgGLRenderer::createRenderTarget(UInt32 width, UInt32 height
+                                                     , UInt32 components
+                                                     , PixelFormat pixelFormat
+                                                     , RenderDataType dataType)
+    {
+        if(width == 0
+           || height == 0
+           || components == 0)
+        {
+            return NULL;
+        }
+        
+        GLuint rtId;
+        glGenFramebuffersEXT(1, &rtId);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rtId);
+        
+        
+        GLenum pf = sgGetGLPixelFormat(pixelFormat);
+        GLenum rdt = sgGetGLDataType(dataType);
+        
+        GLuint textureId;
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, pf, rdt, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+        
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureId, 0);
+        
+        // temp
+        // No color output in the bound framebuffer, only depth.
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        
+        bool ok = false;
+        // Always check that our framebuffer is ok
+        GLenum fbostatus = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+        switch (fbostatus) {
+            case GL_FRAMEBUFFER_COMPLETE_EXT:
+                ok = true;
+                break;
+            case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_UNSUPPORTED_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT");
+                break;
+            case GL_MAX_COLOR_ATTACHMENTS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_MAX_COLOR_ATTACHMENTS_EXT");
+                break;
+            default:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, Unknown");
+                break;
+        }
+        
+        if(!ok && rtId > 0)
+        {
+            glDeleteFramebuffersEXT(1, &rtId);
+            rtId = 0;
+            glDeleteTextures(1, &textureId);
+            return NULL;
+        }
+        
+        sgRenderTarget *pRT = new sgRenderTarget(rtId, textureId, width, height, components);
+        return pRT;
+    }
+    
+    bool sgGLRenderer::deleteRenderTarget(sgRenderTarget *rt)
+    {
+        if(rt == NULL)
+            return false;
+        
+        GLuint rtId = rt->getRtId();
+        if(rtId > 0)
+            glDeleteFramebuffersEXT(1, &rtId);
+        GLuint textureId = rt->getRtTextureId();
+        if(textureId > 0)
+            glDeleteTextures(1, &textureId);
+        
+        return true;
+    }
+    
+    void sgGLRenderer::beginRenderTarget(sgRenderTarget *rt)
+    {
+        if(rt == NULL || !(rt->isActive()) )
+            return ;
+        
+        // Render to our framebuffer
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rt->getRtId());
+		glViewport(0, 0, rt->getWidth(), rt->getHeight()); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+        
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+    
+    void sgGLRenderer::endRenderTarget(void)
+    {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        setViewport(m_CurRenderParam.pviewport);
+        // clear frame buffers
+        clearFrameBuffers(m_CurRenderParam.pviewport->getClearBuffers(),
+                          m_CurRenderParam.pviewport->getBackColor(),
+                          m_CurRenderParam.pviewport->getBackDepth(),
+                          m_CurRenderParam.pviewport->getBackStencil());
     }
 
 } // namespace Sagitta

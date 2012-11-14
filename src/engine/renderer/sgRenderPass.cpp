@@ -12,6 +12,7 @@ namespace Sagitta{
     sgRenderPass::sgRenderPass(const sgStrHandle &queueTypeName)
     : mGpuProgram(NULL)
     , mRenderQueue(NULL)
+    , mUseSceneProgramOnly(false)
     {
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(queueTypeName);
         if(meta && meta->isClass(sgRenderQueue::GetClassName()))
@@ -32,6 +33,11 @@ namespace Sagitta{
     void sgRenderPass::setProgram(sgGpuProgram *program)
     {
         mGpuProgram = program;
+    }
+    
+    void sgRenderPass::setUseSceneProgramOnly(bool onlyScene)
+    {
+        mUseSceneProgramOnly = onlyScene;
     }
     
 } // namespace Sagitta

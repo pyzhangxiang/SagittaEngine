@@ -71,6 +71,25 @@ namespace Sagitta{
     
     }
     
+    GLenum sgGetGLPixelFormat(int sgPixelFormat)
+    {
+        switch (sgPixelFormat) {
+            case PIXEL_FORMAT_RED:
+                return GL_RED;
+            case PIXEL_FORMAT_RG:
+                return GL_RG;
+            case PIXEL_FORMAT_RGB:
+                return GL_RGB;
+            case PIXEL_FORMAT_BGR:
+                return GL_BGR;
+            case PIXEL_FORMAT_BGRA:
+                return GL_BGRA;
+            case PIXEL_FORMAT_RGBA:
+            default:
+                return GL_RGBA;
+		}
+    }
+    
     GLenum sgGetGLDataType(int sgType)
     {
 		switch (sgType) {

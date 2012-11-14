@@ -70,6 +70,7 @@ namespace Sagitta
     const sgStrHandle sgRenderEffect::Texture1("sg_Sampler1");
     const sgStrHandle sgRenderEffect::Texture2("sg_Sampler2");
     const sgStrHandle sgRenderEffect::Texture3("sg_Sampler3");
+    const sgStrHandle sgRenderEffect::TextureDepth("sg_DepthMap");
 
     sgRenderEffect::sgRenderEffect(void)
 	: sgObject()
