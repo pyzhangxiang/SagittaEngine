@@ -414,6 +414,11 @@ namespace Sagitta{
             return -1;
         }
         sgFrameBuffer *buffer = pTexture->getBuffer();
+		if(buffer == NULL)
+		{
+			return -1;
+		}
+
         GLint pixelFormat = GL_RGBA;
         if(buffer->getDataSizeInBytes() == 4)
         {
@@ -483,7 +488,7 @@ namespace Sagitta{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
         
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureId, 0);
+        //glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureId, 0);
         
         // temp
         // No color output in the bound framebuffer, only depth.

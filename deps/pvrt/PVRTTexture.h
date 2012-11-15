@@ -567,10 +567,10 @@ PVRTextureHeaderV3 *PVRTTextureCreate(
 @Description	Allocates and fills, in system memory, a texture large enough
 to repeat the source texture specified number of times.
 *****************************************************************************/
-void PVRTTextureTile(
-					 PVRTextureHeaderV3			**pOut,
-					 const PVRTextureHeaderV3	* const pIn,
-					 const int					nRepeatCnt);
+//void PVRTTextureTile(
+//					 PVRTextureHeaderV3			**pOut,
+//					 const PVRTextureHeaderV3	* const pIn,
+//					 const int					nRepeatCnt);
 
 /****************************************************************************
 ** Internal Functions

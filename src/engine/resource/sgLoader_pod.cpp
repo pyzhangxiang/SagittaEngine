@@ -42,14 +42,56 @@ namespace Sagitta{
 			SPODMesh &podMesh = podScene.pMesh[iMesh];
 			if(podMesh.ePrimitiveType != ePODTriangles)
 				continue;
+			if(podMesh.nNumStrips != 0)
+				continue;
 
-			if(podMesh.sVertex.eType != EPODDataFloat)
+			int podMeshVertexStart = -1;
+			int podMeshNormalStart = -1;
+			int podMeshUV0Start = -1;
+			int podMeshColorStart = -1;
+
+			size_t totalStride = 0;
+
+			podMeshVertexStart = 0;
+			if(podMesh.sVertex.eType != EPODDataFloat || podMesh.sVertex.n != 3)
 				continue;
-			if(podMesh.sVertex.n != 3)
+			totalStride += podMesh.sVertex.n * sizeof(float);
+
+			podMeshNormalStart = podMeshVertexStart + totalStride;
+			if(podMesh.sNormals.eType != EPODDataFloat || (podMesh.sNormals.n != 0 && podMesh.sNormals.n != 3) )
 				continue;
-			if(podMesh.sNormals.eType != EPODDataFloat)
-				continue;
-			if(podMesh.psUVW->eType != EPODDataFloat)
+			totalStride += podMesh.sNormals.n * sizeof(float);
+			
+			//if(podMesh.sTangents.n != 0)
+			{
+				totalStride += podMesh.sTangents.n * sizeof(float);
+			}
+
+			//if(podMesh.sBinormals.n != 0)
+			{
+				totalStride += podMesh.sBinormals.n * sizeof(float);
+			}
+
+			if(podMesh.nNumUVW > 0)
+			{
+				podMeshUV0Start = podMeshVertexStart + totalStride;
+				if(podMesh.psUVW[0].eType != EPODDataFloat || (podMesh.psUVW[0].n != 0 && podMesh.psUVW[0].n != 2))
+					continue ;
+				totalStride += podMesh.psUVW[0].n * sizeof(float);
+			}
+			for(size_t i=1; i<podMesh.nNumUVW; ++i)
+			{
+				totalStride += podMesh.psUVW[0].n * sizeof(float);
+			}
+
+			if(podMesh.sVtxColours.n != 0)
+			{
+				PVRTModelPODDataConvert(podMesh.sVtxColours, podMesh.nNumVertex, EPODDataRGBA);
+				podMeshColorStart = podMeshVertexStart + totalStride;
+				totalStride += podMesh.sNormals.n * sizeof(unsigned int);
+			}
+
+			if(totalStride != podMesh.sVertex.nStride)
 				continue;
 
 			sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + "_mesh_" + sgStringUtil::to_string(iMesh)).c_str());
@@ -58,26 +100,23 @@ namespace Sagitta{
 			sgVertexData *vdata = mesh->getVertexData();
 			sgIndexData *idata = mesh->getIndexData();
 
-			Vector3 *vertices = NULL;
-			Vector3 *normals = NULL;
-			Vector2 *uv0s = NULL;
+			//Vector3 *vertices = NULL;
+			//Vector3 *normals = NULL;
+			//Vector2 *uv0s = NULL;
 			size_t *vindices = NULL;
 			size_t *nindices = NULL;
 			size_t *tindices = NULL;
 
 			// vertex
 			{
-				vertices = static_cast<Vector3*>( vdata->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, podMesh.nNumVertex)->data() );
-				vindices = static_cast<size_t*>( idata->createElement(sgVertexBufferElement::ET_VERTEX)->data() );
+				Vector3 *vertices = static_cast<Vector3*>( vdata->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, podMesh.nNumVertex)->data() );
+				size_t *vindices = static_cast<size_t*>( idata->createElement(sgVertexBufferElement::ET_VERTEX)->data() );
 
-				float *podMeshVertexData = (float*)podMesh.sVertex.pData;
 				for(size_t i=0; i<podMesh.nNumVertex; ++i)
 				{
-					size_t podMeshVI = i * (3 + podMesh.sVertex.nStride);
-					vertices[i].setValues(podMeshVertexData[podMeshVI]
-										, podMeshVertexData[podMeshVI+1]
-										, podMeshVertexData[podMeshVI+2]);
+					memcpy(&(vertices[i]), podMesh.pInterleaved + (podMeshVertexStart + (i * totalStride)), sizeof(Vector3));
 				}
+
 				if(!podMesh.sFaces.pData)
 				{
 					// no index
@@ -89,23 +128,45 @@ namespace Sagitta{
 				}
 				else
 				{
-					//GLenum type = (pMesh->sFaces.eType == EPODDataUnsignedShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-					/*if(podMesh.sFaces.eType == EPODDataUnsignedShort)
+					for(size_t i=0; i<podMesh.nNumFaces*3; ++i)
 					{
-						unsigned short *podMeshIndexData = (unsigned short*)podMesh.sFaces.pData;
-						for(size_t i=0; i<podMesh.nNumFaces*3; ++i)
-						{
-							size_t podMeshVI = i * (3 + podMesh.sVertex.nStride);
-							vindices[i] = meshInfo.vertexIndex[i];
-						}
+						memcpy(&(vindices[i]), podMesh.sFaces.pData + (podMesh.sFaces.nStride * i), podMesh.sFaces.nStride);
 					}
-					else
-					{
-
-					}*/
-					
 				}
 				
+			}
+
+			// normal
+			if(podMeshNormalStart > 0)
+			{
+				Vector3 *normals = static_cast<Vector3*>( vdata->createElement(sgVertexBufferElement::NormalAttributeName, RDT_F, 3, podMesh.nNumVertex)->data() );
+
+				for(size_t i=0; i<podMesh.nNumVertex; ++i)
+				{
+					memcpy(&(normals[i]), podMesh.pInterleaved + (podMeshNormalStart + (i * totalStride)), sizeof(Vector3));
+				}
+			}
+
+			// uv0
+			if(podMeshUV0Start > 0)
+			{
+				Vector2 *uv0s = static_cast<Vector2*>( vdata->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, podMesh.nNumVertex)->data() );
+
+				for(size_t i=0; i<podMesh.nNumVertex; ++i)
+				{
+					memcpy(&(uv0s[i]), podMesh.pInterleaved + (podMeshUV0Start + (i * totalStride)), sizeof(Vector2));
+				}
+			}
+
+			// color
+			if(podMeshColorStart > 0)
+			{
+				Color *colors = static_cast<Color*>( vdata->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, podMesh.nNumVertex)->data() );
+
+				for(size_t i=0; i<podMesh.nNumVertex; ++i)
+				{
+					memcpy(&(colors[i]), podMesh.pInterleaved + (podMeshColorStart + (i * totalStride)), sizeof(Color));
+				}
 			}
 
 		}

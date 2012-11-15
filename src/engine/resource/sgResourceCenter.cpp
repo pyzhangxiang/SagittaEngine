@@ -1,19 +1,15 @@
 //////////////////////////////////////////////////////
 // file: sgResourceCenter.cpp 
 // created by zhangxiang on 09-01-11
-// define of the class sgResourceCenter
-// sgResourceCenter is a class ...
 //////////////////////////////////////////////////////
 
-// INCLUDES //////////////////////////////////////////
 #include "sgResourceCenter.h"
 #include "sgResource.h"
+#include "sgImageLoader.h"
+#include "engine/common/sgClassMeta.h"
 #include "engine/common/sgStringUtil.h"
 #include "engine/common/sgException.h"
 
-// DECLARES //////////////////////////////////////////
-
-// DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
 	//SG_META_DEFINE(sgResourceCenter, sgObject)
@@ -21,7 +17,9 @@ namespace Sagitta{
     sgResourceCenter::sgResourceCenter(void)
     : mRootDir("./")
     {
-        
+        registerImageLoader(".png", sgImageLoader_stb::GetClassName());
+		registerImageLoader(".tga", sgImageLoader_stb::GetClassName());
+		registerImageLoader(".bmp", sgImageLoader_stb::GetClassName());
     }
 
 	//  [1/11/2009 zhangxiang]
@@ -144,5 +142,28 @@ namespace Sagitta{
             return subname;
         return mRootDir + subname;
     }
+
+	bool sgResourceCenter::registerImageLoader( const std::string &imageFileExt, const sgStrHandle &imageLoaderType )
+	{
+		sgClassMeta *meta = sgMetaCenter::instance().findMeta(imageLoaderType);
+		if(meta == NULL)
+			return false;
+
+		if(! (meta->isClass(sgImageLoader::GetClassName())) )
+			return false;
+
+		mImageLoaderTypeMap[imageFileExt] = imageLoaderType.getStr();
+		return true;
+	}
+
+	sgImageLoader * sgResourceCenter::getImageLoader( const std::string &imageFileExt ) const
+	{
+		ImageLoaderTypeMap::const_iterator it = mImageLoaderTypeMap.find(imageFileExt);
+		if(it == mImageLoaderTypeMap.end())
+			return NULL;
+
+		sgImageLoader *imgLoader = (sgImageLoader*)sgObject::createObject(sgStrHandle(it->second.c_str()));
+		return imgLoader;
+	}
 
 } // namespace Sagitta

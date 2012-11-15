@@ -1,20 +1,21 @@
 //  [10/11/2012  zhangxiang]
 
 #include "sgTexture.h"
-#include "sgLoader.h"
+#include "sgImageLoader.h"
+#include "sgResourceCenter.h"
 #include "engine/buffer/sgFrameBuffer.h"
 #include "engine/renderer/sgRenderer.h"
+#include "engine/common/sgStringUtil.h"
 
 namespace Sagitta{
 
 	SG_META_DEFINE(sgTexture, sgResource)
 
 	sgTexture::sgTexture()
-    : sgResource(), mBuffer(NULL)
+    : sgResource(), mImage(NULL)
     , mTextureId(-1), mWidth(0)
     , mHeight(0), mPixelComponents(0)
     {
-        mBuffer = new sgFrameBuffer();
 	}
 
 	sgTexture::~sgTexture(void)
@@ -24,10 +25,10 @@ namespace Sagitta{
             sgGetRenderer()->deleteTexture(mTextureId);
             mTextureId = -1;
         }
-        if(mBuffer)
+        if(mImage != NULL)
         {
-            delete mBuffer;
-            mBuffer = NULL;
+            sgObject::destroyObject(mImage);
+			mImage = NULL;
         }
 	}
 
@@ -38,25 +39,34 @@ namespace Sagitta{
     
     bool sgTexture::hasData(void) const
     {
-        return mBuffer != NULL && mBuffer->data() != NULL;
+        return mImage != NULL && mImage->isActive();
     }
 
 	void sgTexture::onSetFilename( void )
 	{
-		int width, height, comps;
-		uByte *imageData = sgLoader::load_image(getFilename().getStr(), width, height, comps);
-		if(imageData == NULL)
+		std::string filename = getFilename().getStr();
+		std::string fileExt = sgStringUtil::getFileExtention(filename);
+		
+		mImage = sgResourceCenter::instance()->getImageLoader(fileExt);
+		if(mImage == NULL)
 			return ;
-        
-        mWidth = width;
-        mHeight = height;
-        mPixelComponents = comps;
-	
-		sgFrameBuffer *buffer = this->getBuffer();
-		buffer->resize(mWidth, mHeight, mPixelComponents * sizeof(uByte));
-		memcpy(buffer->data(), imageData, buffer->getSizeInBytes());
 
+		mImage->load(filename);
+		
+        mWidth = mImage->getWidth();
+        mHeight = mImage->getHeight();
+        mPixelComponents = mImage->getPixelComponents();
+	
 		mTextureId = sgGetRenderer()->createTexture(this);
+
+	}
+
+	sgFrameBuffer * sgTexture::getBuffer( void ) const
+	{
+		if( mImage == NULL || !(mImage->isActive()) )
+			return NULL;
+
+		return mImage->getImageData();
 
 	}
 

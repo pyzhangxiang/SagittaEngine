@@ -9,14 +9,15 @@
 
 namespace Sagitta{
     
-    class sgFrameBuffer;
+    class sgImageLoader;
+	class sgFrameBuffer;
 
 	class _SG_KernelExport sgTexture : public sgResource
 	{
 		SG_META_DECLARE(sgTexture)
         
     private:
-        sgFrameBuffer *mBuffer;
+        sgImageLoader *mImage;
         Int32 mTextureId;
 
         UInt32 mWidth;
@@ -27,7 +28,7 @@ namespace Sagitta{
 		sgTexture(void);
 		virtual ~sgTexture(void);
 
-        sgFrameBuffer *getBuffer(void) const{ return mBuffer; }
+        sgFrameBuffer *getBuffer(void) const;
         
         Int32 getTextureId(void) const{ return mTextureId; }
         

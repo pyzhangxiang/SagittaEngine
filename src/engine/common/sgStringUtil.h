@@ -79,6 +79,10 @@ namespace Sagitta
         static bool start_with(const std::string &str, const std::string &start);
         static bool end_with(const std::string &str, const std::string &end);
 
+		// file path
+		static std::string getFileExtention(const std::string &filename);
+
+
 	}; //#### end class sgStringUtil
 
 } // namespace Sagitta
