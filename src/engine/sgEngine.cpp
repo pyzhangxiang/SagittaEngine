@@ -18,16 +18,17 @@ namespace Sagitta
         sgCreateAllocator();
 		sgLogSystem::CreateInstance();
         sgObjectCenter::CreateInstance();
+		sgCreateRenderer(rendererType);
         sgResourceCenter::CreateInstance();
         sgResourceCenter::instance()->setRootDir(assetRootDir);
 //        sgLoadInternalMeshes();
-        sgCreateRenderer(rendererType);
+        
     }
     
     void sgEngineShutdown(void)
     {
-        sgDestroyRenderer();
         sgResourceCenter::DestroyInstance();
+		sgDestroyRenderer();
         sgObjectCenter::DestroyInstance();
 		sgStrHandleCenter::instance().release();
 		sgLogSystem::DestroyInstance();

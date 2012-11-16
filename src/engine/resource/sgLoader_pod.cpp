@@ -5,7 +5,10 @@
 #include "engine/common/sgLogSystem.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/resource/sgMesh.h"
+#include "engine/resource/sgMaterial.h"
 #include "engine/component/sgMeshComponent.h"
+#include "engine/component/sgLightComponent.h"
+#include "engine/component/sgRenderStateComponent.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
@@ -36,6 +39,7 @@ namespace Sagitta{
 
 		sgSceneObject *sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 
+		sg_vector(sgMesh*) tMeshList;
 		// create meshes
 		for(size_t iMesh=0; iMesh<podScene.nNumMesh; ++iMesh)
 		{
@@ -96,6 +100,7 @@ namespace Sagitta{
 
 			sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + "_mesh_" + sgStringUtil::to_string(iMesh)).c_str());
 			mesh->reset(3, podMesh.nNumVertex, podMesh.nNumFaces);
+			tMeshList.push_back(mesh);
 
 			sgVertexData *vdata = mesh->getVertexData();
 			sgIndexData *idata = mesh->getIndexData();
@@ -169,8 +174,64 @@ namespace Sagitta{
 				}
 			}
 
+			mesh->prepareGeometry();
 		}
+
+		sg_vector(sgMaterial*) tMaterialList;
+		for(size_t iMat=0; iMat<podScene.nNumMaterial; ++iMat)
+		{
+			SPODMaterial &podMat = podScene.pMaterial[iMat];
+
+			sgMaterial *mat = (sgMaterial*)sgResourceCenter::instance()->createResource(sgMaterial::GetClassName()
+																		, (filename + "_material_" + sgStringUtil::to_string(iMat)).c_str());
+			tMaterialList.push_back(mat);
+
+			mat->setDiffuseColor(Color(Color::GLColor(Vector3(podMat.pfMatDiffuse))));
+			mat->setAmbientColor(Color(Color::GLColor(Vector3(podMat.pfMatAmbient))));
+			mat->setSpecularColor(Color(Color::GLColor(Vector3(podMat.pfMatSpecular))));
+			mat->setShininess(podMat.fMatShininess);
+		}
+
+		sg_vector(sgSceneObject*) tObjectList;
+		// mesh object
+		size_t iNode = 0;
+		for(; iNode<podScene.nNumNode; ++iNode)
+		{
+			SPODNode &podNode = podScene.pNode[iNode];
+			sgSceneObject *obj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+			obj->setParent(sceneRoot);
+			obj->setName(podNode.pszName);
+			tObjectList.push_back(obj);
+		}
+
 		
+		for(iNode=0; iNode<podScene.nNumMesh; ++iNode)
+		{
+			SPODNode &podNode = podScene.pNode[iNode];
+			sgSceneObject *obj = tObjectList[iNode];
+			if(podNode.nIdxParent > 0)
+				obj->setParent(tObjectList[podNode.nIdxParent]);
+
+			sgMeshComponent *meshComp = (sgMeshComponent*)obj->createComponent(sgMeshComponent::GetClassName());
+			meshComp->setMeshFile(tMeshList[podNode.nIdx]->getFilename());
+			obj->translate(tMeshList[podNode.nIdx]->center());
+			tMeshList[podNode.nIdx]->locateToCenter();
+
+			sgRenderStateComponent *rsComp = (sgRenderStateComponent*)obj->createComponent(sgRenderStateComponent::GetClassName());
+			rsComp->setMaterialFile(tMaterialList[podNode.nIdxMaterial]->getFilename());
+		}
+		// light object
+		for(size_t iLight=0; iLight<podScene.nNumLight && iNode<podScene.nNumNode; ++iLight, ++iNode)
+		{
+			SPODNode &podNode = podScene.pNode[iNode];
+			sgSceneObject *obj = tObjectList[iNode];
+			if(podNode.nIdxParent > 0)
+				obj->setParent(tObjectList[podNode.nIdxParent]);
+			
+			SPODLight &podLight = podScene.pLight[iLight];
+			sgLightComponent *lightComp = (sgLightComponent*)obj->createComponent(sgLightComponent::GetClassName());
+			lightComp->setDiffuseColor(Color(Color::GLColor(Vector3(podLight.pfColour))));
+		}
 
 		return sceneRoot;
 
