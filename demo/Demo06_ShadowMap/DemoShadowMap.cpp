@@ -69,8 +69,8 @@ void DemoShadowMap::prepare(void)
 		
 
 		// prepare camera
-		mCamera->translate(Vector3(0.0f, 2.5f, 2.0f));
-		mCamera->pitch(Radian(-Math::PI / 6.0f));
+		mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
+		//mCamera->pitch(Radian(-Math::PI / 6.0f));
 
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());

@@ -59,6 +59,11 @@ function(sg_create_vcproj_userfile TARGETNAME)
 endfunction(sg_create_vcproj_userfile)
 
 
+#
+# Organize projects into folders
+#
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+
 add_subdirectory(src)
 add_subdirectory(demo)
 add_subdirectory(deps)
