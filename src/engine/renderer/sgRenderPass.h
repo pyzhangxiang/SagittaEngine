@@ -9,12 +9,14 @@ namespace Sagitta{
     
     class sgGpuProgram;
     class sgRenderQueue;
+    class sgViewport;
 
 	class _SG_KernelExport sgRenderPass : public sgMemObject
 	{
     //    SG_META_DECLARE(sgRenderPass)
         
 	private:
+        sgViewport *mViewport;
         sgGpuProgram *mGpuProgram;
         
         // only for scene effect, like shadow map
