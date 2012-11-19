@@ -10,31 +10,35 @@
 
 namespace Sagitta{
 
+	class sgViewport;
+	class sgCameraComponent;
+
 	class _SG_KernelExport sgRenderTarget : public sgMemObject
 	{
     private:
         UInt32 mRtId;
-        UInt32 mRtTextureId;
         
         UInt32 mWidth;
         UInt32 mHeight;
-        UInt32 mPixelComponents;
-        
+
+       
+		sgViewport *mViewport;
+
 	public:
-		sgRenderTarget(UInt32 rtId, UInt32 textureId
-                       , UInt32 width, UInt32 height
-                       , UInt32 components);
-		virtual ~sgRenderTarget(void);
+		sgRenderTarget(UInt32 rtId, UInt32 width, UInt32 height);
+		virtual ~sgRenderTarget(void) = 0;
 
         UInt32 getRtId(void) const{ return mRtId; }
-        UInt32 getRtTextureId(void) const{ return mRtTextureId; }
-        
-        bool isActive(void) const;
+       
+        virtual bool isActive(void) const = 0;
         
         UInt32 getWidth(void) const{ return mWidth; }
         UInt32 getHeight(void) const{ return mHeight; }
-        UInt32 getPixelComponents(void) const{ return mPixelComponents; }
 
+		sgViewport *getViewport(void) const{ return mViewport; }
+		void setViewport(Real ratioLeft, Real ratioRight, Real ratioWidth, Real ratioHeight);
+		void resize(UInt32 width, UInt32 height);
+		void setCamera(sgCameraComponent *camera);
 	}; 
 
 } // namespace Sagitta

@@ -10,9 +10,9 @@
 
 namespace Sagitta{
     
-    class sgRenderPass;
     class sgBuffer;
 	class sgSceneObject;
+	class sgGpuProgram;
 
 	namespace sg_render
 	{
@@ -97,18 +97,7 @@ namespace Sagitta{
         typedef sg_map(sgStrHandle, FrameUniform) FrameUniformMap;
         FrameUniformMap mFrameUniformMap;
 
-		typedef sg_vector(sgRenderPass*) PassList;
-		PassList mPassList;
-
-	private:
-		size_t mCurrentPass;
-	protected:
-		// for subclasses
-		size_t getCurrentPass(void) const{ return mCurrentPass; }
-		void setCurrentPass(size_t pass){ mCurrentPass = pass; }
-
-    public:
-        sgRenderPass *addPass(const sgStrHandle &queueType = sgStrHandle::EmptyString);
+		sgGpuProgram *mGpuProgram;
 
 	protected:
 		/// same name data will be replaced
@@ -117,12 +106,13 @@ namespace Sagitta{
     public:
         sgRenderEffect(void);
         virtual ~sgRenderEffect(void) = 0;
-        
-        bool emptyRenderPass(void){ return mPassList.empty(); }
-        size_t getRenderPassNum(void) const{ return mPassList.size(); }
-        sgRenderPass *getRenderPass(size_t index) const;
+
+		sgGpuProgram *getGpuProgram(void) const{ return mGpuProgram; }
+		void setGpuProgram(sgGpuProgram *program);
         
         virtual void update(Float32 deltaTime){}
+		/// render the object in the current pass
+		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 
 	private:
 		/// set uniforms that are not changed in a frame 
@@ -133,9 +123,6 @@ namespace Sagitta{
 	protected:
 		/// set extra user defined uniform data, implement by subclasses
 		virtual void setUniformObjectExtra(sg_render::CurrentRenderParam *param, sgSceneObject *object){};
-        
-		/// render the object in the current pass
-		void renderObject(sg_render::CurrentRenderParam *param, sgSceneObject *object);
 
 	};
 

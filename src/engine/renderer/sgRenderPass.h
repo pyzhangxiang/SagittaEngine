@@ -9,18 +9,19 @@ namespace Sagitta{
     
     class sgGpuProgram;
     class sgRenderQueue;
-    class sgViewport;
+	class sgRenderEffect;
+	class sgRenderTarget;
 
 	class _SG_KernelExport sgRenderPass : public sgMemObject
 	{
     //    SG_META_DECLARE(sgRenderPass)
         
 	private:
-        sgViewport *mViewport;
-        sgGpuProgram *mGpuProgram;
-        
         // only for scene effect, like shadow map
         sgRenderQueue *mRenderQueue;
+
+		sgRenderEffect *mRenderEffect;
+		sgRenderTarget *mRenderTarget;
         
         bool mUseSceneProgramOnly;
         
@@ -29,11 +30,13 @@ namespace Sagitta{
 		virtual ~sgRenderPass(void);
         
         sgRenderQueue *getRenderQueue(void) const{ return mRenderQueue; }
+
+		sgRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
+		void setRenderEffect(sgRenderEffect *effect);
+
+		sgRenderTarget *getRenderTarget(void) const{ return mRenderTarget; }
+		void setRenderTarget(sgRenderTarget *target);
         
-        sgGpuProgram *getGpuProgram(void) const{ return mGpuProgram; }
-        void setProgram(sgGpuProgram *program);
-
-
         bool isUseSceneProgramOnly(void) const{ return mUseSceneProgramOnly; }
         void setUseSceneProgramOnly(bool onlyScene);
 	};

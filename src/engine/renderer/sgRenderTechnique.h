@@ -19,7 +19,7 @@ namespace Sagitta
         
     public:
         sgRenderTechnique(void);
-        virtual ~sgRenderTechnique(void) = 0;
+        virtual ~sgRenderTechnique(void);
         
     private:
 		size_t mCurrentPass;
@@ -35,7 +35,13 @@ namespace Sagitta
         size_t getRenderPassNum(void) const{ return mPassList.size(); }
         sgRenderPass *getRenderPass(size_t index) const;
         
+		/// do something before and after the render pass
+		virtual void preRenderPass(void){}
+		virtual void postRenderPass(void){}
+
         void render(void);
+		void resize(UInt32 width, UInt32 height);
+		void update(Float32 deltaTime);
 	};
 
 } // namespace Sagitta

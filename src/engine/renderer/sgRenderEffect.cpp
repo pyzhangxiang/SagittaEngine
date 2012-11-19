@@ -73,41 +73,20 @@ namespace Sagitta
     const sgStrHandle sgRenderEffect::TextureDepth("sg_DepthMap");
 
     sgRenderEffect::sgRenderEffect(void)
-	: sgObject()
+	: sgObject(), mGpuProgram(NULL)
     {
         
     }
     
     sgRenderEffect::~sgRenderEffect(void)
-    {
-        for(size_t i=0; i<mPassList.size(); ++i)
-        {
-            delete mPassList[i];
-        }
-        mPassList.clear();
-        
+    {   
+
         FrameUniformMap::iterator it = mFrameUniformMap.begin();
         for(; it!=mFrameUniformMap.end(); ++it)
         {
             delete it->second.data;
         }
         mFrameUniformMap.clear();
-    }
-    
-    sgRenderPass *sgRenderEffect::addPass(const sgStrHandle &queueType)
-    {
-        sgRenderPass *rp = new sgRenderPass(queueType);
-        mPassList.push_back(rp);
-
-		return rp;
-    }
-    
-    sgRenderPass *sgRenderEffect::getRenderPass(size_t index) const
-    {
-        if(index >= mPassList.size())
-            return 0;
-        
-        return mPassList[index];
     }
 
 	void sgRenderEffect::addFrameUniform( const sgStrHandle &dataName, FrameUniform uniform )
@@ -256,7 +235,7 @@ namespace Sagitta
         param->textures.clear();
         if(renderState != NULL)
         {
-            size_t texture_num = sgMin(renderState->getTextureNum(), Texture_Max);
+            size_t texture_num = sgMin(renderState->getTextureNum(), (size_t)Texture_Max);
             for(size_t i=0; i<texture_num; ++i)
             {
                 sgTexture *texture = renderState->getTexture(i);

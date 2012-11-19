@@ -1,7 +1,6 @@
 
 #include "sgScene.h"
 #include "sgSceneObject.h"
-#include "engine/renderer/sgSceneRenderEffect.h"
 
 namespace Sagitta{
 
@@ -11,7 +10,6 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgScene::sgScene(void) 
 	: sgObject(), mpRoot(NULL)
-    , mRenderEffect(NULL)
     {
 		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
         mpRoot->setScene(this);
@@ -21,11 +19,6 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgScene::~sgScene(void)
     {
-        if(mRenderEffect)
-        {
-            destroyRenderEffect();
-        }
-        
         // destroy all scene objects belong to me
 		sgObject::destroyObject(mpRoot);
 	}
@@ -38,12 +31,7 @@ namespace Sagitta{
 	void sgScene::update( Float32 deltaTime )
 	{
 		// physics step
-
 		mpRoot->update(deltaTime);
-		if(mRenderEffect)
-		{
-			mRenderEffect->update(deltaTime);
-		}
 	}
     
     const Color &sgScene::getAmbiantColor(void) const
@@ -64,33 +52,6 @@ namespace Sagitta{
     void sgScene::setRenderState(const sgRenderState &state)
     {
         mRenderState = state;
-    }
-    
-    sgSceneRenderEffect *sgScene::createRenderEffect(const sgStrHandle &effectType)
-    {
-        sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
-        if(!meta)
-            return mRenderEffect;
-        if(!meta->isClass(sgSceneRenderEffect::GetClassName()))
-            return mRenderEffect;
-        
-        if(mRenderEffect)
-        {
-            // warning: the original one will be destroyed
-            destroyRenderEffect();
-        }
-        mRenderEffect = (sgSceneRenderEffect*)sgObject::createObject(effectType);
-        
-        return mRenderEffect;
-    }
-    
-    void sgScene::destroyRenderEffect(void)
-    {
-        if(mRenderEffect)
-        {
-            sgObject::destroyObject(mRenderEffect);
-            mRenderEffect = NULL;
-        }
     }
 
 	

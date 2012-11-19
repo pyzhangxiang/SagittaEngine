@@ -1,17 +1,20 @@
 //  [4/11/2012  zhangxiang]
+//  [11/19/2012 fabiozhang]
 
 #include "sgRenderPass.h"
 #include "sgRenderQueue.h"
-#include "sgGpuProgram.h"
 #include "engine/scenegraph/sgSceneObject.h"
+#include "engine/common/sgLogSystem.h"
+#include <string>
 
 namespace Sagitta{
 
     //SG_META_DEFINE(sgRenderPass, sgObject)
     
     sgRenderPass::sgRenderPass(const sgStrHandle &queueTypeName)
-    : mGpuProgram(NULL)
-    , mRenderQueue(NULL)
+    : mRenderQueue(NULL)
+	, mRenderEffect(NULL)
+	, mRenderTarget(NULL)
     , mUseSceneProgramOnly(false)
     {
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(queueTypeName);
@@ -19,6 +22,15 @@ namespace Sagitta{
         {
             mRenderQueue = (sgRenderQueue*)sgObject::createObject(queueTypeName);
         }
+		if(mRenderQueue == NULL)
+		{
+			// use default render queue
+			sgLogSystem::instance()->warning(std::string("Cannot create the specified(") + 
+				std::string(queueTypeName.getStr()) +
+				std::string(") render queue, use default."));
+
+			mRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassName());
+		}
     }
     
     sgRenderPass::~sgRenderPass(void)
@@ -30,14 +42,21 @@ namespace Sagitta{
         }
     }
     
-    void sgRenderPass::setProgram(sgGpuProgram *program)
+    void sgRenderPass::setRenderEffect(sgRenderEffect *effect)
     {
-        mGpuProgram = program;
+        mRenderEffect = effect;
     }
+
+	void sgRenderPass::setRenderTarget( sgRenderTarget *target )
+	{
+		mRenderTarget = target;
+	}
     
     void sgRenderPass::setUseSceneProgramOnly(bool onlyScene)
     {
         mUseSceneProgramOnly = onlyScene;
     }
-    
+
+	
+
 } // namespace Sagitta

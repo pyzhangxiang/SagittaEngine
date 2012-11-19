@@ -2,7 +2,7 @@
 #include "sgRenderStateComponent.h"
 #include "engine/resource/sgResourceCenter.h"
 #include "engine/resource/sgMaterial.h"
-#include "engine/renderer/sgObjectRenderEffect.h"
+#include "engine/renderer/sgRenderEffect.h"
 
 namespace Sagitta
 {
@@ -45,12 +45,12 @@ namespace Sagitta
 		mRenderState = ro;
 	}
     
-    sgObjectRenderEffect *sgRenderStateComponent::createRenderEffect(const sgStrHandle &effectType)
+    sgRenderEffect *sgRenderStateComponent::createRenderEffect(const sgStrHandle &effectType)
     {
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
         if(!meta)
             return mRenderEffect;
-        if(!meta->isClass(sgObjectRenderEffect::GetClassName()))
+        if(!meta->isClass(sgRenderEffect::GetClassName()))
             return mRenderEffect;
         
         if(mRenderEffect)
@@ -58,7 +58,7 @@ namespace Sagitta
             // warning: the original one will be destroyed
             destroyRenderEffect();
         }
-        mRenderEffect = (sgObjectRenderEffect*)sgObject::createObject(effectType);
+        mRenderEffect = (sgRenderEffect*)sgObject::createObject(effectType);
         
         return mRenderEffect;
     }

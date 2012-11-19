@@ -79,9 +79,10 @@ namespace Sagitta{
     protected:
         virtual int createTexture(sgTexture *pTexture);
         virtual bool deleteTexture(int textureId);
-        
+        /*
         virtual bool deleteRenderTarget(sgRenderTarget *rt);
     public:
+		
         virtual sgRenderTarget *createRenderTarget(UInt32 width, UInt32 height
                                                    , UInt32 components
                                                    , PixelFormat pixelFormat
@@ -90,7 +91,7 @@ namespace Sagitta{
         // temp
         virtual void beginRenderTarget(sgRenderTarget *rt);
         virtual void endRenderTarget(void);
-        
+        */
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                        , const Matrix4 &modelMatrix, int polyType) const;

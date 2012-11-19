@@ -455,7 +455,7 @@ namespace Sagitta{
         glDeleteTextures(1, &tid);
         return true;
     }
-    
+    /*
     sgRenderTarget *sgGLRenderer::createRenderTarget(UInt32 width, UInt32 height
                                                      , UInt32 components
                                                      , PixelFormat pixelFormat
@@ -581,5 +581,5 @@ namespace Sagitta{
                           m_CurRenderParam.pviewport->getBackDepth(),
                           m_CurRenderParam.pviewport->getBackStencil());
     }
-
+	*/
 } // namespace Sagitta

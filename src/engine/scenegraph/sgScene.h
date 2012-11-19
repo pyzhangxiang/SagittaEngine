@@ -14,7 +14,6 @@
 namespace Sagitta{
 
 	class sgSceneObject;
-    class sgSceneRenderEffect;
 
 	class _SG_KernelExport sgScene : public sgObject
     {
@@ -32,7 +31,6 @@ namespace Sagitta{
         Color mAmbiantColor;
         sgRenderState mRenderState;
         
-        sgSceneRenderEffect *mRenderEffect;
 
 	// constructors & destructor
 	public:
@@ -49,10 +47,7 @@ namespace Sagitta{
         const sgRenderState &getRenderState(void) const;
         void setRenderState(const sgRenderState &state);
         
-        sgSceneRenderEffect *createRenderEffect(const sgStrHandle &effectType);
-        void destroyRenderEffect(void);
-        sgSceneRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
-
+  
 	}; //#### end class sgSceneNode
 
 } // namespace Sagitta
