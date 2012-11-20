@@ -8,6 +8,7 @@
 namespace Sagitta
 {
     class sgRenderPass;
+	class sgRenderTarget;
 
 	class _SG_KernelExport sgRenderTechnique : public sgObject
 	{
@@ -42,6 +43,19 @@ namespace Sagitta
         void render(void);
 		void resize(UInt32 width, UInt32 height);
 		void update(Float32 deltaTime);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	class _SG_KernelExport sgRenderTechniqueBase : public sgRenderTechnique
+	{
+		SG_META_DECLARE(sgRenderTechniqueBase)
+
+	private:
+		sgRenderTarget *mRTWindow;
+
+	public:
+		sgRenderTechniqueBase(void);
+		virtual ~sgRenderTechniqueBase(void);
 	};
 
 } // namespace Sagitta

@@ -61,7 +61,7 @@ namespace Sagitta{
 	, m_iTargetHeight(600)
 	, mShaderEnvironmentPrepared(false)
 	{
-        //mRenderTechnique = (sgRenderTechnique*)sgObject::createObject(sgRenderTechniqueBase::GetClassName())
+        mRenderTechnique = (sgRenderTechnique*)sgObject::createObject(sgRenderTechniqueBase::GetClassName());
 	}
 
 	//  [8/1/2008 zhangxiang]
@@ -257,10 +257,9 @@ namespace Sagitta{
 			return ;
 
 		// collect scene objects
-		if(m_CurRenderParam.plastcamera != m_CurRenderParam.pcamera)
+		if(m_CurRenderParam.plastscene != m_CurRenderParam.pscene)
 		{
-			m_CurRenderParam.plastcamera = m_CurRenderParam.pcamera;
-
+			m_CurRenderParam.plastscene = m_CurRenderParam.pscene;
 			m_CurRenderParam.objlist.clear();
 			m_CurRenderParam.pscene->getRoot()->getAllObjects(m_CurRenderParam.objlist);
 			collectLights();
@@ -334,13 +333,19 @@ namespace Sagitta{
 
 				sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
 				sgRenderEffect *re = NULL;
+				sgGpuProgram *objProgram = NULL;
 				if(renderState)
 				{
 					re = renderState->getRenderEffect();
 				}
-
 				if(re)
 				{
+					objProgram = re->getGpuProgram();
+				}
+
+				if(objProgram && objProgram->isActive())
+				{
+					m_CurRenderParam.current_gpu_program = objProgram;
 					re->renderObject(&m_CurRenderParam, object);
 				}
 				else
@@ -358,12 +363,12 @@ namespace Sagitta{
 	}
 
 	//  [1/10/2009 zhangxiang]
-	int sgRenderer::tgtWidth(void) const{
+	UInt32 sgRenderer::tgtWidth(void) const{
 		return m_iTargetWidth;
 	}
 
 	//  [1/10/2009 zhangxiang]
-	int sgRenderer::tgtHeight(void) const{
+	UInt32 sgRenderer::tgtHeight(void) const{
 		return m_iTargetHeight;
 	}
 
@@ -476,6 +481,9 @@ namespace Sagitta{
 	//  [1/3/2009 zhangxiang]
 	void sgRenderer::resize(UInt32 width, UInt32 height)
 	{
+		m_iTargetWidth = width;
+		m_iTargetHeight = height;
+
 		if(mRenderTechnique)
 		{
 			mRenderTechnique->resize(width, height);

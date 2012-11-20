@@ -21,7 +21,7 @@ namespace Sagitta{
 
 	class _SG_KernelExport sgRenderEffect : public sgObject
 	{
-        SG_META_DECLARE_ABSTRACT(sgRenderEffect)
+        SG_META_DECLARE(sgRenderEffect)
 
 	public:
         // matrices
@@ -105,7 +105,7 @@ namespace Sagitta{
 
     public:
         sgRenderEffect(void);
-        virtual ~sgRenderEffect(void) = 0;
+        virtual ~sgRenderEffect(void);
 
 		sgGpuProgram *getGpuProgram(void) const{ return mGpuProgram; }
 		void setGpuProgram(sgGpuProgram *program);

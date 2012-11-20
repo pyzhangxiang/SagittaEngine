@@ -8,8 +8,8 @@
 #include <engine/resource/sgMaterial.h>
 #include <engine/resource/sgTexture.h>
 #include <engine/resource/sgLoader.h>
-#include <engine/renderer/sgSceneRenderEffect.h>
-#include <engine/renderer/sgObjectRenderEffect.h>
+#include <engine/renderer/sgRenderTechnique.h>
+#include <engine/renderer/sgRenderEffect.h>
 #include <engine/renderer/sgRenderPass.h>
 #include <engine/renderer/sgGpuProgram.h>
 #include <engine/renderer/sgGLGpuProgram.h>
@@ -58,9 +58,12 @@ void DemoTexture::prepare(void)
 		}
 
 		// create scene effect
-		sgRenderEffect *sceneRe = mScene->createRenderEffect(sgSceneRenderEffect::GetClassName());
-		sgRenderPass *sceneRp = sceneRe->addPass(sgRenderQueue::GetClassName());
-		sceneRp->setProgram(programStandard);
+		sgRenderEffect *sceneRe = (sgRenderEffect*)sgObject::createObject(sgRenderEffect::GetClassName());
+		sceneRe->setGpuProgram(programStandard);
+
+		sgRenderTechnique *renderTech = sgGetRenderer()->getRenderTechnique();
+		sgRenderPass *sceneRp = renderTech->getRenderPass(0);
+		sceneRp->setRenderEffect(sceneRe);
 
 
 		// prepare materials
@@ -104,19 +107,5 @@ void DemoTexture::prepare(void)
             cubeRsComp->addTexture(texture->getFilename());
         }
 
-		// triangle
-	/*	sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-		triangle->setParent(mScene->getRoot());
-		triangle->yaw(Radian(Math::PI_DIV_4));
-		//triangle->scale(Vector3(5, 5, 5));
-    
-		sgMeshComponent *triMeshComp = (sgMeshComponent*)triangle->createComponent(sgMeshComponent::GetClassName());
-		triMeshComp->setMeshFile(meshTriangle->getFilename());
-	    
-		sgRenderStateComponent *triRsComp = (sgRenderStateComponent*)triangle->createComponent(sgRenderStateComponent::GetClassName());
-		sgObjectRenderEffect *triRe = triRsComp->createRenderEffect(sgObjectRenderEffect::GetClassName());
-		sgRenderPass *triRs0 = triRe->addPass();
-		triRs0->setProgram(programColor);      
-      */  
 	}
 }

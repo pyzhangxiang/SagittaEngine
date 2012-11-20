@@ -143,8 +143,8 @@ namespace Sagitta{
         m_CurVertexBuffers.mesh = mesh;
         m_CurVertexBuffers.material = material;
 
-		sgVertexData *pvb;// = new sgVertexData();
-		sgVertexIndexBuffer *pvib;// = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		sgVertexData *pvb = NULL;// = new sgVertexData();
+		sgVertexIndexBuffer *pvib = NULL;// = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
 		if(!mesh->getVertexBuffer(&pvb, &pvib))
 			return ;
 
@@ -257,9 +257,6 @@ namespace Sagitta{
 
 		// release current vertex buffers for next renderable object
 		m_CurVertexBuffers.release();
-
-		delete pvb;
-		delete pvib;
 	}
 
 	//  [1/17/2009 zhangxiang]

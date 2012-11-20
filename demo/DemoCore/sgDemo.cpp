@@ -12,6 +12,9 @@
 #include <engine/renderer/sgGLRenderer.h>
 #include <engine/renderer/SagiRenderer.h>
 #include <engine/renderer/sgViewport.h>
+#include <engine/renderer/sgRenderTechnique.h>
+#include <engine/renderer/sgRenderPass.h>
+#include <engine/renderer/sgRenderTarget.h>
 #include <engine/component/sgCameraComponent.h>
 #include <engine/component/sgLightComponent.h>
 #include <engine/common/sgLogSystem.h>
@@ -123,10 +126,14 @@ void sgDemo::initialize( void )
 	std::cout << "sgDemo::initialize, initialize render and scene\n";
 
 	sgGetRenderer()->init();
-	sgViewport *viewport = sgGetRenderer()->createViewport(
+	/*sgViewport *viewport = sgGetRenderer()->createViewport(
 		getRenderWindowWidth()
 		, getRenderWindowHeight()
-		, 0.0, 0.0, 1.0, 1.0, 0, 0);
+		, 0.0, 0.0, 1.0, 1.0, 0, 0);*/
+	sgRenderTechnique *technique = sgGetRenderer()->getRenderTechnique();
+	sgRenderTarget *rt = technique->getRenderPass(0)->getRenderTarget();
+	sgViewport *viewport = rt->getViewport();
+	rt->resize(getRenderWindowWidth(), getRenderWindowHeight());
 	viewport->setBackColor(Color::DARKGRAY);
 
 	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());

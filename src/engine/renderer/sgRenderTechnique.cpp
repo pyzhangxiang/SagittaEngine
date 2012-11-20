@@ -3,6 +3,7 @@
 #include "sgRenderPass.h"
 #include "sgRenderer.h"
 #include "sgRenderTarget.h"
+#include "sgRenderTargetWindow.h"
 #include "sgRenderEffect.h"
 
 namespace Sagitta
@@ -60,7 +61,7 @@ namespace Sagitta
 		for(size_t i=0; i<mPassList.size(); ++i)
 		{
 			sgRenderTarget *rt = mPassList[i]->getRenderTarget();
-			if(rt)
+			if(rt && dynamic_cast<sgRenderTargetWindow*>(rt))
 			{
 				rt->resize(width, height);
 			}
@@ -77,6 +78,24 @@ namespace Sagitta
 				re->update(deltaTime);
 			}
 		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	SG_META_DEFINE(sgRenderTechniqueBase, sgRenderTechnique)
+
+	sgRenderTechniqueBase::sgRenderTechniqueBase( void )
+	: mRTWindow(0)
+	{
+		sgRenderPass *rp = addPass();
+		mRTWindow = new sgRenderTargetWindow(1, 1);
+		rp->setRenderTarget(mRTWindow);
+		
+	}
+
+	sgRenderTechniqueBase::~sgRenderTechniqueBase( void )
+	{
+		delete mRTWindow;
 	}
 
 } // namespace Sagitta

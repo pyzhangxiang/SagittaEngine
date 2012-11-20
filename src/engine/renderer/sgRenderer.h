@@ -47,8 +47,8 @@ namespace Sagitta{
 		struct CurrentRenderParam{
 			sgViewport *pviewport;
 			sgCameraComponent *pcamera;
-			sgCameraComponent *plastcamera;
 			sgScene *pscene;
+			sgScene *plastscene;
 			ObjectList objlist;
 			LightList lightlist;
 			sgRenderQueue *renderqueue;
@@ -127,7 +127,7 @@ namespace Sagitta{
 		//bool m_bSwapBufferSelf;
 
 		/// whole render target size
-		int m_iTargetWidth, m_iTargetHeight;
+		UInt32 m_iTargetWidth, m_iTargetHeight;
 
 		/** stores whether the target's size is changed.
 			@remarks
@@ -219,10 +219,10 @@ namespace Sagitta{
 
 	public:
 		/** Gets target width. */
-		int tgtWidth(void) const;
+		UInt32 tgtWidth(void) const;
 
 		/** Gets target height. */
-		int tgtHeight(void) const;
+		UInt32 tgtHeight(void) const;
 
 		///** Creates a viewport.
 		//	@remarks Add the new viewport to list.

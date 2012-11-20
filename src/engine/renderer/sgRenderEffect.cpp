@@ -23,7 +23,7 @@
 
 namespace Sagitta
 {
-    SG_META_DEFINE_ABSTRACT(sgRenderEffect, sgObject)
+    SG_META_DEFINE(sgRenderEffect, sgObject)
 
     const sgStrHandle sgRenderEffect::ModelMatrix("sg_ModelMatrix");
 	const sgStrHandle sgRenderEffect::ViewMatrix("sg_ViewMatrix");
@@ -120,6 +120,9 @@ namespace Sagitta
 		sgVertexIndexBuffer *pvib = NULL; // = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
 		if(!mesh->getVertexBuffer(&pvb, &pvib))
 			return ;
+		if(!pvb || !pvib)
+			return ;
+
 		const Matrix4 &modelMatrix = object->getFullTransform();
 
 		if(param->last_gpu_program != param->current_gpu_program)
@@ -129,10 +132,10 @@ namespace Sagitta
 		}
 		setUniformObject(param, object);
 
-		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
-		sgMaterial *material = 0;
-		if(renderState)
-			material = (sgMaterial*)(renderState->getMaterial());
+		//sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
+		//sgMaterial *material = 0;
+		//if(renderState)
+		//	material = (sgMaterial*)(renderState->getMaterial());
 
 		
 
@@ -267,4 +270,10 @@ namespace Sagitta
 		// uniform user defined
 		setUniformObjectExtra(param, object);
 	}
+
+	void sgRenderEffect::setGpuProgram( sgGpuProgram *program )
+	{
+		mGpuProgram = program;
+	}
+
 } // namespace Sagitta
