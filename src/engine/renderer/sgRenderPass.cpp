@@ -3,6 +3,7 @@
 
 #include "sgRenderPass.h"
 #include "sgRenderQueue.h"
+#include "sgRenderEffect.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/common/sgLogSystem.h"
 #include <string>
@@ -35,6 +36,8 @@ namespace Sagitta{
     
     sgRenderPass::~sgRenderPass(void)
     {
+		destroyRenderEffect();
+
         if(mRenderQueue)
         {
             sgObject::destroyObject(mRenderQueue);
@@ -42,10 +45,32 @@ namespace Sagitta{
         }
     }
     
-    void sgRenderPass::setRenderEffect(sgRenderEffect *effect)
-    {
-        mRenderEffect = effect;
-    }
+	sgRenderEffect *sgRenderPass::createRenderEffect(const sgStrHandle &effectType)
+	{
+		sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
+		if(!meta)
+			return mRenderEffect;
+		if(!meta->isClass(sgRenderEffect::GetClassName()))
+			return mRenderEffect;
+
+		if(mRenderEffect)
+		{
+			// warning: the original one will be destroyed
+			destroyRenderEffect();
+		}
+		mRenderEffect = (sgRenderEffect*)sgObject::createObject(effectType);
+
+		return mRenderEffect;
+	}
+
+	void sgRenderPass::destroyRenderEffect(void)
+	{
+		if(mRenderEffect)
+		{
+			sgObject::destroyObject(mRenderEffect);
+			mRenderEffect = NULL;
+		}
+	}
 
 	void sgRenderPass::setRenderTarget( sgRenderTarget *target )
 	{

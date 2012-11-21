@@ -17,7 +17,7 @@ namespace Sagitta
 
 	sgRenderStateComponent::~sgRenderStateComponent( void )
 	{
-
+		destroyRenderEffect();
 	}
 
 	sgStrHandle sgRenderStateComponent::getMaterialFile( void ) const

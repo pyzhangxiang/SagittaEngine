@@ -31,6 +31,27 @@ namespace Sagitta{
 			delete it->second;
 		}
 		m_ResourceMap.clear();
+
+		/*
+		ResourceMap todel = m_ResourceMap;
+		int count = todel.size();
+		while(count > 0)
+		{
+			ResourceMap::iterator it = todel.begin();
+			ResourceMap::iterator eit = todel.end();
+			for(; it!=eit; ++it)
+			{
+				delete it->second;
+				--count;
+				if(count != m_ResourceMap.size())
+				{
+					todel = m_ResourceMap;
+					count = todel.size();
+					break;
+				}
+			}
+		}
+		m_ResourceMap.clear();	*/
 	}
 
 	//  [1/11/2009 zhangxiang]

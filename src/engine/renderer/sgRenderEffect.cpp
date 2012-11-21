@@ -3,6 +3,7 @@
 #include "sgRenderEffect.h"
 #include "sgRenderPass.h"
 #include "sgRenderer.h"
+#include "sgRenderTechnique.h"
 #include "sgRenderQueue.h"
 #include "sgGpuProgram.h"
 #include "engine/scenegraph/sgSceneObject.h"
@@ -129,6 +130,7 @@ namespace Sagitta
 		{
 			param->current_gpu_program->useProgram();
 			setUniformFrame(param);
+			sgGetRenderer()->getRenderTechnique()->_setUniformFrameExtra();
 		}
 		setUniformObject(param, object);
 

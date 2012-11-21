@@ -12,11 +12,23 @@ namespace Sagitta{
 	sgObjectCenter::~sgObjectCenter(void)
     {
         ObjMap todel = mObjMap;
-        ObjMap::iterator it = todel.begin();
-        for(; it!=todel.end(); ++it)
-        {
-            delete it->second;
-        }
+		int count = todel.size();
+		while( count > 0)
+		{
+			ObjMap::iterator it = todel.begin();
+			for(; it!=todel.end(); ++it)
+			{
+				delete it->second;
+				--count;
+				if(count != mObjMap.size())
+				{
+					todel = mObjMap;
+					count = todel.size();
+					break;
+				}
+			}
+		}
+		mObjMap.clear();        
 	}
 
 	void sgObjectCenter::addObject(sgObject *obj)

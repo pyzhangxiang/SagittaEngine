@@ -58,12 +58,10 @@ void DemoTexture::prepare(void)
 		}
 
 		// create scene effect
-		sgRenderEffect *sceneRe = (sgRenderEffect*)sgObject::createObject(sgRenderEffect::GetClassName());
-		sceneRe->setGpuProgram(programStandard);
-
 		sgRenderTechnique *renderTech = sgGetRenderer()->getRenderTechnique();
 		sgRenderPass *sceneRp = renderTech->getRenderPass(0);
-		sceneRp->setRenderEffect(sceneRe);
+		sgRenderEffect *sceneRe = sceneRp->createRenderEffect(sgRenderEffect::GetClassName());
+		sceneRe->setGpuProgram(programStandard);	
 
 
 		// prepare materials

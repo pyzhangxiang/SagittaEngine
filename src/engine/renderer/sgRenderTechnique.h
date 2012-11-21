@@ -43,6 +43,9 @@ namespace Sagitta
         void render(void);
 		void resize(UInt32 width, UInt32 height);
 		void update(Float32 deltaTime);
+
+		/// called by rendereffect, after sgRenderEffect::setUniformFrame
+		virtual void _setUniformFrameExtra(void){}
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -56,6 +59,7 @@ namespace Sagitta
 	public:
 		sgRenderTechniqueBase(void);
 		virtual ~sgRenderTechniqueBase(void);
+
 	};
 
 } // namespace Sagitta

@@ -31,8 +31,9 @@ namespace Sagitta{
         
         sgRenderQueue *getRenderQueue(void) const{ return mRenderQueue; }
 
+		sgRenderEffect *createRenderEffect(const sgStrHandle &effectType);
+		void destroyRenderEffect(void);
 		sgRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
-		void setRenderEffect(sgRenderEffect *effect);
 
 		sgRenderTarget *getRenderTarget(void) const{ return mRenderTarget; }
 		void setRenderTarget(sgRenderTarget *target);

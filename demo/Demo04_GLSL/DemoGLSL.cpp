@@ -55,12 +55,11 @@ void DemoGLSL::prepare(void)
 			sgLogSystem::instance()->warning("Program 'Standard Shading' is invalid");
 		}
 
-		sgRenderEffect *sceneRe = (sgRenderEffect*)sgObject::createObject(sgRenderEffect::GetClassName());
-		sceneRe->setGpuProgram(programStandard);
-
+		// create scene effect
 		sgRenderTechnique *renderTech = sgGetRenderer()->getRenderTechnique();
 		sgRenderPass *sceneRp = renderTech->getRenderPass(0);
-		sceneRp->setRenderEffect(sceneRe);
+		sgRenderEffect *sceneRe = sceneRp->createRenderEffect(sgRenderEffect::GetClassName());
+		sceneRe->setGpuProgram(programStandard);	
 		
 
 
@@ -105,17 +104,17 @@ void DemoGLSL::prepare(void)
 		cubeRsComp->setMaterialFile(mat1->getFilename());
 		
 		// triangle    
-		//sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-		//triangle->setParent(mScene->getRoot());
-		//triangle->yaw(Radian(Math::PI_DIV_4));
-		////triangle->scale(Vector3(5, 5, 5));
-  //  
-		//sgMeshComponent *triMeshComp = (sgMeshComponent*)triangle->createComponent(sgMeshComponent::GetClassName());
-		//triMeshComp->setMeshFile(meshTriangle->getFilename());
-	 //   
-		//sgRenderStateComponent *triRsComp = (sgRenderStateComponent*)triangle->createComponent(sgRenderStateComponent::GetClassName());
-		//sgRenderEffect *triRe = triRsComp->createRenderEffect(sgRenderEffect::GetClassName());
-		//triRe->setGpuProgram(programColor);      
+		sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		triangle->setParent(mScene->getRoot());
+		triangle->yaw(Radian(Math::PI_DIV_4));
+		//triangle->scale(Vector3(5, 5, 5));
+    
+		sgMeshComponent *triMeshComp = (sgMeshComponent*)triangle->createComponent(sgMeshComponent::GetClassName());
+		triMeshComp->setMeshFile(meshTriangle->getFilename());
+	    
+		sgRenderStateComponent *triRsComp = (sgRenderStateComponent*)triangle->createComponent(sgRenderStateComponent::GetClassName());
+		sgRenderEffect *triRe = triRsComp->createRenderEffect(sgRenderEffect::GetClassName());
+		triRe->setGpuProgram(programColor);      
         
 	}
 }

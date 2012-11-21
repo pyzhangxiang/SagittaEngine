@@ -49,8 +49,8 @@ void DemoShadowMap::prepare(void)
 			sgLogSystem::instance()->warning("Program 'Color' is invalid");
 		}
 
-		sgShader *vsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/StandardShading.vs");
-		sgShader *fsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/StandardShading.fs");
+		sgShader *vsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/SimpleShadowMap.vs");
+		sgShader *fsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/SimpleShadowMap.fs");
 		sgGpuProgram *programStandard = (sgGpuProgram*)sgObject::createObject(sgGLGpuProgram::GetClassName());
 		if(!programStandard->setShader(vsStandard->getFilename(), fsStandard->getFilename()))
 		{
@@ -58,22 +58,28 @@ void DemoShadowMap::prepare(void)
 		}
 
 		// create scene effect
-		sgRenderEffect *sceneRe = (sgRenderEffect*)sgObject::createObject(sgRenderEffect::GetClassName());
-		sceneRe->setGpuProgram(programStandard);
-
 		sgRenderTechnique *renderTech = sgGetRenderer()->getRenderTechnique();
 		sgRenderPass *sceneRp = renderTech->getRenderPass(0);
-		sceneRp->setRenderEffect(sceneRe);
+		sgRenderEffect *sceneRe = sceneRp->createRenderEffect(sgRenderEffect::GetClassName());
+		sceneRe->setGpuProgram(programStandard);		
 
 
 		// prepare materials
 		sgMaterial *mat1 = (sgMaterial*)sgResourceCenter::instance()->createResource(sgMaterial::GetClassName(), "material_test_1");
 		mat1->setDiffuseColor(Color(255, 125, 75));
-		
+
+		// prepare resources
+		sgMeshTriangle *meshTriangle = (sgMeshTriangle*)sgResourceCenter::instance()->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
+		meshTriangle->setVertecies(Vector3(-1.0f, 0.0, 0.0f), Color::RED, 
+			Vector3(1.0f, 0.0f, 0.0f), Color::GREEN, 
+			Vector3(0.0f, 1.0f, 0.0f), Color::BLUE);
+		sgMeshPlane *meshPlane = (sgMeshPlane*)sgResourceCenter::instance()->createResource(sgMeshPlane::GetClassName(), sgMeshPlane::InternalFileName);
+		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
 
 		// prepare camera
-		mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
-		//mCamera->pitch(Radian(-Math::PI / 6.0f));
+		//mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
+		mCamera->translate(Vector3(0.0f, 10.5f, 22.0f));
+		mCamera->pitch(Radian(-Math::PI / 6.0f));
 
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
@@ -82,21 +88,32 @@ void DemoShadowMap::prepare(void)
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
 		lightComp1->setIntensity(8.0f);
+		mLight = light1;
+
+		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		light1Debug->setIsDebugObj(true);
+		light1Debug->scale(Vector3(0.2f));
+		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassName());
+		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
+		light1->setDebugObjectToShow(light1Debug);
+		light1->setShowDebug(true);
 		
 
-		// prepare resources
-		sgMeshTriangle *meshTriangle = (sgMeshTriangle*)sgResourceCenter::instance()->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
-		meshTriangle->setVertecies(Vector3(-1.0f, 0.0, 0.0f), Color::RED, 
-			Vector3(1.0f, 0.0f, 0.0f), Color::GREEN, 
-			Vector3(0.0f, 1.0f, 0.0f), Color::BLUE);
+		// plane
+		sgSceneObject *plane = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		plane->setParent(mScene->getRoot());
+		sgMeshComponent *planeComp = (sgMeshComponent*)plane->createComponent(sgMeshComponent::GetClassName());
+		planeComp->setMeshFile(meshPlane->getFilename());
+		sgRenderStateComponent *planeRsComp = (sgRenderStateComponent*)plane->createComponent(sgRenderStateComponent::GetClassName());
+		planeRsComp->setMaterialFile(mat1->getFilename());
 
 		// place cube 
-		sgSceneObject *objRoot = sgLoader::load_pod("scene/podscene1/scene.pod");//sgLoader::load_obj("models/cube.obj");
+		sgSceneObject *objRoot = /*sgLoader::load_pod("scene/podscene1/scene.pod");*/sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mScene->getRoot());
-		objRoot->translate(Vector3(-1.0f, 0.0f, -2.5f));
+		objRoot->translate(Vector3(-1.0f, 3.0f, -2.5f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
-
+		
         sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
 		sgRenderStateComponent *cubeRsComp = (sgRenderStateComponent*)objCube->createComponent(sgRenderStateComponent::GetClassName());
 		cubeRsComp->setMaterialFile(mat1->getFilename());

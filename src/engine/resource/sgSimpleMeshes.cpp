@@ -30,6 +30,7 @@ namespace Sagitta{
     sgStrHandle sgMeshSphere::InternalFileName = "__sagitta.internal.sgmeshsphere.mesh";
     sgStrHandle sgMeshCone::InternalFileName = "__sagitta.internal.sgmeshcone.mesh";
 	sgStrHandle sgMeshGrid::InternalFileName = "__sagitta.internal.sgmeshgrid.mesh";
+	sgStrHandle sgMeshPlane::InternalFileName = "__sagitta.internal.sgmeshplane.mesh";
     
     void sgLoadInternalMeshes(void)
     {
@@ -588,13 +589,57 @@ namespace Sagitta{
 			z += aiLengthPerUnit;
 		}
 
-		m_bNormalOuter = false;
+		m_bNormalOuter = true;
 
 		prepareGeometry();
 	}
 
 	//  [8/18/2008 zhangxiang]
 	sgMeshGrid::~sgMeshGrid(void){
+
+	}
+
+
+	// sgMeshPlane //////////////////////////////////////////////////////////////////////////
+
+	SG_META_DEFINE(sgMeshPlane, sgMesh)
+
+		//  [8/18/2008 zhangxiang]
+		sgMeshPlane::sgMeshPlane()
+		: sgMesh()
+	{
+		UInt32 aiLengthPerUnit = 50;
+		UInt32 aiHUnitNum = 50;
+		UInt32 aiVUnitNum = 50;
+		//reset(2, 2 * (aiHUnitNum + aiVUnitNum), aiHUnitNum + aiVUnitNum + 2);
+		reset(4, 4, 1);
+
+		int hTotalLength = aiLengthPerUnit * aiHUnitNum;
+		int vTotalLength = aiLengthPerUnit * aiVUnitNum;
+		int hHalfTotalLength = hTotalLength * 0.5;
+		int vHalfTotalLength = vTotalLength * 0.5;
+
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
+		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
+		
+		pPosData[0] = Vector3(-hHalfTotalLength, 0.0f, -vHalfTotalLength);
+		pPosData[1] = Vector3(-hHalfTotalLength, 0.0f, vHalfTotalLength);
+		pPosData[2] = Vector3(hHalfTotalLength, 0.0f, vHalfTotalLength);
+		pPosData[3] = Vector3(hHalfTotalLength, 0.0f, -vHalfTotalLength);
+
+		pIndex[0] = 0;
+		pIndex[1] = 1;
+		pIndex[2] = 2;
+		pIndex[3] = 3;
+
+		m_bNormalOuter = true;
+
+		prepareGeometry();
+	}
+
+	//  [8/18/2008 zhangxiang]
+	sgMeshPlane::~sgMeshPlane(void){
 
 	}
 
