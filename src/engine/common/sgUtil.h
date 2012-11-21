@@ -43,7 +43,10 @@ namespace Sagitta{
     enum PixelFormat
     {
         PIXEL_FORMAT_RED,
-        PIXEL_FORMAT_RG,
+        PIXEL_FORMAT_GREEN,
+        PIXEL_FORMAT_BLUE,
+        PIXEL_FORMAT_ALPHA,
+    //    PIXEL_FORMAT_RG,
         PIXEL_FORMAT_RGB,
         PIXEL_FORMAT_BGR,
         PIXEL_FORMAT_RGBA,

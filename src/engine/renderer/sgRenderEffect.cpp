@@ -71,7 +71,6 @@ namespace Sagitta
     const sgStrHandle sgRenderEffect::Texture1("sg_Sampler1");
     const sgStrHandle sgRenderEffect::Texture2("sg_Sampler2");
     const sgStrHandle sgRenderEffect::Texture3("sg_Sampler3");
-    const sgStrHandle sgRenderEffect::TextureDepth("sg_DepthMap");
 
     sgRenderEffect::sgRenderEffect(void)
 	: sgObject(), mGpuProgram(NULL)
@@ -130,9 +129,10 @@ namespace Sagitta
 		{
 			param->current_gpu_program->useProgram();
 			setUniformFrame(param);
-			sgGetRenderer()->getRenderTechnique()->_setUniformFrameExtra();
+            sgGetRenderer()->getRenderTechnique()->_setUniformFrameExtra(param);
 		}
 		setUniformObject(param, object);
+        sgGetRenderer()->getRenderTechnique()->_setUniformObjectExtra(param, object);
 
 		//sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
 		//sgMaterial *material = 0;

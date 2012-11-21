@@ -11,11 +11,14 @@ varying vec3 Normal_cameraspace;
 varying vec3 EyeDirection_cameraspace;
 varying vec3 LightDirection_cameraspace;
 varying vec3 vertexColor;
+varying vec4 depthCoord;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 sg_MVPMatrix;
 uniform mat4 sg_ViewMatrix;
 uniform mat4 sg_ModelMatrix;
+uniform mat4 depthBiasMVP;
+
 // in world space
 uniform vec3 sg_Light0_Position;	
 
@@ -23,6 +26,8 @@ void main(){
 
 	// Output position of the vertex, in clip space : sg_MVPMatrix * position
 	gl_Position =  sg_MVPMatrix * vec4(sg_Vertex,1);
+
+	depthCoord = depthBiasMVP * vec4(sg_Vertex,1);
 	
 	// Position of the vertex, in worldspace : sg_ModelMatrix * position
 	Position_worldspace = (sg_ModelMatrix * vec4(sg_Vertex,1)).xyz;

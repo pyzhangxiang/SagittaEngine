@@ -4,6 +4,7 @@
 
 #include "engine/common/sgObject.h"
 #include "engine/common/sgStlAllocator.h"
+#include "sgRenderer.h"
 
 namespace Sagitta
 {
@@ -37,7 +38,7 @@ namespace Sagitta
         sgRenderPass *getRenderPass(size_t index) const;
         
 		/// do something before and after the render pass
-		virtual void preRenderPass(void){}
+		virtual bool preRenderPass(void){ return true; }
 		virtual void postRenderPass(void){}
 
         void render(void);
@@ -45,7 +46,9 @@ namespace Sagitta
 		void update(Float32 deltaTime);
 
 		/// called by rendereffect, after sgRenderEffect::setUniformFrame
-		virtual void _setUniformFrameExtra(void){}
+        virtual void _setUniformFrameExtra(sg_render::CurrentRenderParam *param){}
+		virtual void _setUniformObjectExtra(sg_render::CurrentRenderParam *param
+                                            , sgSceneObject *object){}
 	};
 
 	//////////////////////////////////////////////////////////////////////////

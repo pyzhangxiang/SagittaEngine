@@ -50,9 +50,11 @@ namespace Sagitta
 		for(size_t i=0; i<mPassList.size(); ++i)
 		{
 			this->setCurrentPass(i);
-			this->preRenderPass();
-			sgGetRenderer()->render(mPassList[i]);
-			this->postRenderPass();
+			if(this->preRenderPass())
+            {
+                sgGetRenderer()->render(mPassList[i]);
+                this->postRenderPass();
+            }
 		}
 	}
 

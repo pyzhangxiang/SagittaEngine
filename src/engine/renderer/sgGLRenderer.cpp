@@ -9,6 +9,7 @@
 #include "sgViewport.h"
 #include "sgRenderEffect.h"
 #include "sgRenderTarget.h"
+#include "sgRenderTargetTexture.h"
 #include "engine/buffer/sgFrameBuffer.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
@@ -104,6 +105,11 @@ namespace Sagitta{
 	//	glLoadIdentity();
 	}
 */
+    void sgGLRenderer::acceptRenderTarget(sgRenderTarget *rt)
+    {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rt->getRtId());
+    }
+    
 	//  [1/15/2009 zhangxiang]
 	void sgGLRenderer::setViewport(sgViewport *aViewport) const{
 		glViewport(aViewport->actleft(), aViewport->acttop(), aViewport->actwidth(), aViewport->actheight());
@@ -455,8 +461,8 @@ namespace Sagitta{
         glDeleteTextures(1, &tid);
         return true;
     }
-    /*
-    sgRenderTarget *sgGLRenderer::createRenderTarget(UInt32 width, UInt32 height
+    
+    sgRenderTargetTexture *sgGLRenderer::_createRenderTarget(UInt32 width, UInt32 height
                                                      , UInt32 components
                                                      , PixelFormat pixelFormat
                                                      , RenderDataType dataType)
@@ -488,7 +494,7 @@ namespace Sagitta{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
         
-        //glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureId, 0);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
         
         // temp
         // No color output in the bound framebuffer, only depth.
@@ -539,11 +545,11 @@ namespace Sagitta{
             return NULL;
         }
         
-        sgRenderTarget *pRT = new sgRenderTarget(rtId, textureId, width, height, components);
+        sgRenderTargetTexture *pRT = new sgRenderTargetTexture(rtId, textureId, width, height, components);
         return pRT;
     }
     
-    bool sgGLRenderer::deleteRenderTarget(sgRenderTarget *rt)
+    bool sgGLRenderer::_deleteRenderTarget(sgRenderTargetTexture *rt)
     {
         if(rt == NULL)
             return false;
@@ -557,7 +563,7 @@ namespace Sagitta{
         
         return true;
     }
-    
+    /*
     void sgGLRenderer::beginRenderTarget(sgRenderTarget *rt)
     {
         if(rt == NULL || !(rt->isActive()) )

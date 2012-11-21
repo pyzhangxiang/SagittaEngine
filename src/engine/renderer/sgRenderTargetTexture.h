@@ -24,6 +24,7 @@ namespace Sagitta{
 
         virtual bool isActive(void) const;
         
+        UInt32 getRtTextureId(void) const{ return mRtTextureId; }
         UInt32 getPixelComponents(void) const{ return mPixelComponents; }
 
 	}; 

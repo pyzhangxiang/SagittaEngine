@@ -8,9 +8,11 @@
 #include <engine/resource/sgMaterial.h>
 #include <engine/resource/sgTexture.h>
 #include <engine/resource/sgLoader.h>
-#include <engine/renderer/sgRenderTechnique.h>
+#include <engine/renderer/sgRenderTechniqueShadowMap.h>
 #include <engine/renderer/sgRenderEffect.h>
 #include <engine/renderer/sgRenderPass.h>
+#include <engine/renderer/sgViewport.h>
+#include <engine/renderer/sgRenderTarget.h>
 #include <engine/renderer/sgGpuProgram.h>
 #include <engine/renderer/sgGLGpuProgram.h>
 #include <engine/renderer/sgRenderer.h>
@@ -48,20 +50,32 @@ void DemoShadowMap::prepare(void)
 		{
 			sgLogSystem::instance()->warning("Program 'Color' is invalid");
 		}
-
-		sgShader *vsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/SimpleShadowMap.vs");
-		sgShader *fsStandard = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/SimpleShadowMap.fs");
-		sgGpuProgram *programStandard = (sgGpuProgram*)sgObject::createObject(sgGLGpuProgram::GetClassName());
-		if(!programStandard->setShader(vsStandard->getFilename(), fsStandard->getFilename()))
+        
+        sgShader *vsDepthRT = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/DepthRT.vs");
+		sgShader *fsDepthRT = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/DepthRT.fs");
+		sgGpuProgram *programDepthRT = (sgGpuProgram*)sgObject::createObject(sgGLGpuProgram::GetClassName());
+		if(!programDepthRT->setShader(vsDepthRT->getFilename(), fsDepthRT->getFilename()))
 		{
-			sgLogSystem::instance()->warning("Program 'Standard Shading' is invalid");
+			sgLogSystem::instance()->warning("Program 'DepthRT' is invalid");
+		}
+
+		sgShader *vsShadow = (sgShader*)sgResourceCenter::instance()->createResource(sgGLVertexShader::GetClassName(), "shaders/SimpleShadowMap.vs");
+		sgShader *fsShadow = (sgShader*)sgResourceCenter::instance()->createResource(sgGLFragmentShader::GetClassName(), "shaders/SimpleShadowMap.fs");
+		sgGpuProgram *programShadow = (sgGpuProgram*)sgObject::createObject(sgGLGpuProgram::GetClassName());
+		if(!programShadow->setShader(vsShadow->getFilename(), fsShadow->getFilename()))
+		{
+			sgLogSystem::instance()->warning("Program 'SimpleShadowMap' is invalid");
 		}
 
 		// create scene effect
-		sgRenderTechnique *renderTech = sgGetRenderer()->getRenderTechnique();
-		sgRenderPass *sceneRp = renderTech->getRenderPass(0);
-		sgRenderEffect *sceneRe = sceneRp->createRenderEffect(sgRenderEffect::GetClassName());
-		sceneRe->setGpuProgram(programStandard);		
+		sgRenderTechnique *renderTech = sgGetRenderer()->useRenderTechnique(sgRenderTechniqueShadowMap::GetClassName());
+		sgRenderPass *depthRTPass = renderTech->getRenderPass(0);
+		sgRenderEffect *depthRTEffect = depthRTPass->createRenderEffect(sgRenderEffect::GetClassName());
+		depthRTEffect->setGpuProgram(programDepthRT);
+        
+        sgRenderPass *shadowPass = renderTech->getRenderPass(1);
+		sgRenderEffect *shadowEffect = shadowPass->createRenderEffect(sgRenderEffect::GetClassName());
+		shadowEffect->setGpuProgram(programShadow);
 
 
 		// prepare materials
@@ -80,11 +94,15 @@ void DemoShadowMap::prepare(void)
 		//mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
 		mCamera->translate(Vector3(0.0f, 10.5f, 22.0f));
 		mCamera->pitch(Radian(-Math::PI / 6.0f));
+        
+        // set shadow pass camera
+        sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
+        shadowPass->getRenderTarget()->getViewport()->setCamera(cameraComp);
 
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		light1->setParent(mScene->getRoot());
-		light1->translate(Vector3(3.0f, 3.0f, 5.0f));
+		light1->translate(Vector3(3.0f, 10.0f, 5.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
 		lightComp1->setIntensity(8.0f);
@@ -97,7 +115,15 @@ void DemoShadowMap::prepare(void)
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
 		light1->setDebugObjectToShow(light1Debug);
 		light1->setShowDebug(true);
-		
+        
+        // set depth pass camera
+        sgSceneObject *lightCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+        lightCamera->setParent(mScene->getRoot());
+        sgCameraComponent *lightcameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassName());
+        cameraComp->setUpDirection(Vector3::UNIT_Y);
+        cameraComp->setShootDirection(Vector3(0.0f, 0.0f, -1.0f));
+		lightCamera->pitch(Radian(-Math::PI / 2.0f));
+        depthRTPass->getRenderTarget()->getViewport()->setCamera(cameraComp);
 
 		// plane
 		sgSceneObject *plane = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());

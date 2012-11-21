@@ -69,12 +69,11 @@ namespace Sagitta{
         
         // texture
         //static const size_t Texture_Max = 4;
-        enum{ Texture_Max = 4 };
+        enum{ Texture_Max = 5 };
         static const sgStrHandle Texture0;
         static const sgStrHandle Texture1;
         static const sgStrHandle Texture2;
         static const sgStrHandle Texture3;
-        static const sgStrHandle TextureDepth;
 
 
     protected:

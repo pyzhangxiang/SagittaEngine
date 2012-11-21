@@ -31,9 +31,11 @@ namespace Sagitta{
 
 	// member functions
 	private:
+        virtual void acceptRenderTarget(sgRenderTarget *rt);
+        
 		/** Sets viewport. Overrides from sgRenderer. */
 		void setViewport(sgViewport *aViewport) const;
-
+        
 		/** clear frame buffers. Overrides from sgRenderer. */
 		void clearFrameBuffers(uInt aFlags,
 							const Color &aBkColor,
@@ -79,19 +81,14 @@ namespace Sagitta{
     protected:
         virtual int createTexture(sgTexture *pTexture);
         virtual bool deleteTexture(int textureId);
-        /*
-        virtual bool deleteRenderTarget(sgRenderTarget *rt);
+        
     public:
-		
-        virtual sgRenderTarget *createRenderTarget(UInt32 width, UInt32 height
+		virtual bool _deleteRenderTarget(sgRenderTargetTexture *rt);
+        virtual sgRenderTargetTexture *_createRenderTarget(UInt32 width, UInt32 height
                                                    , UInt32 components
                                                    , PixelFormat pixelFormat
                                                    , RenderDataType dataType);
         
-        // temp
-        virtual void beginRenderTarget(sgRenderTarget *rt);
-        virtual void endRenderTarget(void);
-        */
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                        , const Matrix4 &modelMatrix, int polyType) const;

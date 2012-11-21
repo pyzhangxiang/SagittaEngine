@@ -76,6 +76,12 @@ namespace Sagitta{
         switch (sgPixelFormat) {
             case PIXEL_FORMAT_RED:
                 return GL_RED;
+            case PIXEL_FORMAT_GREEN:
+                return GL_GREEN;
+            case PIXEL_FORMAT_BLUE:
+                return GL_BLUE;
+            case PIXEL_FORMAT_ALPHA:
+                return GL_ALPHA;
             /*case PIXEL_FORMAT_RG:
                 return GL_RG;*/
             case PIXEL_FORMAT_RGB:

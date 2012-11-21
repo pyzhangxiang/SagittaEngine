@@ -36,6 +36,7 @@ namespace Sagitta{
 	class sgSceneRenderEffect;
     class sgTexture;
     class sgRenderTarget;
+    class sgRenderTargetTexture;
 	class sgRenderTechnique;
 	class sgRenderPass;
 
@@ -162,8 +163,10 @@ namespace Sagitta{
 		*/
 		virtual void doSthWhenResized(void);
 
+        virtual void acceptRenderTarget(sgRenderTarget *rt){}
+        
 		/** Sets viewport. */
-		//virtual void setViewport(sgViewport *aViewport) const = 0;
+		virtual void setViewport(sgViewport *aViewport) const = 0;
 
 		/** clear frame buffers. */
 		virtual void clearFrameBuffers(uInt aFlags,
@@ -307,16 +310,13 @@ namespace Sagitta{
         virtual int createTexture(sgTexture *pTexture){ return -1; }
         virtual bool deleteTexture(int textureId){ return false; }
         
-        // render target
-        virtual bool deleteRenderTarget(sgRenderTarget *rt){ return false; }
     public:
-        virtual sgRenderTarget *createRenderTarget(UInt32 width, UInt32 height
+        // render target
+        virtual bool _deleteRenderTarget(sgRenderTargetTexture *rt){ return false; }
+        virtual sgRenderTargetTexture *_createRenderTarget(UInt32 width, UInt32 height
                                                    , UInt32 components
                                                    , PixelFormat pixelFormat
                                                    , RenderDataType dataType){ return NULL; }
-        // temp
-        virtual void beginRenderTarget(sgRenderTarget *rt){}
-        virtual void endRenderTarget(void){}
 
 	}; //#### end class sgRenderer
 

@@ -7,6 +7,7 @@ varying vec3 Normal_cameraspace;
 varying vec3 EyeDirection_cameraspace;
 varying vec3 LightDirection_cameraspace;
 varying vec3 vertexColor;
+varying vec4 depthCoord;
 
 // Values that stay constant for the whole mesh.
 uniform vec4 sg_Material_Ambient;
@@ -18,6 +19,8 @@ uniform float sg_Material_SpecularAmount;
 uniform float sg_Material_ReflectFraction;
 
 uniform sampler2D sg_Sampler0;
+uniform sampler2D depthMap;
+
 uniform vec3 sg_Light0_Position;	// in world space
 uniform vec4 sg_Light0_Diffuse;
 uniform float sg_Light0_Intensity;
@@ -29,6 +32,14 @@ void main(){
 	float LightPower = 10.0 * sg_Light0_Intensity;
 
 	vec4 MaterialDiffuseColor =  sg_Material_Diffuse;// * texture2D( sg_Sampler0, UV0);
+
+	// shadow
+	vec4 shadowCoordinateWdivide = depthCoord / depthCoord.w ;
+	shadowCoordinateWdivide.z += 0.0005;
+	float distanceFromLight = texture2D(ShadowMap,shadowCoordinateWdivide.xy).z;
+ 	float shadow = 1.0;
+ 	if (depthCoord.w > 0.0)
+ 		shadow = distanceFromLight < shadowCoordinateWdivide.z ? 0.5 : 1.0 ;
 
 	// Distance to the light
 	float distance = length( sg_Light0_Position - Position_worldspace );
@@ -57,11 +68,11 @@ void main(){
 	gl_FragColor = 
 	
 		// Ambiant : simulates indirect lighting
-		sg_Material_Ambient +
+		shadow * ( sg_Material_Ambient +
 		// Diffuse : "color" of the object
 		MaterialDiffuseColor * sg_Light0_Diffuse * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
-		sg_Material_Specular * sg_Light0_Diffuse * LightPower * pow(cosAlpha,5) / (distance*distance);
+		sg_Material_Specular * sg_Light0_Diffuse * LightPower * pow(cosAlpha,5) / (distance*distance) );
 	
 
 }

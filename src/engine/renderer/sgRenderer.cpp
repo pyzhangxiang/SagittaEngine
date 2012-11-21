@@ -235,11 +235,14 @@ namespace Sagitta{
 		sgRenderTarget *rt = pass->getRenderTarget();
 		if(!rt)
 			return ;
+        
+        acceptRenderTarget(rt);
 
 		sgViewport *viewport = rt->getViewport();
 		if(!viewport)
 			return ;
 
+        setViewport(viewport);
 		clearFrameBuffers(viewport->getClearBuffers(),
 			            viewport->getBackColor(),
 			            viewport->getBackDepth(),
