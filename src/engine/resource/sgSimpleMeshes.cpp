@@ -640,6 +640,7 @@ namespace Sagitta{
 		pIndex[3] = 3;
 
 		m_bNormalOuter = true;
+        //setSmooth(false);
 
 		prepareGeometry();
 	}

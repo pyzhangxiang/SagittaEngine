@@ -547,7 +547,7 @@ namespace Sagitta
         
 		m_fAverageRadius /= m_iVertexNum;
         
-		m_bGeometryPrepared = true;
+		//m_bGeometryPrepared = true;
 	}
     
 	//  [1/6/2009 zhangxiang]
@@ -864,7 +864,11 @@ namespace Sagitta
         
         // we only process triangle based mesh
         if(m_iPolyType > 3)
+        {
             trianglate();
+            vBuffer = m_pVertexData->getElement(sgVertexBufferElement::VertexAttributeName);
+            vIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_VERTEX);
+        }
         
         sgVertexBufferElement *nBuffer = m_pVertexData->getElement(sgVertexBufferElement::NormalAttributeName);
         sgVertexIndexBuffer *nIndex = m_pIndexData->getElement(sgVertexBufferElement::ET_NORMAL);

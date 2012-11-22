@@ -80,7 +80,7 @@ namespace Sagitta
 								   0.0f, 0.0f, 0.5f, 0.0f,
 								   0.5f, 0.5f, 0.5f, 1.0f
 								   );
-			Matrix4 depthBiasMVP = object->getFullTransform().transpose() * mDepthVP;// * biasMat;
+			Matrix4 depthBiasMVP = object->getFullTransform().transpose() * mDepthVP/* * biasMat*/;
 			param->current_gpu_program->setParameter(mDepthBiasMVPName, (1<<1)|0, depthBiasMVP.arr());
         
 			size_t depthIndex = param->textures.size();

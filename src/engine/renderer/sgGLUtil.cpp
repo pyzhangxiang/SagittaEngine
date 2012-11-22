@@ -64,6 +64,7 @@ namespace Sagitta{
                 return RDT_FM44;
             case GL_SAMPLER_2D:
             case GL_SAMPLER_CUBE:
+            case GL_SAMPLER_2D_SHADOW:
                 return RDT_TEXTURE;
             default:
                 return RDT_NIL;

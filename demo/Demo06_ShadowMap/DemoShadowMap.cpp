@@ -92,7 +92,7 @@ void DemoShadowMap::prepare(void)
 
 		// prepare camera
 		//mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
-		mCamera->translate(Vector3(0.0f, 10.5f, 22.0f));
+		mCamera->translate(Vector3(0.0f, 13.5f, 22.0f));
 		mCamera->pitch(Radian(-Math::PI / 6.0f));
         
         // set shadow pass camera
@@ -103,19 +103,19 @@ void DemoShadowMap::prepare(void)
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		light1->setParent(mScene->getRoot());
-		light1->translate(Vector3(3.0f, 13.0f, 5.0f));
+		light1->translate(Vector3(3.0f, 10.0f, 5.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
 		lightComp1->setIntensity(8.0f);
 		mLight = light1;
 
-		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		/*sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		light1Debug->setIsDebugObj(true);
 		light1Debug->scale(Vector3(0.2f));
 		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
 		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+		light1->setShowDebug(true);*/
         
         // set depth pass camera
         sgSceneObject *lightCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
@@ -138,7 +138,7 @@ void DemoShadowMap::prepare(void)
 		// place cube 
 		sgSceneObject *objRoot = /*sgLoader::load_pod("scene/podscene1/scene.pod");*/sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mScene->getRoot());
-		objRoot->translate(Vector3(-1.0f, 3.0f, -2.5f));
+		objRoot->translate(Vector3(-1.0f, 1.0f, -2.5f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
 		
