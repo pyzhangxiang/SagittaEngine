@@ -608,9 +608,9 @@ namespace Sagitta{
 		sgMeshPlane::sgMeshPlane()
 		: sgMesh()
 	{
-		UInt32 aiLengthPerUnit = 50;
-		UInt32 aiHUnitNum = 50;
-		UInt32 aiVUnitNum = 50;
+		UInt32 aiLengthPerUnit = 10;
+		UInt32 aiHUnitNum = 10;
+		UInt32 aiVUnitNum = 10;
 		//reset(2, 2 * (aiHUnitNum + aiVUnitNum), aiHUnitNum + aiVUnitNum + 2);
 		reset(4, 4, 1);
 
@@ -620,6 +620,7 @@ namespace Sagitta{
 		int vHalfTotalLength = vTotalLength * 0.5;
 
 		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
+		Vector2 *pUV0Data = static_cast<Vector2*>(m_pVertexData->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, m_iVertexNum)->data());
 		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 		
@@ -627,6 +628,11 @@ namespace Sagitta{
 		pPosData[1] = Vector3(-hHalfTotalLength, 0.0f, vHalfTotalLength);
 		pPosData[2] = Vector3(hHalfTotalLength, 0.0f, vHalfTotalLength);
 		pPosData[3] = Vector3(hHalfTotalLength, 0.0f, -vHalfTotalLength);
+
+		pUV0Data[0] = Vector2(0.0f, 0.0f);
+		pUV0Data[1] = Vector2(0.0f, 1.0f);
+		pUV0Data[2] = Vector2(1.0f, 1.0f);
+		pUV0Data[3] = Vector2(0.0f, 0.0f);
 
 		pIndex[0] = 0;
 		pIndex[1] = 1;

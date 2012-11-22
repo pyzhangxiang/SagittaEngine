@@ -494,12 +494,12 @@ namespace Sagitta{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
         
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
         
         // temp
         // No color output in the bound framebuffer, only depth.
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
+        glDrawBuffer(GL_BACK);
+        glReadBuffer(GL_BACK);
         
         bool ok = false;
         // Always check that our framebuffer is ok

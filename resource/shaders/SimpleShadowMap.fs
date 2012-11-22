@@ -34,12 +34,15 @@ void main(){
 	vec4 MaterialDiffuseColor =  sg_Material_Diffuse;// * texture2D( sg_Sampler0, UV0);
 
 	// shadow
-	vec4 shadowCoordinateWdivide = depthCoord / depthCoord.w ;
-	shadowCoordinateWdivide.z += 0.0005;
-	float distanceFromLight = texture2D(ShadowMap,shadowCoordinateWdivide.xy).z;
+	vec4 shadowCoordinateWdivide = vec4(depthCoord.x, depthCoord.y, depthCoord.z / depthCoord.w, depthCoord.w) ;
+	//shadowCoordinateWdivide.z += 0.0005;
+	vec4 depthColor = texture2D(depthMap,shadowCoordinateWdivide.xy);
+	float distanceFromLight = depthColor.z;// / depthColor.w;
+	vec4 depthColor2 = texture2D(depthMap,UV0);
+	
  	float shadow = 1.0;
- 	if (depthCoord.w > 0.0)
- 		shadow = distanceFromLight < shadowCoordinateWdivide.z ? 0.5 : 1.0 ;
+ 	//if (depthCoord.w > 0.0)
+ 		shadow = distanceFromLight < shadowCoordinateWdivide.z ? 0.0 : 1.0 ;
 
 	// Distance to the light
 	float distance = length( sg_Light0_Position - Position_worldspace );

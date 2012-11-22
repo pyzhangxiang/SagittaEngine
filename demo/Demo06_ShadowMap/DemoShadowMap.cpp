@@ -98,11 +98,12 @@ void DemoShadowMap::prepare(void)
         // set shadow pass camera
         sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
         shadowPass->getRenderTarget()->getViewport()->setCamera(cameraComp);
+		shadowPass->getRenderTarget()->getViewport()->setBackColor(Color::DARKGRAY);
 
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 		light1->setParent(mScene->getRoot());
-		light1->translate(Vector3(3.0f, 10.0f, 5.0f));
+		light1->translate(Vector3(3.0f, 13.0f, 5.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
 		lightComp1->setIntensity(8.0f);
@@ -118,12 +119,13 @@ void DemoShadowMap::prepare(void)
         
         // set depth pass camera
         sgSceneObject *lightCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-        lightCamera->setParent(mScene->getRoot());
-        sgCameraComponent *lightcameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassName());
-        cameraComp->setUpDirection(Vector3::UNIT_Y);
-        cameraComp->setShootDirection(Vector3(0.0f, 0.0f, -1.0f));
+        lightCamera->setParent(light1);
+        sgCameraComponent *lightcameraComp = (sgCameraComponent*)lightCamera->createComponent(sgCameraComponent::GetClassName());
+        lightcameraComp->setUpDirection(Vector3::UNIT_Y);
+        lightcameraComp->setShootDirection(Vector3(0.0f, 0.0f, -1.0f));
+		lightcameraComp->setPerspective(Math::PI / 1.2f, 0.1f, 10000.0f);
 		lightCamera->pitch(Radian(-Math::PI / 2.0f));
-        depthRTPass->getRenderTarget()->getViewport()->setCamera(cameraComp);
+        depthRTPass->getRenderTarget()->getViewport()->setCamera(lightcameraComp);
 
 		// plane
 		sgSceneObject *plane = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());

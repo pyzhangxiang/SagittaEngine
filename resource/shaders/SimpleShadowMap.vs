@@ -28,6 +28,9 @@ void main(){
 	gl_Position =  sg_MVPMatrix * vec4(sg_Vertex,1);
 
 	depthCoord = depthBiasMVP * vec4(sg_Vertex,1);
+	depthCoord.x = depthCoord.x * 0.5 + 0.5;
+	depthCoord.y = depthCoord.y * 0.5 + 0.5;
+	depthCoord.z = depthCoord.z * 0.5 + 0.5;
 	
 	// Position of the vertex, in worldspace : sg_ModelMatrix * position
 	Position_worldspace = (sg_ModelMatrix * vec4(sg_Vertex,1)).xyz;
