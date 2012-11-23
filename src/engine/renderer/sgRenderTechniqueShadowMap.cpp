@@ -20,13 +20,12 @@ namespace Sagitta
     , mDepthBiasMVPName("depthBiasMVP")
 	{
         sgRenderPass *rpDepth = addPass();
-        //mDepthMap = sgGetRenderer()->_createRenderTarget(256, 256, 4, PIXEL_FORMAT_RGBA, RDT_F);
-		mRTWindow = new sgRenderTargetWindow(1, 1);
-        rpDepth->setRenderTarget(mRTWindow);
-        /*
+        mDepthMap = sgGetRenderer()->_createRenderTarget(1024, 1024, 4, PIXEL_FORMAT_RGBA, RDT_F);
+        rpDepth->setRenderTarget(mDepthMap);
+        
 		sgRenderPass *rp = addPass();
 		mRTWindow = new sgRenderTargetWindow(1, 1);
-		rp->setRenderTarget(mRTWindow);*/
+		rp->setRenderTarget(mRTWindow);
     
 	}
 

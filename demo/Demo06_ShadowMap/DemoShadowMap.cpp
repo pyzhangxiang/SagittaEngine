@@ -73,9 +73,9 @@ void DemoShadowMap::prepare(void)
 		sgRenderEffect *depthRTEffect = depthRTPass->createRenderEffect(sgRenderEffect::GetClassName());
 		depthRTEffect->setGpuProgram(programDepthRT);
         
-        /*sgRenderPass *shadowPass = renderTech->getRenderPass(1);
+        sgRenderPass *shadowPass = renderTech->getRenderPass(1);
 		sgRenderEffect *shadowEffect = shadowPass->createRenderEffect(sgRenderEffect::GetClassName());
-		shadowEffect->setGpuProgram(programShadow);*/
+		shadowEffect->setGpuProgram(programShadow);
 
 
 		// prepare materials
@@ -96,9 +96,9 @@ void DemoShadowMap::prepare(void)
 		mCamera->pitch(Radian(-Math::PI / 6.0f));
         
         // set shadow pass camera
-        /*sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
+        sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
         shadowPass->getRenderTarget()->getViewport()->setCamera(cameraComp);
-		shadowPass->getRenderTarget()->getViewport()->setBackColor(Color::DARKGRAY);*/
+		shadowPass->getRenderTarget()->getViewport()->setBackColor(Color::DARKGRAY);
 
 		// set lights
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());

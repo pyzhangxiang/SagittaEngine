@@ -25,6 +25,29 @@ uniform vec3 sg_Light0_Position;	// in world space
 uniform vec4 sg_Light0_Diffuse;
 uniform float sg_Light0_Intensity;
 
+vec4 ShadowCoordPostW;
+
+float chebyshevUpperBound( float distance)
+{
+	vec2 moments = texture2D(depthMap, ShadowCoordPostW.xy).rg;
+	
+	// Surface is fully lit. as the current fragment is before the light occluder
+	if (distance <= moments.x)
+		return 1.0 ;
+	else
+		return 0.5;
+		
+	// The fragment is either in shadow or penumbra. We now use chebyshev's upperBound to check
+	// How likely this pixel is to be lit (p_max)
+	float variance = moments.y - (moments.x*moments.x);
+	variance = max(variance,0.00002);
+
+	float d = distance - moments.x;
+	float p_max = variance / (variance + d*d);
+
+	return p_max;
+}
+
 void main(){
 
 	// Light emission properties
@@ -34,51 +57,21 @@ void main(){
 	vec4 MaterialDiffuseColor =  sg_Material_Diffuse;// * texture2D( sg_Sampler0, UV0);
 
 	// shadow
-	//shadow2D( shadowMap, vec3(ShadowCoord.xy, (ShadowCoord.z)/ShadowCoord.w) ).r;
-	//vec4 depthColor = shadow2D(depthMap, vec3(depthCoord.x, depthCoord.y, depthCoord.z/depthCoord.w));
-	//vec4 depthColor = texture2DProj(depthMap, vec3(depthCoord.x, depthCoord.y, depthCoord.z/depthCoord.w));
-	vec4 depthColor = texture2D(depthMap, depthCoord.xy);
-	//vec4 depthColor2 = texture2D(depthMap,UV0);
-	vec4 lightDepth2 = vec4(vec3(pow(depthColor.z, 100)), 1.0);
-	vec4 lightDepth2_2 = vec4(vec3(depthColor.z), 1.0);
-	vec4 lightDepth = vec4(vec3((depthCoord.z / depthCoord.w)), 1.0);
-	
- 	float shadow = 1.0;
- 	//if (depthCoord.w > 0.0)
- 		shadow = depthColor.r < depthCoord.z / depthCoord.w ? 0.0 : 1.0 ;
+	ShadowCoordPostW = depthCoord / depthCoord.w;
+	ShadowCoordPostW.x = ShadowCoordPostW.x * 0.5 + 0.5;
+	ShadowCoordPostW.y = ShadowCoordPostW.y * 0.5 + 0.5;
+	ShadowCoordPostW.z = ShadowCoordPostW.z * 0.5 + 0.5;
 
-	// Distance to the light
-	float distance = length( sg_Light0_Position - Position_worldspace );
+	//ShadowCoordPostW.z = pow(ShadowCoordPostW.z, 50);
+	
+ 	float shadow = chebyshevUpperBound(ShadowCoordPostW.z);
+	
+	vec4 map = vec4(vec3(texture2D(depthMap, ShadowCoordPostW.xy).r), 1.0);
 
-	// Normal of the computed fragment, in camera space
-	vec3 n = normalize( Normal_cameraspace );
-	// Direction of the light (from the fragment to the light)
-	vec3 l = normalize( LightDirection_cameraspace );
-	// Cosine of the angle between the normal and the light direction, 
-	// clamped above 0
-	//  - light is at the vertical of the triangle -> 1
-	//  - light is perpendicular to the triangle -> 0
-	//  - light is behind the triangle -> 0
-	float cosTheta = clamp( dot( n,l ), 0,1 );
+
 	
-	// Eye vector (towards the camera)
-	vec3 E = normalize(EyeDirection_cameraspace);
-	// Direction in which the triangle reflects the light
-	vec3 R = reflect(-l,n);
-	// Cosine of the angle between the Eye vector and the Reflect vector,
-	// clamped to 0
-	//  - Looking into the reflection -> 1
-	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp( dot( E,R ), 0,1 );
+	gl_FragColor = shadow * MaterialDiffuseColor;
 	
-	gl_FragColor = vec4(vec3(pow(gl_FragCoord.z, 100)), 1.0);//lightDepth2_2;//lightDepth2;//vec4(depthCoord.x, depthCoord.y, 0.0, 1.0);
-	
-		// Ambiant : simulates indirect lighting
-		shadow * ( sg_Material_Ambient +
-		// Diffuse : "color" of the object
-		MaterialDiffuseColor * sg_Light0_Diffuse * LightPower * cosTheta / (distance*distance) +
-		// Specular : reflective highlight, like a mirror
-		sg_Material_Specular * sg_Light0_Diffuse * LightPower * pow(cosAlpha,5) / (distance*distance) );
 	
 
 }
