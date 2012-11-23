@@ -25,7 +25,7 @@ uniform vec3 sg_Light0_Position;
 void main(){
 
 	// Output position of the vertex, in clip space : sg_MVPMatrix * position
-	gl_Position =  sg_MVPMatrix * vec4(sg_Vertex,1);
+	gl_Position =  depthBiasMVP/*sg_MVPMatrix */* vec4(sg_Vertex,1);
 
 	depthCoord = depthBiasMVP * vec4(sg_Vertex,1);
 	depthCoord.x = depthCoord.x * 0.5 + 0.5;

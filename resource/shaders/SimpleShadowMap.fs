@@ -36,7 +36,8 @@ void main(){
 	// shadow
 	//shadow2D( shadowMap, vec3(ShadowCoord.xy, (ShadowCoord.z)/ShadowCoord.w) ).r;
 	//vec4 depthColor = shadow2D(depthMap, vec3(depthCoord.x, depthCoord.y, depthCoord.z/depthCoord.w));
-	vec4 depthColor = texture2DProj(depthMap, vec3(depthCoord.x, depthCoord.y, depthCoord.z/depthCoord.w));
+	//vec4 depthColor = texture2DProj(depthMap, vec3(depthCoord.x, depthCoord.y, depthCoord.z/depthCoord.w));
+	vec4 depthColor = texture2D(depthMap, depthCoord.xy);
 	//vec4 depthColor2 = texture2D(depthMap,UV0);
 	vec4 lightDepth2 = vec4(vec3(pow(depthColor.z, 100)), 1.0);
 	vec4 lightDepth2_2 = vec4(vec3(depthColor.z), 1.0);
@@ -70,7 +71,7 @@ void main(){
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
 	
-	gl_FragColor = //lightDepth2_2;//lightDepth2;//vec4(depthCoord.x, depthCoord.y, 0.0, 1.0);
+	gl_FragColor = vec4(vec3(pow(gl_FragCoord.z, 100)), 1.0);//lightDepth2_2;//lightDepth2;//vec4(depthCoord.x, depthCoord.y, 0.0, 1.0);
 	
 		// Ambiant : simulates indirect lighting
 		shadow * ( sg_Material_Ambient +
