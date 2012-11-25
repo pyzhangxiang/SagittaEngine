@@ -23,7 +23,6 @@ void main(){
 	float max_depth = 1000.0;
 	depth = (length(Position_viewspace) - min_depth) / max_depth;
 	gl_FragColor = pack_float(depth);
-
-    //gl_FragColor = vec4( moment1,moment1, moment1, 1.0 );
+	//gl_FragColor = vec4( depth, depth, depth, 1.0 );
 	//gl_FragDepth = depth;
 }

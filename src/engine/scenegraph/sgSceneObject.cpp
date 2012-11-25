@@ -104,7 +104,7 @@ namespace Sagitta{
             return ;
         
         mCastShadow = bCastShadow;
- /*
+ 
         ChildNodeMap::iterator it = m_Children.begin();
         for(; it!=m_Children.end(); ++it)
         {
@@ -114,7 +114,7 @@ namespace Sagitta{
                 child->setCastShadow(bCastShadow);
             }
         }
-  */
+  
     }
 
     void sgSceneObject::onSetParent(sgNode *aParent)
