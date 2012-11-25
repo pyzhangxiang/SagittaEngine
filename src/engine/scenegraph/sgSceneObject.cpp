@@ -14,6 +14,7 @@ namespace Sagitta{
 	sgSceneObject::sgSceneObject(void) 
 	: sgNode(), mpScene(0)
     , mbSceneChanged(true), mpSkeleton(0)
+    , mCastShadow(true)
     , mIsDebugObj(false), mDebugObjectToShow(0)
     {
 
@@ -97,6 +98,25 @@ namespace Sagitta{
 		sgNode::update(deltaTime);
 	}
     
+    void sgSceneObject::setCastShadow(bool bCastShadow)
+    {
+        if(mCastShadow == bCastShadow)
+            return ;
+        
+        mCastShadow = bCastShadow;
+ /*
+        ChildNodeMap::iterator it = m_Children.begin();
+        for(; it!=m_Children.end(); ++it)
+        {
+            sgSceneObject *child = dynamic_cast<sgSceneObject*>(it->second);
+            if(child)
+            {
+                child->setCastShadow(bCastShadow);
+            }
+        }
+  */
+    }
+
     void sgSceneObject::onSetParent(sgNode *aParent)
     {
         sgNode::onSetParent(aParent);
@@ -185,6 +205,12 @@ namespace Sagitta{
     {
         if(mIsDebugObj == debug)
             return ;
+        
+        mIsDebugObj = debug;
+        if(mIsDebugObj)
+        {
+            setCastShadow(false);
+        }
         
         ChildNodeMap::iterator it = m_Children.begin();
         for(; it!=m_Children.end(); ++it)

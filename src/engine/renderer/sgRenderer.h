@@ -57,6 +57,8 @@ namespace Sagitta{
 			sgGpuProgram *current_gpu_program;
 			sgGpuProgram *last_gpu_program;
             
+            sgRenderState *scene_render_state;
+            
             bool scene_program_only;
 
 			// own by the param
@@ -203,6 +205,8 @@ namespace Sagitta{
 
 		/** Resets light state. */
 		virtual void resetLights(int aLightNum) const = 0;
+        
+        virtual void setRenderState(const sgRenderState &rs){}
 
 		/** Renders specified viewport. */
 		//void render(sgViewport *aViewport) const;

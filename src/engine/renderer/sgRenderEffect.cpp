@@ -14,6 +14,7 @@
 #include "engine/common/sgException.h"
 #include "engine/common/sgUtil.h"
 #include "engine/scenegraph/sgSceneObject.h"
+#include "engine/scenegraph/sgScene.h"
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
 #include "engine/component/sgCameraComponent.h"
@@ -31,6 +32,8 @@ namespace Sagitta
 	const sgStrHandle sgRenderEffect::ProjectionMatrix("sg_ProjectionMatrix");
     const sgStrHandle sgRenderEffect::MVMatrix("sg_MVMatrix");
 	const sgStrHandle sgRenderEffect::MVPMatrix("sg_MVPMatrix");
+    
+   	const sgStrHandle sgRenderEffect::Enviroment_Ambient("sg_Enviroment_Ambient");
     
 	const sgStrHandle sgRenderEffect::Light0_Position("sg_Light0_Position");
 	const sgStrHandle sgRenderEffect::Light1_Position("sg_Light1_Position");
@@ -71,6 +74,16 @@ namespace Sagitta
     const sgStrHandle sgRenderEffect::Texture1("sg_Sampler1");
     const sgStrHandle sgRenderEffect::Texture2("sg_Sampler2");
     const sgStrHandle sgRenderEffect::Texture3("sg_Sampler3");
+    
+    const sgStrHandle sgRenderEffect::Texture0_Enabled("sg_Sampler0_Enabled");
+    const sgStrHandle sgRenderEffect::Texture1_Enabled("sg_Sampler1_Enabled");
+    const sgStrHandle sgRenderEffect::Texture2_Enabled("sg_Sampler2_Enabled");
+    const sgStrHandle sgRenderEffect::Texture3_Enabled("sg_Sampler3_Enabled");
+    
+    
+    const sgStrHandle sgRenderEffect::Camera_Near("sg_Camera_Near");
+    const sgStrHandle sgRenderEffect::Camera_Far("sg_Camera_Far");
+    const sgStrHandle sgRenderEffect::Camera_Range("sg_Camera_Range");
 
     sgRenderEffect::sgRenderEffect(void)
 	: sgObject(), mGpuProgram(NULL)
@@ -151,6 +164,18 @@ namespace Sagitta
 		if(!param)
 			return ;
         
+        /*
+        // camera properties
+        Real camera_near = param->pcamera->zNear();
+        param->current_gpu_program->setParameter(Camera_Near, 1, &camera_near);
+        
+        Real camera_far = param->pcamera->zFar();
+        param->current_gpu_program->setParameter(Camera_Far, 1, &camera_far);
+        
+        Real camera_range = camera_far - camera_near;
+        param->current_gpu_program->setParameter(Camera_Range, 1, &camera_range);
+         */
+        
         // view and projection matrix
         param->current_gpu_program->setParameter(ViewMatrix, (1<<1)|0, param->view_matrix.arr());
         param->current_gpu_program->setParameter(ProjectionMatrix, (1<<1)|0, param->projection_matrix.arr());
@@ -160,6 +185,9 @@ namespace Sagitta
 		{
 			param->current_gpu_program->setParameter(it->first, it->second.extra, it->second.data->data());
 		}
+        
+        // Enviroment_Ambient
+        param->current_gpu_program->setParameter(Enviroment_Ambient, 1, param->pscene->getAmbiantColor().toGLColor().data());
 		
 		// light data
 		for(size_t i=0; i<param->lightlist.size() && i<4; ++i)
@@ -237,9 +265,16 @@ namespace Sagitta
 			param->current_gpu_program->setParameter(Material_ReflectFraction, 1, &reflectFraction);
 		}
         // texture
+        int textureEnabled = 0;
         param->textures.clear();
+        param->current_gpu_program->setParameter(Texture0_Enabled, 1, &textureEnabled);
+        param->current_gpu_program->setParameter(Texture1_Enabled, 1, &textureEnabled);
+        param->current_gpu_program->setParameter(Texture2_Enabled, 1, &textureEnabled);
+        param->current_gpu_program->setParameter(Texture3_Enabled, 1, &textureEnabled);
+        
         if(renderState != NULL)
         {
+            textureEnabled = 1;
             size_t texture_num = sgMin(renderState->getTextureNum(), (size_t)Texture_Max);
             for(size_t i=0; i<texture_num; ++i)
             {
@@ -252,18 +287,22 @@ namespace Sagitta
                 if(i == 0)
                 {
                     param->current_gpu_program->setParameter(Texture0, 1, &i);
+                    param->current_gpu_program->setParameter(Texture0_Enabled, 1, &textureEnabled);
                 }
                 else if(i == 1)
                 {
                     param->current_gpu_program->setParameter(Texture1, 1, &i);
+                    param->current_gpu_program->setParameter(Texture1_Enabled, 1, &textureEnabled);
                 }
                 else if(i == 2)
                 {
                     param->current_gpu_program->setParameter(Texture2, 1, &i);
+                    param->current_gpu_program->setParameter(Texture2_Enabled, 1, &textureEnabled);
                 }
                 else if(i == 3)
                 {
                     param->current_gpu_program->setParameter(Texture3, 1, &i);
+                    param->current_gpu_program->setParameter(Texture3_Enabled, 1, &textureEnabled);
                 }
             }
         }

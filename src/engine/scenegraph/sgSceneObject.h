@@ -41,6 +41,7 @@ namespace Sagitta{
         
         sgSkeleton *mpSkeleton;
         
+        bool mCastShadow;
 	// constructors & destructor
 	public:
 		sgSceneObject(void);
@@ -66,6 +67,9 @@ namespace Sagitta{
 		void getAllObjects(SceneObjectVec &objVec);
 
 		virtual void update(Float32 deltaTime);
+        
+        bool isCastShadow(void) const{ return mCastShadow; }
+        void setCastShadow(bool bCastShadow);
         
     private:
         /// if this instance is a debug object

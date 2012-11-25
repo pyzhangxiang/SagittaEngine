@@ -21,7 +21,7 @@ namespace Sagitta{
 		m_SpecularColor = Color(Color::GLColor(0.3, 0.3, 0.3, 1.0));
 		m_EmissionColor = Color(Color::GLColor(0.0, 0.0, 0.0, 1.0));
 
-		m_Shininess = 0.0;
+		m_Shininess = 5.0;
 		m_SpecularAmount = 0.5;
 		m_ReflectFraction = 0.0;
 	}

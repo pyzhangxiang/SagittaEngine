@@ -4,6 +4,7 @@
 #define __SGRENDERPASS_H__
 
 #include "engine/common/sgObject.h"
+#include "sgRenderState.h"
 
 namespace Sagitta{
     
@@ -23,6 +24,8 @@ namespace Sagitta{
 		sgRenderEffect *mRenderEffect;
 		sgRenderTarget *mRenderTarget;
         
+        sgRenderState mRenderState;
+        
         bool mUseSceneProgramOnly;
         
 	public:
@@ -40,6 +43,9 @@ namespace Sagitta{
         
         bool isUseSceneProgramOnly(void) const{ return mUseSceneProgramOnly; }
         void setUseSceneProgramOnly(bool onlyScene);
+        
+        sgRenderState &getRenderState(void){ return mRenderState; }
+        void setRenderState(const sgRenderState &rs);
 	};
 
 } // namespace Sagitta

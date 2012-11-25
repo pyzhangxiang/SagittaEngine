@@ -37,8 +37,8 @@ namespace Sagitta{
 		void setMaterialFile(sgStrHandle materialFile);
 		sgMaterial *getMaterial(void) const;
 
-		sgRenderState getRenderState(void) const;
-		void setRenderOption(const sgRenderState &ro);
+		sgRenderState &getRenderState(void);
+		void setRenderState(const sgRenderState &ro);
         
         void addTexture(const sgStrHandle &filename);
         void clearTexture(void);

@@ -248,6 +248,7 @@ namespace Sagitta{
 			            viewport->getBackDepth(),
 			            viewport->getBackStencil());
 
+        m_CurRenderParam.scene_render_state = &(pass->getRenderState());
 		m_CurRenderParam.pviewport = viewport;
 		m_CurRenderParam.pcamera = viewport->camera();
 		m_CurRenderParam.pscene = viewport->camera()->getParent()->getScene();
@@ -300,7 +301,7 @@ namespace Sagitta{
 
 			// setup lights
 			if(!(m_CurRenderParam.lightlist.empty())
-				&& m_CurRenderParam.pscene->getRenderState().isLightEnable())
+				&& m_CurRenderParam.scene_render_state->isLightEnable())
 			{
 				setupLightsImpl(m_CurRenderParam.pscene->getAmbiantColor());
 			}
@@ -309,7 +310,7 @@ namespace Sagitta{
 			const sgRenderQueue::ObjectList &objects = m_CurRenderParam.renderqueue->getObjectList();
 			for(size_t i=0; i<objects.size(); ++i)
 			{
-				render(m_CurRenderParam.pscene->getRenderState(), objects[i]);
+				render(*(m_CurRenderParam.scene_render_state), objects[i]);
 			}
 		}
 		else
@@ -321,12 +322,12 @@ namespace Sagitta{
 			}
 			// program pipeline
 
-			sgGpuProgram *program = sceneRenderEffect->getGpuProgram();
-			if(!program || !program->isActive())
+			sgGpuProgram *sceneprogram = sceneRenderEffect->getGpuProgram();
+			if(!sceneprogram || !sceneprogram->isActive())
 				return ;
 
 			m_CurRenderParam.current_gpu_program =
-				m_CurRenderParam.scene_gpu_program = program;
+				m_CurRenderParam.scene_gpu_program = sceneprogram;
 
 			// render
 			const sgRenderQueue::ObjectList &objects = m_CurRenderParam.renderqueue->getObjectList();
@@ -346,13 +347,16 @@ namespace Sagitta{
 					objProgram = re->getGpuProgram();
 				}
 
-				if(objProgram && objProgram->isActive())
+				if( !(m_CurRenderParam.scene_program_only) && objProgram && objProgram->isActive() )
 				{
+                    setRenderState(renderState->getRenderState());
 					m_CurRenderParam.current_gpu_program = objProgram;
 					re->renderObject(&m_CurRenderParam, object);
 				}
 				else
 				{
+                    setRenderState(pass->getRenderState());
+                    m_CurRenderParam.current_gpu_program = sceneprogram;
 					sceneRenderEffect->renderObject(&m_CurRenderParam, object);
 				}
 			}

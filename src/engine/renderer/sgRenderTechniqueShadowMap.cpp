@@ -7,6 +7,7 @@
 #include "sgRenderEffect.h"
 #include "sgViewport.h"
 #include "sgGpuProgram.h"
+#include "sgRenderQueueCastShadow.h"
 #include "engine/component/sgCameraComponent.h"
 
 namespace Sagitta
@@ -19,9 +20,13 @@ namespace Sagitta
     , mDepthTextureName("depthMap")
     , mDepthBiasMVPName("depthBiasMVP")
 	{
-        sgRenderPass *rpDepth = addPass();
-        mDepthMap = sgGetRenderer()->_createRenderTarget(1024, 1024, 4, PIXEL_FORMAT_RGBA, RDT_F);
+        sgRenderPass *rpDepth = addPass(sgRenderQueueCastShadow::GetClassName());
+        mDepthMap = sgGetRenderer()->_createRenderTarget(1024, 1024, 4, PIXEL_FORMAT_RGBA, RDT_UBYTE);
         rpDepth->setRenderTarget(mDepthMap);
+        rpDepth->setUseSceneProgramOnly(true);
+        //sgRenderState &rs = rpDepth->getRenderState();
+        //rs.setFaceCullingEnable(true);
+        //rs.setFaceToCull(sgRenderState::FTC_FRONT);
         
 		sgRenderPass *rp = addPass();
 		mRTWindow = new sgRenderTargetWindow(1, 1);

@@ -11,6 +11,8 @@ namespace Sagitta{
 	sgScene::sgScene(void) 
 	: sgObject(), mpRoot(NULL)
     {
+        mAmbiantColor = Color(Color::GLColor(0.1, 0.1, 0.1, 1.0));
+        
 		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
         mpRoot->setScene(this);
 	}
@@ -43,7 +45,7 @@ namespace Sagitta{
     {
         mAmbiantColor = color;
     }
-    
+   /*
     const sgRenderState &sgScene::getRenderState(void) const
     {
         return mRenderState;
@@ -53,6 +55,6 @@ namespace Sagitta{
     {
         mRenderState = state;
     }
-
+*/
 	
 } // namespace Sagitta

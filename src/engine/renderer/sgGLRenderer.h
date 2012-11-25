@@ -64,6 +64,8 @@ namespace Sagitta{
 
 		/** Resets light state. Overrides from sgRenderer. */
 		void resetLights(int aLightNum) const;
+        
+        virtual void setRenderState(const sgRenderState &rs);
 
 	protected:
 		/** Overridden from sgRenderer. Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */

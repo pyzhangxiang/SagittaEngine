@@ -35,12 +35,12 @@ namespace Sagitta
 		return dynamic_cast<sgMaterial*>(sgResourceCenter::instance()->findResource(mMaterialFile));
 	}
 
-	Sagitta::sgRenderState sgRenderStateComponent::getRenderState( void ) const
+	Sagitta::sgRenderState &sgRenderStateComponent::getRenderState( void )
 	{
 		return mRenderState;
 	}
 
-	void sgRenderStateComponent::setRenderOption( const sgRenderState &ro )
+	void sgRenderStateComponent::setRenderState( const sgRenderState &ro )
 	{
 		mRenderState = ro;
 	}

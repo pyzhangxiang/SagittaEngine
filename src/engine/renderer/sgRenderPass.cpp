@@ -82,6 +82,9 @@ namespace Sagitta{
         mUseSceneProgramOnly = onlyScene;
     }
 
-	
+	void sgRenderPass::setRenderState(const sgRenderState &rs)
+    {
+        mRenderState = rs;
+    }
 
 } // namespace Sagitta

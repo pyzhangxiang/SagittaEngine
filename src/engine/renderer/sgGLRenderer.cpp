@@ -237,6 +237,26 @@ namespace Sagitta{
 		}
 		glDisable(GL_LIGHTING);
 	}
+    
+    void sgGLRenderer::setRenderState(const sgRenderState &rs)
+    {
+        if(rs.isFaceCullingEnable())
+        {
+            glEnable(GL_CULL_FACE);
+            if(rs.faceToCull() == sgRenderState::FTC_BACK)
+            {
+                glCullFace(GL_BACK);
+            }
+            else
+            {
+                glCullFace(GL_FRONT);
+            }
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+    }
 
 	//  [8/1/2008 zhangxiang]
 	int sgGLRenderer::retMapping(int aRet) const{
@@ -486,7 +506,7 @@ namespace Sagitta{
         glGenTextures(1, &textureId);
         glBindTexture(GL_TEXTURE_2D, textureId);
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, pf, rdt, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
@@ -494,7 +514,7 @@ namespace Sagitta{
         /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);*/
         
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT , GL_TEXTURE_2D, textureId, 0);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
         
         // temp
         // No color output in the bound framebuffer, only depth.

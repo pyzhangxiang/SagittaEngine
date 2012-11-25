@@ -31,6 +31,9 @@ namespace Sagitta{
         static const sgStrHandle MVMatrix;
         static const sgStrHandle MVPMatrix;
         
+        
+        static const sgStrHandle Enviroment_Ambient;
+        
         // light
 		static const sgStrHandle Light0_Position;
 		static const sgStrHandle Light1_Position;
@@ -74,6 +77,16 @@ namespace Sagitta{
         static const sgStrHandle Texture1;
         static const sgStrHandle Texture2;
         static const sgStrHandle Texture3;
+        
+        static const sgStrHandle Texture0_Enabled;
+        static const sgStrHandle Texture1_Enabled;
+        static const sgStrHandle Texture2_Enabled;
+        static const sgStrHandle Texture3_Enabled;
+        
+        // camera
+        static const sgStrHandle Camera_Near;
+        static const sgStrHandle Camera_Far;
+        static const sgStrHandle Camera_Range;
 
 
     protected:

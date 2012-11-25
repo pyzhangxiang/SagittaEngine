@@ -235,7 +235,7 @@ namespace Sagitta{
 		
 		// cull faces, only for triangles
 		if(pvib->polyType() == 3 &&
-			m_CurRenderParam.pscene->getRenderState().isFaceCullingEnable()){
+			m_CurRenderParam.scene_render_state->isFaceCullingEnable()){
 			cullFaces();
 		}
 
@@ -261,7 +261,7 @@ namespace Sagitta{
 
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::cullFaces(void) const{
-		if(m_CurRenderParam.pscene->getRenderState().faceToCull() == sgRenderState::FTC_BACK){
+		if(m_CurRenderParam.scene_render_state->faceToCull() == sgRenderState::FTC_BACK){
 			cullBackFacesImpl();
 		}else{
 			cullFrontFacesImpl();
@@ -1156,7 +1156,7 @@ namespace Sagitta{
 		size_t v1, v2;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
+			if(m_CurRenderParam.scene_render_state->isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 2 * i
@@ -2843,7 +2843,7 @@ namespace Sagitta{
 		size_t v1, v2, v3;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
+			if(m_CurRenderParam.scene_render_state->isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 3 * i

@@ -29,7 +29,7 @@ namespace Sagitta{
 	protected:
 		sgSceneObject *mpRoot;
         Color mAmbiantColor;
-        sgRenderState mRenderState;
+        //sgRenderState mRenderState;
         
 
 	// constructors & destructor
@@ -44,8 +44,8 @@ namespace Sagitta{
         const Color &getAmbiantColor(void) const;
         void setAmbiantColor(const Color &color);
 
-        const sgRenderState &getRenderState(void) const;
-        void setRenderState(const sgRenderState &state);
+        //const sgRenderState &getRenderState(void) const;
+        //void setRenderState(const sgRenderState &state);
         
   
 	}; //#### end class sgSceneNode
