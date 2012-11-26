@@ -1006,10 +1006,18 @@ namespace Sagitta
 		}
 
 		// texture coordinates
-		if(tBuffer && tIndex)
+		if(tBuffer)
 		{
 			Vector2 *tBufferData = static_cast<Vector2*>(tBuffer->data());
-			size_t *tIndexData = static_cast<size_t*>(tIndex->data());
+			size_t *tIndexData = NULL;
+            if(tIndex)
+            {
+                tIndexData = static_cast<size_t*>(tIndex->data());
+            }
+            else
+            {
+                tIndexData = vIndexData;
+            }
 				
 			Vector2 *outtBufferData = static_cast<Vector2*>(mpVertexDataFlat->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, outVertexNum)->data());
 			size_t vi = 0;

@@ -128,7 +128,7 @@ void DemoShadowMap::prepare(void)
 		lightcameraComp->setPerspective(Math::PI / 1.2f, 0.1f, 10000.0f);
 		lightCamera->pitch(Radian(-Math::PI / 2.0f));
         depthRTPass->getRenderTarget()->getViewport()->setCamera(lightcameraComp);
-		depthRTPass->getRenderTarget()->getViewport()->setBackColor(Color::DARKGRAY);
+		depthRTPass->getRenderTarget()->getViewport()->setBackColor(Color::WHITE);
 
 		// plane
 		sgSceneObject *plane = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
@@ -138,9 +138,16 @@ void DemoShadowMap::prepare(void)
 		sgRenderStateComponent *planeRsComp = (sgRenderStateComponent*)plane->createComponent(sgRenderStateComponent::GetClassName());
 		planeRsComp->setMaterialFile(mat1->getFilename());
         plane->setCastShadow(false);
+        
+        sgTexture *textureChess = (sgTexture*)sgResourceCenter::instance()->createResource(sgTexture::GetClassName(), "images/chess.png");
+        if(textureChess)
+        {
+            planeRsComp->addTexture(textureChess->getFilename());
+        }
 
 		// place cube 
-		sgSceneObject *objRoot = /*sgLoader::load_pod("scene/podscene1/scene.pod");*/sgLoader::load_obj("models/cube.obj");
+		sgSceneObject *objRoot = //sgLoader::load_pod("scene/podscene1/scene.pod");
+                        sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mScene->getRoot());
 		objRoot->translate(Vector3(-1.0f, 1.0f, -2.5f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));

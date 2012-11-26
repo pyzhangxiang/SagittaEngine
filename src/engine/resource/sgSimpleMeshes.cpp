@@ -612,7 +612,7 @@ namespace Sagitta{
 		UInt32 aiHUnitNum = 10;
 		UInt32 aiVUnitNum = 10;
 		//reset(2, 2 * (aiHUnitNum + aiVUnitNum), aiHUnitNum + aiVUnitNum + 2);
-		reset(4, 4, 1);
+		reset(4, aiHUnitNum * aiVUnitNum * 4, aiHUnitNum * aiVUnitNum);
 
 		int hTotalLength = aiLengthPerUnit * aiHUnitNum;
 		int vTotalLength = aiLengthPerUnit * aiVUnitNum;
@@ -623,7 +623,32 @@ namespace Sagitta{
 		Vector2 *pUV0Data = static_cast<Vector2*>(m_pVertexData->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, m_iVertexNum)->data());
 		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
-		
+        
+        Int32 xLeft = -hHalfTotalLength;
+        Int32 zTop = -vHalfTotalLength;
+        UInt32 iVertex = 0;
+        for(UInt32 row=0; row<aiVUnitNum; ++row, zTop+=aiLengthPerUnit)
+        {
+            xLeft = -hHalfTotalLength;
+            for(UInt32 col=0; col<aiHUnitNum; ++col, xLeft+=aiLengthPerUnit, iVertex+=4)
+            {
+                pPosData[iVertex] = Vector3(xLeft, 0.0f, zTop);
+                pPosData[iVertex+1] = Vector3(xLeft, 0.0f, zTop+(Int32)aiLengthPerUnit);
+                pPosData[iVertex+2] = Vector3(xLeft+(Int32)aiLengthPerUnit, 0.0f, zTop+(Int32)aiLengthPerUnit);
+                pPosData[iVertex+3] = Vector3(xLeft+(Int32)aiLengthPerUnit, 0.0f, zTop);
+                
+                pUV0Data[iVertex] = Vector2(0.0f, 0.0f);
+                pUV0Data[iVertex+1] = Vector2(0.0f, 1.0f);
+                pUV0Data[iVertex+2] = Vector2(1.0f, 1.0f);
+                pUV0Data[iVertex+3] = Vector2(1.0f, 0.0f);
+                
+                pIndex[iVertex] = iVertex;
+                pIndex[iVertex+1] = iVertex+1;
+                pIndex[iVertex+2] = iVertex+2;
+                pIndex[iVertex+3] = iVertex+3;
+            }
+        }
+		/*
 		pPosData[0] = Vector3(-hHalfTotalLength, 0.0f, -vHalfTotalLength);
 		pPosData[1] = Vector3(-hHalfTotalLength, 0.0f, vHalfTotalLength);
 		pPosData[2] = Vector3(hHalfTotalLength, 0.0f, vHalfTotalLength);
@@ -638,9 +663,10 @@ namespace Sagitta{
 		pIndex[1] = 1;
 		pIndex[2] = 2;
 		pIndex[3] = 3;
+         */
 
 		m_bNormalOuter = true;
-        //setSmooth(false);
+        setSmooth(false);
 
 		prepareGeometry();
 	}
