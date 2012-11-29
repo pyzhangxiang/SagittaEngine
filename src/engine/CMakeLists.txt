@@ -2,6 +2,7 @@ add_definitions(-DSAGITTA_KERNEL)
 
 include_directories(${SAGITTA_ROOT}/src)
 include_directories(${SAGITTA_ROOT}/deps)
+include_directories(${SAGITTA_ROOT}/deps/bullet/src)
 
 set(Header)
 set(Source)

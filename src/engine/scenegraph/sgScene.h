@@ -9,11 +9,10 @@
 #include "engine/renderer/sgRenderState.h"
 #include <map>
 
-// DECLARES //////////////////////////////////////////
-
 namespace Sagitta{
 
 	class sgSceneObject;
+	class sgDynamicsWorld;
 
 	class _SG_KernelExport sgScene : public sgObject
     {
@@ -31,6 +30,8 @@ namespace Sagitta{
         Color mAmbiantColor;
         //sgRenderState mRenderState;
         
+		bool mPhysicsEnabled;
+		sgDynamicsWorld *mDynamicsWorld;
 
 	// constructors & destructor
 	public:
@@ -43,6 +44,10 @@ namespace Sagitta{
         
         const Color &getAmbiantColor(void) const;
         void setAmbiantColor(const Color &color);
+
+		bool ismPhysicsEnabled(void) const{ return mPhysicsEnabled; }
+		void setPhysicsEnabled(bool enable);
+		sgDynamicsWorld *getDynamicsWorld(void) const{ return mDynamicsWorld; }
 
         //const sgRenderState &getRenderState(void) const;
         //void setRenderState(const sgRenderState &state);

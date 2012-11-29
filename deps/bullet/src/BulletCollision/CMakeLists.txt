@@ -239,8 +239,13 @@ SET(BulletCollision_HDRS
 	${NarrowPhaseCollision_HDRS}
 )
 
+IF (BUILD_SHARED_LIBS)
+	ADD_LIBRARY(BulletCollision SHARED ${BulletCollision_SRCS} ${BulletCollision_HDRS})
+ELSE (BUILD_SHARED_LIBS)
+	ADD_LIBRARY(BulletCollision STATIC ${BulletCollision_SRCS} ${BulletCollision_HDRS})
+ENDIF (BUILD_SHARED_LIBS)
 
-ADD_LIBRARY(BulletCollision ${BulletCollision_SRCS} ${BulletCollision_HDRS})
+
 SET_TARGET_PROPERTIES(BulletCollision PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(BulletCollision PROPERTIES SOVERSION ${BULLET_VERSION})
 IF (BUILD_SHARED_LIBS)

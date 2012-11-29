@@ -1,6 +1,7 @@
 
 #include "sgScene.h"
 #include "sgSceneObject.h"
+#include "sgDynamicsWorld.h"
 
 namespace Sagitta{
 
@@ -10,11 +11,15 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgScene::sgScene(void) 
 	: sgObject(), mpRoot(NULL)
+	, mPhysicsEnabled(false), mDynamicsWorld(NULL)
     {
         mAmbiantColor = Color(Color::GLColor(0.1, 0.1, 0.1, 1.0));
         
 		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
         mpRoot->setScene(this);
+
+		mDynamicsWorld = new sgDynamicsWorld();
+
 	}
 
 
@@ -23,6 +28,7 @@ namespace Sagitta{
     {
         // destroy all scene objects belong to me
 		sgObject::destroyObject(mpRoot);
+		delete mDynamicsWorld;
 	}
 
 	sgSceneObject * sgScene::getRoot( void ) const
@@ -32,7 +38,12 @@ namespace Sagitta{
 
 	void sgScene::update( Float32 deltaTime )
 	{
-		// physics step
+		if(mPhysicsEnabled)
+		{
+			// physics step
+			mDynamicsWorld->stepSimulation(deltaTime);
+		}
+		
 		mpRoot->update(deltaTime);
 	}
     
@@ -45,7 +56,12 @@ namespace Sagitta{
     {
         mAmbiantColor = color;
     }
-   /*
+
+	void sgScene::setPhysicsEnabled( bool enable )
+	{
+		mPhysicsEnabled = enable;
+	}
+	/*
     const sgRenderState &sgScene::getRenderState(void) const
     {
         return mRenderState;

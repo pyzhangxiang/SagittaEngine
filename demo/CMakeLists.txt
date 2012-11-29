@@ -1,5 +1,6 @@
 include_directories(${SAGITTA_ROOT}/src)
 include_directories(${SAGITTA_ROOT}/deps)
+include_directories(${SAGITTA_ROOT}/deps/bullet/src)
 
 if(WIN32)
 	set(DX_DIR $ENV{DXSDK_DIR})

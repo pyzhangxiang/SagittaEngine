@@ -53,7 +53,8 @@ sgDemo::sgDemo(const std::string &winTitle,
 , mRenderWindowTitle(winTitle)
 , mDestroying(false)
 , mAssetRootDir(assetRootDir)
-, mScene(NULL), mCamera(NULL), mLight(NULL)
+, mScene(NULL), mTargetRoot(NULL)
+, mCamera(NULL), mLight(NULL)
 {
     if(gApp)
     {
@@ -74,6 +75,9 @@ sgDemo::~sgDemo(void)
     sgObject::destroyObject(mCamera);
     mCamera = 0;
     
+	sgObject::destroyObject(mTargetRoot);
+	mTargetRoot = 0;
+
     sgObject::destroyObject(mScene);
     mScene = 0;
 }
@@ -173,6 +177,8 @@ void sgDemo::createEvent( void )
 	std::cout << "sgDemo::createEvent, create the scene\n";
 
 	mScene = (sgScene*)sgObject::createObject(sgScene::GetClassName());
+	mTargetRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+	mTargetRoot->setParent(mScene->getRoot());
 	mCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
 	mCamera->setParent(mScene->getRoot());
 	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassName());
@@ -189,6 +195,8 @@ void sgDemo::destroyEvent( void )
 	mLight = 0;
 	sgObject::destroyObject(mCamera);
 	mCamera = 0;
+	sgObject::destroyObject(mTargetRoot);
+	mTargetRoot = 0;
 	sgObject::destroyObject(mScene);
 	mScene = 0;
 }
@@ -288,13 +296,18 @@ void sgDemo::keyPressEvent( sgKeyEvent &event )
 
 void sgDemo::mousePressEvent( sgMouseEvent &event )
 {
-	if(mScene && mCamera)
+	if(mScene && mCamera && mTargetRoot)
 	{
-		if(event.buttons == Sagitta::MBT_Left)
+		if(event.buttons == Sagitta::MBT_Right)
 		{
 			mStartRotRayX = Vector3(event.x, mRotationSphereCenter.y(), 0.0f) - mRotationSphereCenter;
 			mStartRotRayY = Vector3(mRotationSphereCenter.x(), event.y, 0.0f) - mRotationSphereCenter;
 			mStartRotOrientation = mCamera->relativeOrentation();
+		}
+		else if(event.buttons == Sagitta::MBT_Left)
+		{
+			mStartRotRayTarget = Vector3(event.x, event.y, 0.0f) - mRotationSphereCenter;
+			mStartRotOrientationTarget = mTargetRoot->relativeOrentation();
 		}
 	}
 	
@@ -302,9 +315,9 @@ void sgDemo::mousePressEvent( sgMouseEvent &event )
 
 void sgDemo::mouseMoveEvent( sgMouseEvent &event )
 {
-	if(mScene && mCamera)
+	if(mScene && mCamera && mTargetRoot)
 	{
-		if(event.buttons == Sagitta::MBT_Left)
+		if(event.buttons == Sagitta::MBT_Right)
 		{
 			Vector3 currentRayX = Vector3(event.x, mRotationSphereCenter.y(), 0.0f) - mRotationSphereCenter;
 			Vector3 currentRayY = Vector3(mRotationSphereCenter.x(), event.y, 0.0f) - mRotationSphereCenter;
@@ -315,6 +328,12 @@ void sgDemo::mouseMoveEvent( sgMouseEvent &event )
 
 			//mCamera->rotationX(Radian(-event.deltaY / 100.0f));
 			//mCamera->rotationY(Radian(-event.deltaX / 100.0f));
+		}
+		else if(event.buttons == Sagitta::MBT_Left)
+		{
+			Vector3 currentRay = Vector3(event.x, event.y, 0.0f) - mRotationSphereCenter;
+			Quaternion q = currentRay.getRotationTo(mStartRotRayTarget);
+			mTargetRoot->setRelativeOrientation(q * q * mStartRotOrientationTarget);
 		}
 	}
 }

@@ -148,8 +148,8 @@ void DemoShadowMap::prepare(void)
 		// place cube 
 		sgSceneObject *objRoot = //sgLoader::load_pod("scene/podscene1/scene.pod");
                         sgLoader::load_obj("models/cube.obj");
-        objRoot->setParent(mScene->getRoot());
-		objRoot->translate(Vector3(-1.0f, 1.0f, -2.5f));
+        objRoot->setParent(mTargetRoot);
+		mTargetRoot->translate(Vector3(-1.0f, 1.0f, -2.5f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
 		

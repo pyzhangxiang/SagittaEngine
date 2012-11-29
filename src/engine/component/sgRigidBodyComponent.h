@@ -7,22 +7,30 @@
 #include "sgComponent.h"
 #include "engine/common/sgStrHandle.h"
 
+class btRigidBody;
 
 namespace Sagitta{
 
 	class sgMesh;
 
+	/// is btRigidBody, btCollisionShape, btMotionState' owner
 	class _SG_KernelExport sgRigidBodyComponent : public sgComponent
 	{
 		SG_META_DECLARE(sgRigidBodyComponent)
 
 	protected:
+		btRigidBody *mRigidBody;
 
 	public:
 		sgRigidBodyComponent(void);
 		virtual ~sgRigidBodyComponent(void);
 
+		btRigidBody *getRigidBody(void) const{ return mRigidBody; }
+		void setRigidBody(btRigidBody *body);
 
+		/// callback
+		void _addToSimWorld(void);
+		void _removeFromSimWorld(void);
 	}; 
 
 } // namespace Sagitta
