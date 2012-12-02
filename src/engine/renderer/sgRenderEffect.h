@@ -31,6 +31,8 @@ namespace Sagitta{
         static const sgStrHandle MVMatrix;
         static const sgStrHandle MVPMatrix;
         
+        static const sgStrHandle NormalMatrix;
+        static const sgStrHandle NormalMVMatrix;
         
         static const sgStrHandle Enviroment_Ambient;
         

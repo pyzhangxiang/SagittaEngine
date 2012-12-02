@@ -33,6 +33,9 @@ namespace Sagitta
     const sgStrHandle sgRenderEffect::MVMatrix("sg_MVMatrix");
 	const sgStrHandle sgRenderEffect::MVPMatrix("sg_MVPMatrix");
     
+    const sgStrHandle sgRenderEffect::NormalMatrix("sg_NormalMatrix");
+    const sgStrHandle sgRenderEffect::NormalMVMatrix("sg_NormalMVMatrix");
+    
    	const sgStrHandle sgRenderEffect::Enviroment_Ambient("sg_Enviroment_Ambient");
     
 	const sgStrHandle sgRenderEffect::Light0_Position("sg_Light0_Position");
@@ -241,6 +244,16 @@ namespace Sagitta
         param->current_gpu_program->setParameter(ModelMatrix, (1<<1)|0, modelMatrix.arr());
         param->current_gpu_program->setParameter(MVMatrix, (1<<1)|0, mvMatrix.arr());
         param->current_gpu_program->setParameter(MVPMatrix, (1<<1)|0, mvpMatrix.arr());
+        
+        // normal matrix
+        Matrix3 normalMat3;
+        object->getFullTransform().extract3x3Matrix(normalMat3);
+        normalMat3 = normalMat3.inverse().transpose();
+        Matrix4 normalMat(normalMat3);
+        normalMat = normalMat.transpose();
+        Matrix4 normalMVMatrix = normalMat * param->view_matrix;
+        param->current_gpu_program->setParameter(NormalMatrix, (1<<1)|0, normalMat.arr());
+        param->current_gpu_program->setParameter(NormalMVMatrix, (1<<1)|0, normalMVMatrix.arr());
 
 		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
 		sgMaterial *material = NULL;

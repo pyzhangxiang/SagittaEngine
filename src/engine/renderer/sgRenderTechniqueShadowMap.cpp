@@ -18,7 +18,7 @@ namespace Sagitta
 	sgRenderTechniqueShadowMap::sgRenderTechniqueShadowMap( void )
 	: sgRenderTechnique()
     , mDepthTextureName("depthMap")
-    , mDepthBiasMVPName("depthBiasMVP")
+    , mDepthMVPName("depthMVP")
 	{
         sgRenderPass *rpDepth = addPass(sgRenderQueueCastShadow::GetClassName());
         mDepthMap = sgGetRenderer()->_createRenderTarget(1024, 1024, 4, PIXEL_FORMAT_RGBA, RDT_UBYTE);
@@ -85,8 +85,8 @@ namespace Sagitta
 								   0.0f, 0.0f, 0.5f, 0.0f,
 								   0.5f, 0.5f, 0.5f, 1.0f
 								   );
-			Matrix4 depthBiasMVP = object->getFullTransform().transpose() * mDepthVP/* * biasMat*/;
-			param->current_gpu_program->setParameter(mDepthBiasMVPName, (1<<1)|0, depthBiasMVP.arr());
+			Matrix4 depthMVP = object->getFullTransform().transpose() * mDepthVP/* * biasMat*/;
+			param->current_gpu_program->setParameter(mDepthMVPName, (1<<1)|0, depthMVP.arr());
         
 			size_t depthIndex = param->textures.size();
 			param->current_gpu_program->setParameter(mDepthTextureName, 1, &depthIndex);
