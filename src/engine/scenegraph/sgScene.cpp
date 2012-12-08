@@ -18,7 +18,7 @@ namespace Sagitta{
 		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
         mpRoot->setScene(this);
 
-		mDynamicsWorld = new sgDynamicsWorld();
+		mDynamicsWorld = (sgDynamicsWorld*)sgObject::createObject(sgDynamicsWorld::GetClassName());
 
 	}
 
@@ -28,7 +28,7 @@ namespace Sagitta{
     {
         // destroy all scene objects belong to me
 		sgObject::destroyObject(mpRoot);
-		delete mDynamicsWorld;
+		sgObject::destroyObject(mDynamicsWorld);
 	}
 
 	sgSceneObject * sgScene::getRoot( void ) const

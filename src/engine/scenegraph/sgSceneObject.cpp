@@ -1,6 +1,7 @@
 
 #include "sgSceneObject.h"
 #include "engine/component/sgComponent.h"
+#include "engine/component/sgRigidBodyComponent.h"
 #include "sgScene.h"
 #include "sgSkeleton.h"
 #include "engine/common/sgException.h"
@@ -139,7 +140,6 @@ namespace Sagitta{
         }
         
         this->setScene(obj->getScene());
-        
     }
 
 	void sgSceneObject::setScene( sgScene *pScene )
@@ -148,6 +148,12 @@ namespace Sagitta{
 			return ;
 		mpScene = pScene;
 		mbSceneChanged = true;
+
+		sgRigidBodyComponent *rigidComp = (sgRigidBodyComponent*)getComponent(sgRigidBodyComponent::GetClassName());
+		if(rigidComp)
+		{
+			rigidComp->_addToDynamicsWorld();
+		}
 
         // let all children know which scene they belong to
         sgSceneObject *obj = 0;

@@ -2,7 +2,7 @@
 #define __SGDYNAMICSWORLD_H__
 
 
-#include "engine/common/sgMemObject.h"
+#include "engine/common/sgObject.h"
 #include "math/sgTypeDef.h"
 #include "engine/common/sgStlAllocator.h"
 #include <set>
@@ -16,8 +16,10 @@ class btRigidBody;
 
 namespace Sagitta{
 
-	class _SG_KernelExport sgDynamicsWorld : public sgMemObject
+	class _SG_KernelExport sgDynamicsWorld : public sgObject
     {
+		SG_META_DECLARE(sgDynamicsWorld)
+
 	protected:
 		btDynamicsWorld *m_dynamicsWorld;
 		btBroadphaseInterface *m_broadphase;

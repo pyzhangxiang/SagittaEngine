@@ -4,6 +4,8 @@
 
 namespace Sagitta{
 
+	SG_META_DEFINE(sgDynamicsWorld, sgObject)
+
 	sgDynamicsWorld::sgDynamicsWorld( void )
 	{
 		///collision configuration contains default setup for memory, collision setup

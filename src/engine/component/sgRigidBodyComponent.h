@@ -20,6 +20,7 @@ namespace Sagitta{
 
 	protected:
 		btRigidBody *mRigidBody;
+		id_type mCurrentDynamicsWorld;
 
 	public:
 		sgRigidBodyComponent(void);
@@ -29,8 +30,11 @@ namespace Sagitta{
 		void setRigidBody(btRigidBody *body);
 
 		/// callback
-		void _addToSimWorld(void);
-		void _removeFromSimWorld(void);
+		void _addToDynamicsWorld(void);
+		void _removeFromDynamicsWorld(void);
+
+	private:
+		void release(void);
 	}; 
 
 } // namespace Sagitta
