@@ -3,12 +3,12 @@ add_subdirectory(stb_image)
 add_subdirectory(pvrt)
 add_subdirectory(bullet)
 add_subdirectory(alglib)
-add_subdirectory(matclpro)
+
 
 SET_PROPERTY(TARGET stb_image PROPERTY FOLDER "deps")
 SET_PROPERTY(TARGET pvrt_sdk PROPERTY FOLDER "deps")
 SET_PROPERTY(TARGET alglib PROPERTY FOLDER "deps")
-SET_PROPERTY(TARGET matclpro PROPERTY FOLDER "deps")
+
 
 SET_PROPERTY(TARGET LinearMath PROPERTY FOLDER "deps/bullet")
 SET_PROPERTY(TARGET BulletCollision PROPERTY FOLDER "deps/bullet")

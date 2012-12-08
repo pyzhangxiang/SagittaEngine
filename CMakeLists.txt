@@ -65,5 +65,6 @@ endfunction(sg_create_vcproj_userfile)
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(src)
-add_subdirectory(demo)
 add_subdirectory(deps)
+add_subdirectory(demo)
+add_subdirectory(test)
