@@ -14,5 +14,5 @@ else(WIN32)
 	add_executable(Demo07_Ragdoll ${Source_File})
 endif(WIN32)
 
-target_link_libraries(Demo07_Ragdoll Sagitta DemoCore)
+target_link_libraries(Demo07_Ragdoll Sagitta DemoCore alglib matclpro)
 sg_create_vcproj_userfile(Demo07_Ragdoll)

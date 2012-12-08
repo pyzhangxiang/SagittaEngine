@@ -18,7 +18,7 @@ namespace Sagitta
         sgRenderTargetTexture *mDepthMap;
         
         sgStrHandle mDepthTextureName;
-        sgStrHandle mDepthBiasMVPName;
+        sgStrHandle mDepthMVPName;
         Matrix4 mDepthVP;
         
     public:
