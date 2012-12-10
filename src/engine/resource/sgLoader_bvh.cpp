@@ -35,7 +35,7 @@ namespace Sagitta{
             
         }
         
-        sgSkeleton *pSkeleton = (sgSkeleton*)sgObject::createObject(sgSkeleton::GetClassName());
+        sgSkeleton *pSkeleton = (sgSkeleton*)sgObject::createObject(sgSkeleton::GetClassTypeName());
         sgBoneObject *boneRoot = pSkeleton->getBoneRoot();
         
         sg_vector(sgBoneObject*) nodeList;
@@ -50,7 +50,7 @@ namespace Sagitta{
 			if(str == "ROOT" || str == "JOINT"){
                 // get joint name
 				file >> str;
-                sgBoneObject *node = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassName());
+                sgBoneObject *node = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassTypeName());
                 node->setName(str);
                 // this node will belong to pSkeleton in the setParent function
                 node->setParent(nodeStack.back());
@@ -75,7 +75,7 @@ namespace Sagitta{
 				file >> str;
                 
                 str = "EndSite_" + sgStringUtil::to_string(numEndSite++);
-                sgBoneObject *node = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassName());
+                sgBoneObject *node = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassTypeName());
                 node->setName(str);
                 // this node will belong to pSkeleton in the setParent function
                 node->setParent(nodeStack.back());
@@ -104,20 +104,20 @@ namespace Sagitta{
             }
 		}
         
-        sgMesh *pMeshSphere = (sgMesh*)sgResourceCenter::instance()->createResource(sgMeshSphere::GetClassName(), sgMeshSphere::InternalFileName);
-        sgMesh *pMeshLine = (sgMesh*)sgResourceCenter::instance()->createResource(sgMeshLine::GetClassName(), sgMeshLine::InternalFileName);
+        sgMesh *pMeshSphere = (sgMesh*)sgResourceCenter::instance()->createResource(sgMeshSphere::GetClassTypeName(), sgMeshSphere::InternalFileName);
+        sgMesh *pMeshLine = (sgMesh*)sgResourceCenter::instance()->createResource(sgMeshLine::GetClassTypeName(), sgMeshLine::InternalFileName);
         
         // setup nodes' debug object
         for(size_t i=0; i<nodeList.size(); ++i)
         {
-            sgSceneObject *debugObj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+            sgSceneObject *debugObj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
             debugObj->setIsDebugObj(true);
 
             sgSceneObject *obj = nodeList[i];
             obj->setDebugObjectToShow(debugObj);
 			debugObj->setName(obj->getName() + "_debug");
             
-            sgMeshComponent *pSphereComp = (sgMeshComponent*)debugObj->createComponent(sgMeshComponent::GetClassName());
+            sgMeshComponent *pSphereComp = (sgMeshComponent*)debugObj->createComponent(sgMeshComponent::GetClassTypeName());
             pSphereComp->setMeshFile(pMeshSphere->getFilename());
             
             sgNode::ChildIterator it = obj->getChildIterator();
@@ -125,12 +125,12 @@ namespace Sagitta{
             {
                 sgNode *child = dynamic_cast<sgSceneObject*>(it.value());
                 
-                sgSceneObject *lineObj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                sgSceneObject *lineObj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 				lineObj->setIsDebugObj(true);
                 lineObj->setParent(debugObj);
                 lineObj->scale(child->position() - obj->position());
                 
-                sgMeshComponent *pLineComp = (sgMeshComponent*)lineObj->createComponent(sgMeshComponent::GetClassName());
+                sgMeshComponent *pLineComp = (sgMeshComponent*)lineObj->createComponent(sgMeshComponent::GetClassTypeName());
                 pLineComp->setMeshFile(pMeshLine->getFilename());
             }
         }
@@ -207,7 +207,7 @@ namespace Sagitta{
 		file >> str >> str >> frametime;
 //		outMotionClip->setFrameTime(frametime);
         
-        sgAnimation *pAnimation = (sgAnimation*)sgResourceCenter::instance()->createResource(sgAnimation::GetClassName(), filename.c_str());
+        sgAnimation *pAnimation = (sgAnimation*)sgResourceCenter::instance()->createResource(sgAnimation::GetClassTypeName(), filename.c_str());
         pAnimation->setKeyNum(framenum);
         
 		// create joints

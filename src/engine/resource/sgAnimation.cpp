@@ -61,7 +61,7 @@ namespace Sagitta{
         if(ret)
             return ret;
         
-        ret = (sgAnimationJoint*)sgObject::createObject(sgAnimationJoint::GetClassName());
+        ret = (sgAnimationJoint*)sgObject::createObject(sgAnimationJoint::GetClassTypeName());
         ret->setName(aName);
 		m_AnimaJointMap.insert(std::make_pair(aName, ret));
 		return ret;

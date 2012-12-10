@@ -125,7 +125,7 @@ namespace Sagitta
 
 	void sgRenderEffect::renderObject( sg_render::CurrentRenderParam *param, sgSceneObject *object )
 	{
-		sgMeshComponent *meshComp = (sgMeshComponent*)(object->getComponent(sgMeshComponent::GetClassName()));
+		sgMeshComponent *meshComp = (sgMeshComponent*)(object->getComponent(sgMeshComponent::GetClassTypeName()));
 		if(!meshComp)
 			return ;
 		sgMesh *mesh = meshComp->getMesh();
@@ -150,7 +150,7 @@ namespace Sagitta
 		setUniformObject(param, object);
         sgGetRenderer()->getRenderTechnique()->_setUniformObjectExtra(param, object);
 
-		//sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
+		//sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassTypeName()));
 		//sgMaterial *material = 0;
 		//if(renderState)
 		//	material = (sgMaterial*)(renderState->getMaterial());
@@ -255,7 +255,7 @@ namespace Sagitta
         param->current_gpu_program->setParameter(NormalMatrix, (1<<1)|0, normalMat.arr());
         param->current_gpu_program->setParameter(NormalMVMatrix, (1<<1)|0, normalMVMatrix.arr());
 
-		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
+		sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassTypeName()));
 		sgMaterial *material = NULL;
 		if(renderState != NULL)
 		{

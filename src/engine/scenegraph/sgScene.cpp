@@ -15,10 +15,10 @@ namespace Sagitta{
     {
         mAmbiantColor = Color(Color::GLColor(0.1, 0.1, 0.1, 1.0));
         
-		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
         mpRoot->setScene(this);
 
-		mDynamicsWorld = (sgDynamicsWorld*)sgObject::createObject(sgDynamicsWorld::GetClassName());
+		mDynamicsWorld = (sgDynamicsWorld*)sgObject::createObject(sgDynamicsWorld::GetClassTypeName());
 
 	}
 

@@ -17,9 +17,9 @@ namespace Sagitta{
     sgResourceCenter::sgResourceCenter(void)
     : mRootDir("./")
     {
-        registerImageLoader(".png", sgImageLoader_stb::GetClassName());
-		registerImageLoader(".tga", sgImageLoader_stb::GetClassName());
-		registerImageLoader(".bmp", sgImageLoader_stb::GetClassName());
+        registerImageLoader(".png", sgImageLoader_stb::GetClassTypeName());
+		registerImageLoader(".tga", sgImageLoader_stb::GetClassTypeName());
+		registerImageLoader(".bmp", sgImageLoader_stb::GetClassTypeName());
     }
 
 	//  [1/11/2009 zhangxiang]
@@ -105,7 +105,7 @@ namespace Sagitta{
             return res;
         
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(type);
-        if(!meta || !meta->isClass(sgResource::GetClassName()))
+        if(!meta || !meta->isClass(sgResource::GetClassTypeName()))
             return 0;
         
         res = (sgResource*)(sgObject::createObject(type));
@@ -170,7 +170,7 @@ namespace Sagitta{
 		if(meta == NULL)
 			return false;
 
-		if(! (meta->isClass(sgImageLoader::GetClassName())) )
+		if(! (meta->isClass(sgImageLoader::GetClassTypeName())) )
 			return false;
 
 		mImageLoaderTypeMap[imageFileExt] = imageLoaderType.getStr();

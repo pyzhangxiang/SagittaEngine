@@ -817,7 +817,7 @@ namespace Sagitta
 	Real sgMesh::maxRadius(void) const{
 		return m_fMaxRadius;
 	}
-    
+    /*
     void sgMesh::load(SERIALIZE_LOAD_ARCHIVE &archive)
     {
         sgResource::load(archive);
@@ -839,7 +839,7 @@ namespace Sagitta
         archive & SG_MAKE_NVP("m_bNormalOuter", m_bNormalOuter);
         archive & SG_MAKE_NVP("m_bCounterClockWise", m_bCounterClockWise);
     }
-
+	*/
 	bool sgMesh::prepareFlatData( void )
 	{
         _setDirty();

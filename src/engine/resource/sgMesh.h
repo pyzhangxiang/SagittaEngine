@@ -398,8 +398,8 @@ namespace Sagitta{
 		/** Gets my max radius. */
 		Real maxRadius(void) const;
         
-        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
-        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
+        //virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
+        //virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
         
 		/** Gets full model transform matrix for this renderable object. */
 		//Matrix4 getModelMatrix(void) const;

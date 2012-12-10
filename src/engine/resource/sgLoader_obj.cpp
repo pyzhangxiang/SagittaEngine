@@ -300,7 +300,7 @@ namespace Sagitta{
                 // loading end
                 
                 // construct meshes
-                sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
                 sceneRoot->setName(sceneName + "_Node");
                 
                 for(size_t i=0; i<meshList.size(); ++i)
@@ -314,7 +314,7 @@ namespace Sagitta{
                         continue ;
                     }
                     
-                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + meshInfo.name + "_mesh").c_str());
+                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassTypeName(), (filename + meshInfo.name + "_mesh").c_str());
                     mesh->reset(meshInfo.polyType, meshInfo.vertex.size(), meshInfo.faceNum);
                     
                     sgVertexData *vdata = mesh->getVertexData();
@@ -381,10 +381,10 @@ namespace Sagitta{
                     mesh->locateToCenter();
                     
                     // create scene objects
-                    sgSceneObject *object = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                    sgSceneObject *object = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
                     object->setName(meshInfo.name + "_node");
                     object->setParent(sceneRoot);
-                    sgMeshComponent *meshComp = (sgMeshComponent*)object->createComponent(sgMeshComponent::GetClassName());
+                    sgMeshComponent *meshComp = (sgMeshComponent*)object->createComponent(sgMeshComponent::GetClassTypeName());
                     meshComp->setMeshFile(mesh->getFilename());
                     object->translate(originalMeshCenter);
                     
@@ -444,7 +444,7 @@ namespace Sagitta{
                 }
                 
                 // laod from obj
-                sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
                 
                 std::string sceneName;
                 if(lastslash == std::string::npos)
@@ -522,14 +522,14 @@ namespace Sagitta{
                                         bsmooth = false;
                                     }
                                     // assume counterclockwise
-                                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + gName + "_mesh" + sgStringUtil::to_string(static_cast<uInt>(gCount))).c_str());
+                                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassTypeName(), (filename + gName + "_mesh" + sgStringUtil::to_string(static_cast<uInt>(gCount))).c_str());
                                     mesh->reset(polyType, gVCount, gFCount);
                              //       sgEntity *entity = new sgEntity(gName, polyType, gVCount, gFCount, bsmooth);
                               //      entity->renderOption().setRenderElementType(sgRenderOption::RET_TRIANGLES);
-                                    sgSceneObject *node = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                                    sgSceneObject *node = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
                                     node->setName(gName + "_node");
                                     node->setParent(sceneRoot);
-                                    sgMeshComponent *meshComp = (sgMeshComponent*)node->createComponent(sgMeshComponent::GetClassName());
+                                    sgMeshComponent *meshComp = (sgMeshComponent*)node->createComponent(sgMeshComponent::GetClassTypeName());
                                     meshComp->setMeshFile(mesh->getFilename());
                                     //groups.push_back(entity);
                                     groups.push_back(mesh);
@@ -671,14 +671,14 @@ namespace Sagitta{
                         bsmooth = false;
                     }
                     // assume counterclockwise
-                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + gName + "_mesh").c_str());
+                    sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassTypeName(), (filename + gName + "_mesh").c_str());
                     mesh->reset(polyType, gVCount, gFCount);
                     //       sgEntity *entity = new sgEntity(gName, polyType, gVCount, gFCount, bsmooth);
                     //      entity->renderOption().setRenderElementType(sgRenderOption::RET_TRIANGLES);
-                    sgSceneObject *node = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+                    sgSceneObject *node = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
                     node->setName(gName + "_node");
                     node->setParent(sceneRoot);
-                    sgMeshComponent *meshComp = (sgMeshComponent*)node->createComponent(sgMeshComponent::GetClassName());
+                    sgMeshComponent *meshComp = (sgMeshComponent*)node->createComponent(sgMeshComponent::GetClassTypeName());
                     meshComp->setMeshFile(mesh->getFilename());
                     //groups.push_back(entity);
                     groups.push_back(mesh);

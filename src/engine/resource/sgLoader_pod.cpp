@@ -37,7 +37,7 @@ namespace Sagitta{
 			return NULL;
 		}
 
-		sgSceneObject *sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		sgSceneObject *sceneRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 
 		sg_vector(sgMesh*) tMeshList;
 		// create meshes
@@ -98,7 +98,7 @@ namespace Sagitta{
 			if(totalStride != podMesh.sVertex.nStride)
 				continue;
 
-			sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassName(), (filename + "_mesh_" + sgStringUtil::to_string(iMesh)).c_str());
+			sgMesh *mesh = (sgMesh*)sgResourceCenter::instance()->createResource(sgMesh::GetClassTypeName(), (filename + "_mesh_" + sgStringUtil::to_string(iMesh)).c_str());
 			mesh->reset(3, podMesh.nNumVertex, podMesh.nNumFaces);
 			tMeshList.push_back(mesh);
 
@@ -182,7 +182,7 @@ namespace Sagitta{
 		{
 			SPODMaterial &podMat = podScene.pMaterial[iMat];
 
-			sgMaterial *mat = (sgMaterial*)sgResourceCenter::instance()->createResource(sgMaterial::GetClassName()
+			sgMaterial *mat = (sgMaterial*)sgResourceCenter::instance()->createResource(sgMaterial::GetClassTypeName()
 																		, (filename + "_material_" + sgStringUtil::to_string(iMat)).c_str());
 			tMaterialList.push_back(mat);
 
@@ -198,7 +198,7 @@ namespace Sagitta{
 		for(; iNode<podScene.nNumNode; ++iNode)
 		{
 			SPODNode &podNode = podScene.pNode[iNode];
-			sgSceneObject *obj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+			sgSceneObject *obj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 			obj->setParent(sceneRoot);
 			obj->setName(podNode.pszName);
 			tObjectList.push_back(obj);
@@ -212,12 +212,12 @@ namespace Sagitta{
 			if(podNode.nIdxParent > 0)
 				obj->setParent(tObjectList[podNode.nIdxParent]);
 
-			sgMeshComponent *meshComp = (sgMeshComponent*)obj->createComponent(sgMeshComponent::GetClassName());
+			sgMeshComponent *meshComp = (sgMeshComponent*)obj->createComponent(sgMeshComponent::GetClassTypeName());
 			meshComp->setMeshFile(tMeshList[podNode.nIdx]->getFilename());
 			obj->translate(tMeshList[podNode.nIdx]->center());
 			tMeshList[podNode.nIdx]->locateToCenter();
 
-			sgRenderStateComponent *rsComp = (sgRenderStateComponent*)obj->createComponent(sgRenderStateComponent::GetClassName());
+			sgRenderStateComponent *rsComp = (sgRenderStateComponent*)obj->createComponent(sgRenderStateComponent::GetClassTypeName());
 			rsComp->setMaterialFile(tMaterialList[podNode.nIdxMaterial]->getFilename());
 		}
 		// light object
@@ -229,7 +229,7 @@ namespace Sagitta{
 				obj->setParent(tObjectList[podNode.nIdxParent]);
 			
 			SPODLight &podLight = podScene.pLight[iLight];
-			sgLightComponent *lightComp = (sgLightComponent*)obj->createComponent(sgLightComponent::GetClassName());
+			sgLightComponent *lightComp = (sgLightComponent*)obj->createComponent(sgLightComponent::GetClassTypeName());
 			lightComp->setDiffuseColor(Color(Color::GLColor(Vector3(podLight.pfColour))));
 		}
 

@@ -113,7 +113,7 @@ void sgDemo::setWindowPos( int x, int y )
 
 void sgDemo::OnCreate( void )
 {
-	Sagitta::sgEngineInit(sgGLRenderer::GetClassName(), mAssetRootDir);
+	Sagitta::sgEngineInit(sgGLRenderer::GetClassTypeName(), mAssetRootDir);
 	sgLogSystem::instance()->addLogHandler(demoLogHandler);
 	createEvent();
 }
@@ -140,7 +140,7 @@ void sgDemo::initialize( void )
 	rt->resize(getRenderWindowWidth(), getRenderWindowHeight());
 	viewport->setBackColor(Color::DARKGRAY);
 
-	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
+	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassTypeName());
 	viewport->setCamera(cameraComp);
 
 	this->prepare();
@@ -176,12 +176,12 @@ void sgDemo::createEvent( void )
 {
 	std::cout << "sgDemo::createEvent, create the scene\n";
 
-	mScene = (sgScene*)sgObject::createObject(sgScene::GetClassName());
-	mTargetRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+	mScene = (sgScene*)sgObject::createObject(sgScene::GetClassTypeName());
+	mTargetRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 	mTargetRoot->setParent(mScene->getRoot());
-	mCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+	mCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 	mCamera->setParent(mScene->getRoot());
-	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassName());
+	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassTypeName());
 
 	cameraComp->setUpDirection(Vector3::UNIT_Y);
 	cameraComp->setShootDirection(Vector3(0.0f, 0.0f, -1.0f));

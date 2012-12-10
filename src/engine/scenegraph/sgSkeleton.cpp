@@ -15,8 +15,8 @@ namespace Sagitta{
 	sgSkeleton::sgSkeleton(void)
 	: sgObject(), mpRoot(0)
     {
-		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-        mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassName());
+		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+        mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassTypeName());
         mpBoneRoot->setParent(mpRoot);
         // let bone root belong to me
         mpBoneRoot->mpSkeletonBelongTo = this;
@@ -59,7 +59,7 @@ namespace Sagitta{
         if(!parent)
             return ;
         
-        sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassName());
+        sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassTypeName());
         if(!comp)
             return ;
         

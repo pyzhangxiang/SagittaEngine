@@ -124,14 +124,14 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	void SagiRenderer::render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const{
-		sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassName()));
+		sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassTypeName()));
         if(!meshComp)
             return ;
         sgMesh *mesh = meshComp->getMesh();
         if(!mesh)
             return ;
         
-        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
+        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassTypeName()));
         sgMaterial *material = 0;
         if(renderState)
             material = (sgMaterial*)(renderState->getMaterial());

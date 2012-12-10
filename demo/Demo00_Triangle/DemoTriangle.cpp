@@ -25,18 +25,18 @@ void DemoTriangle::prepare(void)
 		mCamera->translate(Vector3(0.0f, 0.0f, 2.0f));
 
 		// prepare resources
-		sgMeshTriangle *meshTriangle = (sgMeshTriangle*)sgResourceCenter::instance()->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
+		sgMeshTriangle *meshTriangle = (sgMeshTriangle*)sgResourceCenter::instance()->createResource(sgMeshTriangle::GetClassTypeName(), sgMeshTriangle::InternalFileName);
 		meshTriangle->setVertecies(Vector3(-1.0f, 0.0, 0.0f), Color::RED, 
 								   Vector3(1.0f, 0.0f, 0.0f), Color::GREEN, 
 								   Vector3(0.0f, 1.0f, 0.0f), Color::BLUE);
     
-		sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		sgSceneObject *triangle = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		triangle->setParent(mScene->getRoot());
 		triangle->yaw(Radian(Math::PI_DIV_4));
 		//triangle->scale(Vector3(5, 5, 5));
     
-		sgMeshComponent *meshComp = (sgMeshComponent*)triangle->createComponent(sgMeshComponent::GetClassName());
-	//    sgRenderStateComponent *rsComp = (sgRenderStateComponent*)triangle->createComponent(sgRenderStateComponent::GetClassName());
+		sgMeshComponent *meshComp = (sgMeshComponent*)triangle->createComponent(sgMeshComponent::GetClassTypeName());
+	//    sgRenderStateComponent *rsComp = (sgRenderStateComponent*)triangle->createComponent(sgRenderStateComponent::GetClassTypeName());
 		meshComp->setMeshFile(meshTriangle->getFilename());
 	}
 }

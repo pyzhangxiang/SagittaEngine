@@ -19,7 +19,7 @@ namespace Sagitta{
     , mUseSceneProgramOnly(false)
     {
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(queueTypeName);
-        if(meta && meta->isClass(sgRenderQueue::GetClassName()))
+        if(meta && meta->isClass(sgRenderQueue::GetClassTypeName()))
         {
             mRenderQueue = (sgRenderQueue*)sgObject::createObject(queueTypeName);
         }
@@ -30,7 +30,7 @@ namespace Sagitta{
 				std::string(queueTypeName.getStr()) +
 				std::string(") render queue, use default."));
 
-			mRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassName());
+			mRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassTypeName());
 		}
     }
     
@@ -50,7 +50,7 @@ namespace Sagitta{
 		sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
 		if(!meta)
 			return mRenderEffect;
-		if(!meta->isClass(sgRenderEffect::GetClassName()))
+		if(!meta->isClass(sgRenderEffect::GetClassTypeName()))
 			return mRenderEffect;
 
 		if(mRenderEffect)

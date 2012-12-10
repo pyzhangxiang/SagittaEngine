@@ -5,6 +5,7 @@
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/scenegraph/sgDynamicsWorld.h"
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletCollision/CollisionShapes/btCollisionShape.h>
 
 namespace Sagitta
 {

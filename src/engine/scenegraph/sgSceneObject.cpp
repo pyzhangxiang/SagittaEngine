@@ -149,7 +149,7 @@ namespace Sagitta{
 		mpScene = pScene;
 		mbSceneChanged = true;
 
-		sgRigidBodyComponent *rigidComp = (sgRigidBodyComponent*)getComponent(sgRigidBodyComponent::GetClassName());
+		sgRigidBodyComponent *rigidComp = (sgRigidBodyComponent*)getComponent(sgRigidBodyComponent::GetClassTypeName());
 		if(rigidComp)
 		{
 			rigidComp->_addToDynamicsWorld();

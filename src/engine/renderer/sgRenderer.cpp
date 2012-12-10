@@ -40,7 +40,7 @@ namespace Sagitta{
     sgRenderer *sgGetRenderer(void)
     {
         if(!g_renderer)
-            sgCreateRenderer(sgGLRenderer::GetClassName());
+            sgCreateRenderer(sgGLRenderer::GetClassTypeName());
         return g_renderer;
     }
     
@@ -61,7 +61,7 @@ namespace Sagitta{
 	, m_iTargetHeight(600)
 	, mShaderEnvironmentPrepared(false)
 	{
-        mRenderTechnique = (sgRenderTechnique*)sgObject::createObject(sgRenderTechniqueBase::GetClassName());
+        mRenderTechnique = (sgRenderTechnique*)sgObject::createObject(sgRenderTechniqueBase::GetClassTypeName());
 	}
 
 	//  [8/1/2008 zhangxiang]
@@ -91,7 +91,7 @@ namespace Sagitta{
 	//  [11/6/2012 fabiozhang]
 	void sgRenderer::collectLights() const
 	{
-		sgStrHandle strLightType = sgLightComponent::GetClassName();
+		sgStrHandle strLightType = sgLightComponent::GetClassTypeName();
 
 		m_CurRenderParam.lightlist.clear();
 		for(size_t i=0; i<m_CurRenderParam.objlist.size(); ++i)
@@ -335,7 +335,7 @@ namespace Sagitta{
 			{
 				sgSceneObject *object = objects[i];
 
-				sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassName()));
+				sgRenderStateComponent *renderState = (sgRenderStateComponent*)(object->getComponent(sgRenderStateComponent::GetClassTypeName()));
 				sgRenderEffect *re = NULL;
 				sgGpuProgram *objProgram = NULL;
 				if(renderState)
@@ -523,7 +523,7 @@ namespace Sagitta{
 	sgRenderTechnique * sgRenderer::useRenderTechnique( const sgStrHandle &techniqueName )
 	{
 		sgClassMeta *meta = sgMetaCenter::instance().findMeta(techniqueName);
-		if(meta && meta->isClass(sgRenderTechnique::GetClassName()))
+		if(meta && meta->isClass(sgRenderTechnique::GetClassTypeName()))
 		{
 			mRenderTechnique = (sgRenderTechnique*)sgObject::createObject(techniqueName);
 		}
@@ -532,7 +532,7 @@ namespace Sagitta{
 
 	sg_render::CurrentRenderParam::CurrentRenderParam( void )
 	{
-		mDefaultRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassName());
+		mDefaultRenderQueue = (sgRenderQueue*)sgObject::createObject(sgRenderQueue::GetClassTypeName());
 	}
 
 	sg_render::CurrentRenderParam::~CurrentRenderParam( void )
@@ -570,7 +570,7 @@ namespace Sagitta{
 			if(!obj->isActive())
 				continue;
 
-			meshComp = (sgMeshComponent*)obj->getComponent(sgMeshComponent::GetClassName());
+			meshComp = (sgMeshComponent*)obj->getComponent(sgMeshComponent::GetClassTypeName());
 			if(!meshComp)
 				continue;
 

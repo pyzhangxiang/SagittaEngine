@@ -20,7 +20,7 @@ namespace Sagitta
     , mDepthTextureName("depthMap")
     , mDepthMVPName("depthMVP")
 	{
-        sgRenderPass *rpDepth = addPass(sgRenderQueueCastShadow::GetClassName());
+        sgRenderPass *rpDepth = addPass(sgRenderQueueCastShadow::GetClassTypeName());
         mDepthMap = sgGetRenderer()->_createRenderTarget(1024, 1024, 4, PIXEL_FORMAT_RGBA, RDT_UBYTE);
         rpDepth->setRenderTarget(mDepthMap);
         rpDepth->setUseSceneProgramOnly(true);

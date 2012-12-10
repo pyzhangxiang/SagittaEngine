@@ -8,7 +8,7 @@
 #include "sgObject.h"
 #include "sgClassMeta.h"
 #include "sgObjectCenter.h"
-#include "strtk/strtk.hpp"
+#include "sgStringUtil.h"
 
 // DECLARATION ///////////////////////////////////////
 
@@ -22,7 +22,7 @@ namespace Sagitta{
 	sgObject::sgObject(void) 
     : m_iOId(++ms_oid)
     , mMeta(0){
-        mName = "Object" + strtk::type_to_string(m_iOId);
+        mName = "Object" + sgStringUtil::to_string(m_iOId);
         sgObjectCenter::instance()->addObject(this);
 	}
 
@@ -78,6 +78,7 @@ namespace Sagitta{
         return meta->isClass(classtype);
     } 
     
+	/*
     void sgObject::load(SERIALIZE_LOAD_ARCHIVE &archive)
     {
         archive & SG_MAKE_NVP(this->GetMyClassName().getStr(), *this);
@@ -87,5 +88,5 @@ namespace Sagitta{
     {
         archive & SG_MAKE_NVP(this->GetMyClassName().getStr(), *this);
     }
-
+	*/
 } // namespace Sagitta

@@ -50,7 +50,7 @@ namespace Sagitta
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
         if(!meta)
             return mRenderEffect;
-        if(!meta->isClass(sgRenderEffect::GetClassName()))
+        if(!meta->isClass(sgRenderEffect::GetClassTypeName()))
             return mRenderEffect;
         
         if(mRenderEffect)

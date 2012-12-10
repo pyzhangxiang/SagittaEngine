@@ -37,11 +37,11 @@ namespace Sagitta{
         sgResourceCenter *rm = sgResourceCenter::instance();
         if(rm)
         {
-            rm->createResource(sgMeshLine::GetClassName(), sgMeshLine::InternalFileName);
-            rm->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
-            rm->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
-            rm->createResource(sgMeshSphere::GetClassName(), sgMeshSphere::InternalFileName);
-            rm->createResource(sgMeshCone::GetClassName(), sgMeshCone::InternalFileName);
+            rm->createResource(sgMeshLine::GetClassTypeName(), sgMeshLine::InternalFileName);
+            rm->createResource(sgMeshTriangle::GetClassTypeName(), sgMeshTriangle::InternalFileName);
+            rm->createResource(sgMeshCube::GetClassTypeName(), sgMeshCube::InternalFileName);
+            rm->createResource(sgMeshSphere::GetClassTypeName(), sgMeshSphere::InternalFileName);
+            rm->createResource(sgMeshCone::GetClassTypeName(), sgMeshCone::InternalFileName);
         }
     }
     

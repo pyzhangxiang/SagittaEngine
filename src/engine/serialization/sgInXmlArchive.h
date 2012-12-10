@@ -7,7 +7,7 @@ namespace Sagitta
 {   
     namespace serialization
     {
-        class sgInXmlArchive : public sgXmlArchive
+        class _SG_KernelExport sgInXmlArchive : public sgXmlArchive
 	    {
             //SG_SERIALIZATION_ARCHIVE(sgOutXmlArchive)
         private:

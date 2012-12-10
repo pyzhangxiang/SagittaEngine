@@ -9,9 +9,9 @@
 // INCLUDES //////////////////////////////////////////
 #include "math/SagittaPlatform.h"
 #include "math/sgMath.h"
-#include "engine/serialization/sg_serialization_nvp.h"
-#include "engine/serialization/sgInXmlArchive.h"
-#include "engine/serialization/sgOutXmlArchive.h"
+//#include "engine/serialization/sg_serialization_nvp.h"
+//#include "engine/serialization/sgBaseArchive.h"
+//#include "engine/serialization/sgOutXmlArchive.h"
 #include "sgMemObject.h"
 #include "sgStrHandle.h"
 #include "sgClassMeta.h"
@@ -62,8 +62,8 @@ namespace Sagitta{
 		/** Sets my name. */
 		void setName(const std::string &aName);
         
-        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
-        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
+//        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
+//        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
         
         static sgObject *createObject(const sgStrHandle &classname);
         static void destroyObject(sgObject *obj);
@@ -72,13 +72,13 @@ namespace Sagitta{
         virtual void setShowDebug(bool show){}
 
 	};
-    
+    /*
     template<class Archive>
     Archive &operator & (Archive &archive, sgObject &obj)
     {
         archive & SG_MAKE_NVP("mName", obj.mName);
         return archive;
-    }
+    }*/
 
 } // namespace Sagitta
 
