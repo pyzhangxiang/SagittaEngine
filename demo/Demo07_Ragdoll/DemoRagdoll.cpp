@@ -23,6 +23,9 @@
 #include <engine/common/sgLogSystem.h>
 #include <engine/serialization/sgOutXmlArchive.h>
 #include <engine/math_serialization.h>
+#include <engine/scenegraph/sgSkeleton.h>
+#include "engine/component/sgAnimationComponent.h"
+#include "engine/resource/sgAnimation.h"
 using namespace Sagitta;
 
 DemoRagdoll::DemoRagdoll() 
@@ -44,10 +47,10 @@ void DemoRagdoll::prepare(void)
 	bi.width = 1.11;
 	bis.mBodyInfo.push_back(bi);
 	bis.mBodyInfo.push_back(bi);
-	*/
+	
 	serialization::sgOutXmlArchive xml("bodyinfo.xml");
 	xml & bis;
-	xml.write();
+	xml.write();*/
 
     if(mScene && mCamera)
 	{
@@ -105,10 +108,7 @@ void DemoRagdoll::prepare(void)
 		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassTypeName(), sgMeshCube::InternalFileName);
 
 		// prepare camera
-		//mCamera->translate(Vector3(0.0f, 32.5f, 202.0f));
-		mCamera->translate(Vector3(4.0f, 3.5f, -12.0f));
-        mCamera->yaw(Radian(Math::PI / 1.2f));
-		mCamera->pitch(Radian(-Math::PI / 9.0f));
+		mCamera->translate(Vector3(0.0f, 100.5f, 152.0f));
         
         // set shadow pass camera
         sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassTypeName());
@@ -119,19 +119,19 @@ void DemoRagdoll::prepare(void)
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		light1->setParent(mScene->getRoot());
 		//light1->translate(Vector3(3.0f, 4.0f, 0.0f));
-        light1->translate(Vector3(4.0f, 4.0f, 0.0f));
+        light1->translate(Vector3(4.0f, 200.0f, 10.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassTypeName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
-		lightComp1->setIntensity(8.0f);
+		lightComp1->setIntensity(1008.0f);
 		mLight = light1;
 
 		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
-		light1Debug->setIsDebugObj(true);
 		light1Debug->scale(Vector3(0.2f));
 		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassTypeName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
-		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+
+		light1Debug->setIsDebugObj(true);
+		light1Debug->setParent(light1);
        
         // set depth pass camera
         sgSceneObject *lightCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
@@ -162,20 +162,37 @@ void DemoRagdoll::prepare(void)
 		// place cube 
 		sgSceneObject *objRoot = //sgLoader::load_pod("scene/podscene1/scene.pod");
                         sgLoader::load_obj("models/cube.obj");
-        objRoot->setParent(mScene->getRoot());
-		objRoot->translate(Vector3(-1.0f, 1.0f, -2.5f));
+        objRoot->setParent(mTargetRoot);
+		mTargetRoot->translate(Vector3(20.0f, 10.0f, -2.5f));
+		objRoot->scale(Vector3(10.0f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
-		
-        sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
+		sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
 		sgRenderStateComponent *cubeRsComp = (sgRenderStateComponent*)objCube->createComponent(sgRenderStateComponent::GetClassTypeName());
 		cubeRsComp->setMaterialFile(mat1->getFilename());
-        // load textures
-        sgTexture *texture = (sgTexture*)sgResourceCenter::instance()->createResource(sgTexture::GetClassTypeName(), "images/cube.png");
-        if(texture)
-        {
-            cubeRsComp->addTexture(texture->getFilename());
-        }
+		// load textures
+		sgTexture *texture = (sgTexture*)sgResourceCenter::instance()->createResource(sgTexture::GetClassTypeName(), "images/cube.png");
+		if(texture)
+		{
+			cubeRsComp->addTexture(texture->getFilename());
+		}
 
+		
+		sgSceneObject *player = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+		player->setParent(mScene->getRoot());
+		// load .bvh
+		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
+		player->setSkeleton(pSkeleton);
+
+		/*sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");
+		sgAnimationComponent *animComp = (sgAnimationComponent*)player->createComponent(sgAnimationComponent::GetClassTypeName());
+		animComp->setAnimationFile(pAnimation->getFilename());
+		animComp->setPlayMode(sgAnimationComponent::PM_LOOP);
+		animComp->play();*/
+
+		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
+
+		int i=0;
+		i++;
 	}
 }

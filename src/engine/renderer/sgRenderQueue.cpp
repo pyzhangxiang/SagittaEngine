@@ -19,6 +19,9 @@ namespace Sagitta
     
     void sgRenderQueue::push_back(sgSceneObject *object)
     {
+		if(!filter(object))
+			return ;
+
         mObjectList.push_back(object);
     }
     

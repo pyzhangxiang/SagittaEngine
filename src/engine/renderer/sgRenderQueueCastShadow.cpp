@@ -17,21 +17,13 @@ namespace Sagitta
         
     }
         
-    void sgRenderQueueCastShadow::sort()
-    {
-        ObjectList::iterator it = mObjectList.begin();
-        for(; it!=mObjectList.end(); )
-        {
-            if(!(*it)->isCastShadow())
-            {
-                it = mObjectList.erase(it);
-            }
-            else
-            {
-                ++it;
-            }
-        }
-    }
-    
+	bool sgRenderQueueCastShadow::filter( sgSceneObject *object )
+	{
+		if(object->isCastShadow())
+			return true;
+		else
+			return false;
+	}
+
 
 } // namespace Sagitta

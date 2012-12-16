@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <root>
-	<mBodyInfo vec_size="2">
+	<mBodyInfo vec_size="15">
 		<0 jointName="Chest" bodyName="Pelvis" shapeType="1" width="26.448" height="11.6235" thick="8.001" posOnJoint="0" constraintTo="" mass="15.091" haveInertia="1" ifCollideWithParent="0">
 			<angleLowerLimit x="0" y="0" z="0"/>
 			<angleUpperLimit x="0" y="0" z="0"/>

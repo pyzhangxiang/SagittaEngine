@@ -114,7 +114,7 @@ namespace Sagitta{
             debugObj->setIsDebugObj(true);
 
             sgSceneObject *obj = nodeList[i];
-            obj->setDebugObjectToShow(debugObj);
+			debugObj->setParent(obj);
 			debugObj->setName(obj->getName() + "_debug");
             
             sgMeshComponent *pSphereComp = (sgMeshComponent*)debugObj->createComponent(sgMeshComponent::GetClassTypeName());

@@ -116,8 +116,8 @@ void DemoShadowMap::prepare(void)
 		light1Debug->scale(Vector3(0.2f));
 		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassTypeName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
-		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+		light1Debug->setIsDebugObj(true);
+		light1Debug->setParent(light1);
        
         // set depth pass camera
         sgSceneObject *lightCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());

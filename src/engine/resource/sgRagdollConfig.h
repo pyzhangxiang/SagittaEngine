@@ -8,6 +8,8 @@
 #include "math/sgVector3.h"
 #include "../serialization/sg_serialization_nvp.h"
 #include "../math_serialization.h"
+#include "engine/common/sgStlAllocator.h"
+#include <map>
 #include <vector>
 
 namespace Sagitta{
@@ -18,6 +20,11 @@ namespace Sagitta{
 	public:
 		struct BodyInfo
 		{
+			enum{
+				SHAPE_CAPSULE = 0,
+				SHAPE_BOX = 1
+			};
+
 			std::string jointName;
 			std::string bodyName;
 			int shapeType;		// 0 - capsule, 1 - box
@@ -41,12 +48,15 @@ namespace Sagitta{
 			std::vector<BodyInfo> mBodyInfo;
 		};
         
+		typedef sg_map(std::string, BodyInfo) BodyInfoMap;
     private:
-
+		BodyInfoMap mBodyInfoSet;
         
 	public:
 		sgRagdollConfig(void);
 		virtual ~sgRagdollConfig(void);
+
+		const BodyInfoMap &getBodyInfoSet(void) const{ return mBodyInfoSet; }
 
 	protected:
 		virtual void onSetFilename(void);

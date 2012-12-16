@@ -68,8 +68,6 @@ namespace Sagitta{
         static sgObject *createObject(const sgStrHandle &classname);
         static void destroyObject(sgObject *obj);
         static sgObject *getObject(id_type oid);
-        
-        virtual void setShowDebug(bool show){}
 
 	};
     /*

@@ -16,7 +16,7 @@ namespace Sagitta{
         sgRenderQueueCastShadow(void);
 		virtual ~sgRenderQueueCastShadow(void);
 
-        virtual void sort(void);
+        virtual bool filter(sgSceneObject *object);
 
 	};
 

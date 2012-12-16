@@ -40,12 +40,11 @@ void DemoSkeletonAnimation::prepare(void)
 
 		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassTypeName(), sgMeshCube::InternalFileName);
 		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
-		light1Debug->setIsDebugObj(true);
 		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassTypeName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
 
-		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+		light1Debug->setIsDebugObj(true);
+		light1Debug->setParent(light1);
 
 
 		// grid
@@ -60,7 +59,6 @@ void DemoSkeletonAnimation::prepare(void)
 		player->setParent(mScene->getRoot());
 		// load .bvh
 		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
-		pSkeleton->setShowDebug(true);
 		player->setSkeleton(pSkeleton);
 		//pSkeleton->setParent(mScene->getRoot());
 

@@ -28,6 +28,8 @@ namespace Sagitta{
         const ObjectList &getObjectList(void) const{ return mObjectList; }
 
         virtual void sort(void){}
+	protected:
+		virtual bool filter(sgSceneObject *object){ return true; }
 
 	};
 

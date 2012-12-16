@@ -40,8 +40,8 @@ void DemoLoaderObj::prepare(void)
 		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassTypeName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
 
-		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+		light1Debug->setIsDebugObj(true);
+		light1Debug->setParent(light1);
 
 		// load .obj
 		sgSceneObject *objRoot = sgLoader::load_obj("models/jiedao.obj");

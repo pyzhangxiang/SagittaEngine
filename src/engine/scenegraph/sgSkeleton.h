@@ -47,7 +47,7 @@ namespace Sagitta{
         sgBoneObject *getBoneRoot(void) const;
 		virtual void update(Float32 deltaTime);
         
-        sgSceneObject *parent(void);
+        sgSceneObject *parent(void) const;
 
     protected:
         // for sgBoneObject

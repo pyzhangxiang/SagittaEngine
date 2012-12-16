@@ -90,7 +90,7 @@ namespace Sagitta{
         mpRoot->setParent(parent);
     }
     
-    sgSceneObject *sgSkeleton::parent(void)
+    sgSceneObject *sgSkeleton::parent(void) const
     {
         return dynamic_cast<sgSceneObject*>(mpRoot->parent());
     }

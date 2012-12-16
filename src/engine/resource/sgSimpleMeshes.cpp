@@ -608,9 +608,9 @@ namespace Sagitta{
 		sgMeshPlane::sgMeshPlane()
 		: sgMesh()
 	{
-		UInt32 aiLengthPerUnit = 10;
-		UInt32 aiHUnitNum = 10;
-		UInt32 aiVUnitNum = 10;
+		UInt32 aiLengthPerUnit = 50;
+		UInt32 aiHUnitNum = 50;
+		UInt32 aiVUnitNum = 50;
 		//reset(2, 2 * (aiHUnitNum + aiVUnitNum), aiHUnitNum + aiVUnitNum + 2);
 		reset(4, aiHUnitNum * aiVUnitNum * 4, aiHUnitNum * aiVUnitNum);
 

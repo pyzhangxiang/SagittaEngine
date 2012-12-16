@@ -80,12 +80,12 @@ namespace Sagitta{
         
     protected:
         /// the debug object attach to this instance
-        sgSceneObject *mDebugObjectToShow;
+        //sgSceneObject *mDebugObjectToShow;
     public:
-        sgSceneObject *getDebugObjectToShow(void) const;
-        sgSceneObject *setDebugObjectToShow(sgSceneObject *obj);
+        //sgSceneObject *getDebugObjectToShow(void) const;
+        //sgSceneObject *setDebugObjectToShow(sgSceneObject *obj);
         
-        virtual void showDebug(bool show);
+        void showDebug(bool show);
         
 
 

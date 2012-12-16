@@ -16,7 +16,7 @@ namespace Sagitta{
 	: sgNode(), mpScene(0)
     , mbSceneChanged(true), mpSkeleton(0)
     , mCastShadow(true)
-    , mIsDebugObj(false), mDebugObjectToShow(0)
+    , mIsDebugObj(false)//, mDebugObjectToShow(0)
     {
 
 	}
@@ -228,7 +228,7 @@ namespace Sagitta{
             }
         }
     }
-    
+    /*
     sgSceneObject *sgSceneObject::getDebugObjectToShow(void) const
     {
         return mDebugObjectToShow;
@@ -247,21 +247,36 @@ namespace Sagitta{
         mDebugObjectToShow->setParent(this);
         mDebugObjectToShow->setIsDebugObj(true);
         return original;
-    }
+    }*/
     
     void sgSceneObject::showDebug(bool show)
     {
-        if(!mDebugObjectToShow)
-            return ;
-        
-        if(show)
-        {
-            mDebugObjectToShow->setActive(true);
-        }
-        else
-        {
-            mDebugObjectToShow->setActive(false);
-        }
+		ChildNodeMap::iterator it = m_Children.begin();
+		for(; it!=m_Children.end(); ++it)
+		{
+			sgSceneObject *child = dynamic_cast<sgSceneObject*>(it->second);
+			if(child)
+			{
+				if(child->isDebugObj())
+				{
+					if(show)
+					{
+						child->setActive(true);
+					}
+					else
+					{
+						child->setActive(false);
+					}
+				}
+				else
+				{
+					child->showDebug(show);
+				}
+				
+			}
+
+		}
+
     }
 
 } // namespace Sagitta
