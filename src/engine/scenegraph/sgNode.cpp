@@ -522,4 +522,62 @@ namespace Sagitta{
         
     }
 
+	void sgNode::setAbsoluteOrientation( const Quaternion &aq )
+	{
+		Quaternion q = Quaternion::IDENTITY;
+		if(parent())
+		{
+			q = parent()->absoluteOrientation().inverse();
+		}
+		setRelativeOrientation(q * aq);
+	}
+
+	void sgNode::getInheritsNodes( NodeList &outlist, size_t count /*= 0*/, const StringHandleSet &classTypefilter /*= StringHandleSet()*/ )
+	{
+		outlist.clear();
+		if(count > 0)
+			outlist.reserve(count);
+		else
+			count = size_t(-1) - 1;
+
+		bool doFilter = true;
+		if(classTypefilter.empty())
+			doFilter = false;
+
+		size_t mycount = 0;
+
+		if(mycount == count)
+			return ;
+
+		sg_list(sgNode*) nodeQueue;
+		nodeQueue.push_back(this);
+
+		ChildNodeMap *childMap = &m_Children;
+		ChildNodeMap::const_iterator it = childMap->begin();
+		while(mycount < count && !nodeQueue.empty())
+		{
+			sgNode *node = nodeQueue.front();
+			nodeQueue.pop_front();
+			// do sth.
+			if(!doFilter)
+			{
+				outlist.push_back(node);
+				++mycount;
+			}
+			else if(classTypefilter.find(node->GetMyClassName()) != classTypefilter.end())
+			{
+				outlist.push_back(node);
+				++mycount;
+			}
+
+			childMap = &(node->m_Children);
+			it = childMap->begin();
+			for(; it!=childMap->end(); ++it)
+			{
+				nodeQueue.push_back(it->second);
+			}
+
+		}
+	}
+
 } // namespace Sagitta

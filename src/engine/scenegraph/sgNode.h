@@ -11,6 +11,7 @@
 #include "math/sgMathHeader.h"
 #include "engine/common/sgIterator.h"
 #include <map>
+#include <vector>
 
 // DECLARES //////////////////////////////////////////
 
@@ -43,6 +44,10 @@ namespace Sagitta{
 	// type defines
 	protected:
 		typedef sg_map(id_type, sgNode*) ChildNodeMap;
+
+	public:
+		typedef sg_vector(sgNode*) NodeList;
+
 	public:
 		typedef sgMapIterator<ChildNodeMap> ChildIterator;
 		typedef sgConstMapIterator<ChildNodeMap> ConstChildIterator;
@@ -203,6 +208,8 @@ namespace Sagitta{
 				Note that rotations are oriented around the node's origin.
 		*/
 		void setRelativeOrientation(const Quaternion &aq);
+
+		void setAbsoluteOrientation(const Quaternion &aq);
 
 		/** Resets the nodes relative orientation (local axes as world axes, no rotation).
 			@remarks
@@ -419,6 +426,9 @@ namespace Sagitta{
 		/** Gets const child iterator. */
 		ConstChildIterator getConstChildIterator(void) const;
         
+		/** collect nodes from the node tree */
+		void getInheritsNodes(NodeList &outlist, size_t count = 0, const StringHandleSet &classTypefilter = StringHandleSet());
+
 	}; //#### end class sgNode
 
 } // namespace Sagitta

@@ -26,6 +26,7 @@ namespace Sagitta{
 			};
 
 			std::string jointName;
+			std::string joint2Name;
 			std::string bodyName;
 			int shapeType;		// 0 - capsule, 1 - box
 			float width;			// for capsule, it's radius
@@ -41,6 +42,8 @@ namespace Sagitta{
 			float mass;
 			bool haveInertia;	
 			Vector3 inertia;
+
+			bool ifSyncPos;
 		};
 
 		struct BodyInfoSet
@@ -67,6 +70,7 @@ namespace Sagitta{
 	Archive &operator & (Archive &archive, sgRagdollConfig::BodyInfo &obj)
 	{
 		archive & SG_MAKE_NVP("jointName", obj.jointName);
+		archive & SG_MAKE_NVP("joint2Name", obj.joint2Name);
 		archive & SG_MAKE_NVP("bodyName", obj.bodyName);
 		
 		archive & SG_MAKE_NVP("shapeType", obj.shapeType);
@@ -83,6 +87,8 @@ namespace Sagitta{
 		archive & SG_MAKE_NVP("mass", obj.mass);
 		archive & SG_MAKE_NVP("haveInertia", obj.haveInertia);
 		archive & SG_MAKE_NVP("inertia", obj.inertia);
+
+		archive & SG_MAKE_NVP("ifSyncPos", obj.ifSyncPos);
 
 		return archive;
 	}

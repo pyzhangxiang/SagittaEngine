@@ -1,77 +1,77 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <root>
 	<mBodyInfo vec_size="15">
-		<0 jointName="Chest" bodyName="Pelvis" shapeType="1" width="26.448" height="11.6235" thick="8.001" posOnJoint="0" constraintTo="" mass="15.091" haveInertia="1" ifCollideWithParent="0">
+		<0 jointName="Hips" joint2Name="Chest" bodyName="Pelvis" shapeType="1" width="26.448" height="11.6235" thick="8.001" posOnJoint="0" constraintTo="" mass="15.091" haveInertia="1" ifCollideWithParent="0" ifSyncPos="1">
 			<angleLowerLimit x="0" y="0" z="0"/>
 			<angleUpperLimit x="0" y="0" z="0"/>
 			<inertia x="3062.028" y="2768.13" z="1179.14"/>
 		</0>
-		<1 jointName="Chest2" bodyName="Trunk" shapeType="1" width="30.826" height="33.4208" thick="10.001" posOnJoint="1" constraintTo="Pelvis" mass="10.021" haveInertia="1" ifCollideWithParent="0">
+		<1 jointName="Chest2" joint2Name="" bodyName="Trunk" shapeType="1" width="30.826" height="33.4208" thick="10.001" posOnJoint="1" constraintTo="Pelvis" mass="10.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
 			<angleLowerLimit x="-45" y="-55" z="-50"/>
 			<angleUpperLimit x="90" y="55" z="50"/>
 			<inertia x="1200.033" y="695.179" z="1076.374"/>
 		</1>
-    <2 jointName="LeftKnee" bodyName="LeftThigh" shapeType="1" width="5.001" height="46.9773" thick="5.001" posOnJoint="0" constraintTo="Pelvis" mass="8.253" haveInertia="1" ifCollideWithParent="0">
+    <2 jointName="LeftHip" joint2Name="" bodyName="LeftThigh" shapeType="1" width="5.001" height="46.9773" thick="5.001" posOnJoint="0" constraintTo="Pelvis" mass="8.253" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-90" y="-20" z="-20"/>
       <angleUpperLimit x="90" y="80" z="30"/>
       <inertia x="1452.761" y="1475.093" z="239.143"/>
     </2>
-    <3 jointName="RightKnee" bodyName="RightThigh" shapeType="1" width="5.001" height="46.9773" thick="5.001" posOnJoint="0" constraintTo="Pelvis" mass="8.253" haveInertia="1" ifCollideWithParent="0">
+    <3 jointName="RightHip" joint2Name="" bodyName="RightThigh" shapeType="1" width="5.001" height="46.9773" thick="5.001" posOnJoint="0" constraintTo="Pelvis" mass="8.253" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-90" y="-80" z="-30"/>
       <angleUpperLimit x="90" y="20" z="20"/>
       <inertia x="1452.761" y="1475.093" z="239.143"/>
     </3>
-    <4 jointName="LeftAnkle" bodyName="LeftCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="LeftThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0">
+    <4 jointName="LeftKnee" joint2Name="" bodyName="LeftCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="LeftThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="0" y="0" z="0"/>
       <angleUpperLimit x="90" y="0" z="0"/>
       <inertia x="220.765" y="218.578" z="23.462"/>
     </4>
-    <5 jointName="RightAnkle" bodyName="RightCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="LeftThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0">
+    <5 jointName="RightKnee" joint2Name="" bodyName="RightCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="LeftThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="0" y="0" z="0"/>
       <angleUpperLimit x="90" y="0" z="0"/>
       <inertia x="220.765" y="218.578" z="23.462"/>
     </5>
-    <6 jointName="Head" bodyName="Head" shapeType="1" width="5.001" height="20.6018" thick="5.001" posOnJoint="1" constraintTo="Trunk" mass="5.482" haveInertia="1" ifCollideWithParent="0">
+    <6 jointName="Head" joint2Name="" bodyName="Head" shapeType="1" width="5.001" height="20.6018" thick="5.001" posOnJoint="1" constraintTo="Trunk" mass="5.482" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-60" y="-80" z="-70"/>
       <angleUpperLimit x="90" y="80" z="70"/>
       <inertia x="326.657" y="343.593" z="191.414"/>
     </6>
-    <7 jointName="LeftFoot" bodyName="LeftFoot" shapeType="1" width="8.001" height="10.2547" thick="3.001" posOnJoint="0" constraintTo="LeftCrus" mass="0.884" haveInertia="0" ifCollideWithParent="0">
+    <7 jointName="LeftAnkle" joint2Name="" bodyName="LeftFoot" shapeType="1" width="5.001" height="10.2547" thick="12.3862" posOnJoint="0" constraintTo="LeftCrus" mass="0.884" haveInertia="0" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-45" y="0" z="-50"/>
       <angleUpperLimit x="50" y="0" z="2"/>
       <inertia x="0" y="0" z="0"/>
     </7>
-    <8 jointName="RightFoot" bodyName="RightFoot" shapeType="1" width="8.001" height="10.2547" thick="3.001" posOnJoint="0" constraintTo="RightCrus" mass="0.884" haveInertia="0" ifCollideWithParent="0">
+    <8 jointName="RightAnkle" joint2Name="" bodyName="RightFoot" shapeType="1" width="5.001" height="10.2547" thick="12.3862" posOnJoint="0" constraintTo="RightCrus" mass="0.884" haveInertia="0" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-45" y="0" z="-2"/>
       <angleUpperLimit x="50" y="0" z="50"/>
       <inertia x="0" y="0" z="0"/>
     </8>
-    <9 jointName="LeftElbow" bodyName="LeftUpperArm" shapeType="1" width="3.001" height="30.7247" thick="3.001" posOnJoint="0" constraintTo="Trunk" mass="1.539" haveInertia="1" ifCollideWithParent="1">
+    <9 jointName="LeftShoulder" joint2Name="" bodyName="LeftUpperArm" shapeType="1" width="3.001" height="30.7247" thick="3.001" posOnJoint="0" constraintTo="Trunk" mass="1.539" haveInertia="1" ifCollideWithParent="1" ifSyncPos="0">
       <angleLowerLimit x="-180" y="-60" z="-40"/>
       <angleUpperLimit x="90" y="80" z="130"/>
       <inertia x="117.998" y="121.815" z="15.825"/>
     </9>
-    <10 jointName="RightElbow" bodyName="RightUpperArm" shapeType="1" width="3.001" height="30.7247" thick="3.001" posOnJoint="0" constraintTo="Trunk" mass="1.539" haveInertia="1" ifCollideWithParent="1">
+    <10 jointName="RightShoulder" joint2Name="" bodyName="RightUpperArm" shapeType="1" width="3.001" height="30.7247" thick="3.001" posOnJoint="0" constraintTo="Trunk" mass="1.539" haveInertia="1" ifCollideWithParent="1" ifSyncPos="0">
       <angleLowerLimit x="-180" y="-80" z="-130"/>
       <angleUpperLimit x="90" y="60" z="40"/>
       <inertia x="117.998" y="121.815" z="15.825"/>
     </10>
-    <11 jointName="LeftWrist" bodyName="LeftForeArm" shapeType="1" width="2.001" height="24.9766" thick="2.001" posOnJoint="0" constraintTo="LeftUpperArm" mass="0.776" haveInertia="1" ifCollideWithParent="0">
+    <11 jointName="LeftElbow" joint2Name="" bodyName="LeftForeArm" shapeType="1" width="2.001" height="24.9766" thick="2.001" posOnJoint="0" constraintTo="LeftUpperArm" mass="0.776" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-150" y="-30" z="-90"/>
       <angleUpperLimit x="0" y="40" z="0"/>
       <inertia x="30.631" y="29.581" z="7.248"/>
     </11>
-    <12 jointName="RightWrist" bodyName="RightForeArm" shapeType="1" width="2.001" height="24.9766" thick="2.001" posOnJoint="0" constraintTo="RightUpperArm" mass="0.776" haveInertia="1" ifCollideWithParent="0">
+    <12 jointName="RightElbow" joint2Name="" bodyName="RightForeArm" shapeType="1" width="2.001" height="24.9766" thick="2.001" posOnJoint="0" constraintTo="RightUpperArm" mass="0.776" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-150" y="-40" z="0"/>
       <angleUpperLimit x="0" y="30" z="90"/>
       <inertia x="30.631" y="29.581" z="7.248"/>
     </12>
-    <13 jointName="LeftHand" bodyName="LeftHand" shapeType="1" width="0.701" height="18.7451" thick="8.001" posOnJoint="0" constraintTo="LeftForeArm" mass="0.377" haveInertia="0" ifCollideWithParent="0">
+    <13 jointName="LeftWrist" joint2Name="" bodyName="LeftHand" shapeType="1" width="0.701" height="18.7451" thick="8.001" posOnJoint="0" constraintTo="LeftForeArm" mass="0.377" haveInertia="0" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-45" y="-90" z="-90"/>
       <angleUpperLimit x="45" y="10" z="90"/>
       <inertia x="0" y="0" z="0"/>
     </13>
-    <14 jointName="RightHand" bodyName="RightHand" shapeType="1" width="0.701" height="18.7451" thick="8.001" posOnJoint="0" constraintTo="RightForeArm" mass="0.377" haveInertia="0" ifCollideWithParent="0">
+    <14 jointName="RightWrist" joint2Name="" bodyName="RightHand" shapeType="1" width="0.701" height="18.7451" thick="8.001" posOnJoint="0" constraintTo="RightForeArm" mass="0.377" haveInertia="0" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-45" y="-10" z="-90"/>
       <angleUpperLimit x="45" y="90" z="90"/>
       <inertia x="0" y="0" z="0"/>

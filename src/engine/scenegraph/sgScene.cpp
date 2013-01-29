@@ -11,7 +11,9 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgScene::sgScene(void) 
 	: sgObject(), mpRoot(NULL)
-	, mPhysicsEnabled(false), mDynamicsWorld(NULL)
+	, mPhysicsEnabled(false)
+	, mPhysicsContinuous(true)
+	, mDynamicsWorld(NULL)
     {
         mAmbiantColor = Color(Color::GLColor(0.1, 0.1, 0.1, 1.0));
         
@@ -38,7 +40,7 @@ namespace Sagitta{
 
 	void sgScene::update( Float32 deltaTime )
 	{
-		if(mPhysicsEnabled)
+		if(mPhysicsEnabled && mPhysicsContinuous)
 		{
 			// physics step
 			mDynamicsWorld->stepSimulation(deltaTime);
@@ -60,6 +62,19 @@ namespace Sagitta{
 	void sgScene::setPhysicsEnabled( bool enable )
 	{
 		mPhysicsEnabled = enable;
+	}
+
+	void sgScene::setPhysicsContinuous( bool continuous )
+	{
+		mPhysicsContinuous = continuous;
+	}
+
+	void sgScene::stepPhysics( Float32 deltaTime )
+	{
+		if(mPhysicsEnabled && !mPhysicsContinuous)
+		{
+			mDynamicsWorld->stepSimulation(deltaTime);
+		}
 	}
 	/*
     const sgRenderState &sgScene::getRenderState(void) const

@@ -4,9 +4,11 @@
 
 #include "math/SagittaPlatform.h"
 #include "Singleton.h"
+#include "sgStlAllocator.h"
 #include <vector>
 #include <map>
 #include <string>
+#include <set>
 
 namespace Sagitta
 {
@@ -55,6 +57,9 @@ namespace Sagitta
         static size_t getStringMemSize(void);
 
     };
+
+	typedef sg_vector(sgStrHandle) StringHandleList;
+	typedef sg_set(sgStrHandle) StringHandleSet;
     
     class sgStrHandleCenter : public Singleton<sgStrHandleCenter>
     {

@@ -46,6 +46,9 @@ namespace Sagitta{
 		sgSceneObject *getRoot(void) const;
         sgBoneObject *getBoneRoot(void) const;
 		virtual void update(Float32 deltaTime);
+
+		sgBoneObject *getBoneNode(const std::string &bonename) const;
+		size_t getBoneNum(void) const{ return mBoneNodeMap.size(); }
         
         sgSceneObject *parent(void) const;
 

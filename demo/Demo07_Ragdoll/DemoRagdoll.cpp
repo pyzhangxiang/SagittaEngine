@@ -26,6 +26,11 @@
 #include <engine/scenegraph/sgSkeleton.h>
 #include "engine/component/sgAnimationComponent.h"
 #include "engine/resource/sgAnimation.h"
+#include "engine/scenegraph/sgRagdoll.h"
+#include "engine/component/sgRigidBodyComponent.h"
+#include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "BulletCollision/CollisionShapes/btBoxShape.h"
+#include "LinearMath/btDefaultMotionState.h"
 using namespace Sagitta;
 
 DemoRagdoll::DemoRagdoll() 
@@ -159,11 +164,27 @@ void DemoRagdoll::prepare(void)
             planeRsComp->addTexture(textureChess->getFilename());
         }
 
+		{
+			sgRigidBodyComponent *planeRigidBody = (sgRigidBodyComponent*)plane->createComponent(sgRigidBodyComponent::GetClassTypeName());
+			btCollisionShape* planeShape = new btBoxShape(btVector3(1250, 1250, 10));
+			btTransform startTransform;
+			startTransform.setIdentity();
+			startTransform.setOrigin(btVector3(0,-10,0));
+			btVector3 localInertia(0,0,0);
+			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+			btDefaultMotionState* planeMotionState = new btDefaultMotionState(startTransform);
+			btRigidBody::btRigidBodyConstructionInfo rbInfo(0, planeMotionState, planeShape, localInertia);
+			btRigidBody* planeBody = new btRigidBody(rbInfo);
+
+			planeRigidBody->setRigidBody(planeBody);
+		}
+		
+
 		// place cube 
 		sgSceneObject *objRoot = //sgLoader::load_pod("scene/podscene1/scene.pod");
                         sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mTargetRoot);
-		mTargetRoot->translate(Vector3(20.0f, 10.0f, -2.5f));
+		mTargetRoot->translate(Vector3(20.0f, 100.0f, -2.5f));
 		objRoot->scale(Vector3(10.0f));
 		objRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
@@ -177,6 +198,21 @@ void DemoRagdoll::prepare(void)
 			cubeRsComp->addTexture(texture->getFilename());
 		}
 
+		{
+			sgRigidBodyComponent *planeRigidBody = (sgRigidBodyComponent*)objCube->createComponent(sgRigidBodyComponent::GetClassTypeName());
+			btCollisionShape* planeShape = new btBoxShape(btVector3(5.0f, 5.0f, 5.0f));
+			btTransform startTransform;
+			startTransform.setIdentity();
+			//startTransform.setOrigin(btVector3(0,-10,0));
+			btVector3 localInertia(0,0,0);
+			planeShape->calculateLocalInertia(1.0f, localInertia);
+			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+			btDefaultMotionState* planeMotionState = new btDefaultMotionState(startTransform);
+			btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0, planeMotionState, planeShape, localInertia);
+			btRigidBody* planeBody = new btRigidBody(rbInfo);
+
+			planeRigidBody->setRigidBody(planeBody);
+		}
 		
 		sgSceneObject *player = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		player->setParent(mScene->getRoot());
@@ -184,15 +220,35 @@ void DemoRagdoll::prepare(void)
 		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
 		player->setSkeleton(pSkeleton);
 
-		/*sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");
+		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
+		sgRagdoll *ragdoll = (sgRagdoll*)sgObject::createObject(sgRagdoll::GetClassTypeName());
+		ragdoll->setRagdollConfig(ragdollConfig->getFilename());
+		player->setRagdoll(ragdoll);
+
+		sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");
 		sgAnimationComponent *animComp = (sgAnimationComponent*)player->createComponent(sgAnimationComponent::GetClassTypeName());
 		animComp->setAnimationFile(pAnimation->getFilename());
 		animComp->setPlayMode(sgAnimationComponent::PM_LOOP);
-		animComp->play();*/
+		//animComp->play();
 
-		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
-
-		int i=0;
-		i++;
+		mScene->setPhysicsEnabled(true);
+		mScene->setPhysicsContinuous(false);
+		
 	}
+}
+
+void DemoRagdoll::keyPressEvent( sgKeyEvent &event )
+{
+	if(mScene && mCamera)
+	{
+		switch(event.key)
+		{
+		case 'n':
+		case 'N':
+			mScene->stepPhysics(0.003);
+			return ;
+		}
+	}
+
+	sgDemo::keyPressEvent(event);
 }

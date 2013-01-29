@@ -32,6 +32,7 @@ namespace Sagitta
 		_removeFromDynamicsWorld();
 		release();
 		mRigidBody = body;
+		resetTransform();
 		_addToDynamicsWorld();
 
 	}
@@ -100,5 +101,54 @@ namespace Sagitta
 			delete mRigidBody;
 			mRigidBody = 0;
 		}
+	}
+
+	void sgRigidBodyComponent::update( Float32 deltaTime )
+	{
+		sgSceneObject *parent = getParent();
+		if(!parent)
+			return ;
+		sgScene *scene = parent->getScene();
+		if(!scene)
+			return ;
+
+		if(scene->isPhysicsEnabled())
+		{
+			syncTransformToSkeleton();
+		}
+		else
+		{
+			resetTransform();
+		}
+	}
+
+	void sgRigidBodyComponent::resetTransform( void )
+	{
+		sgSceneObject *parent = getParent();
+		if(!parent)
+			return ;
+
+		btTransform bodyTrans = mRigidBody->getWorldTransform();
+
+		Quaternion q = parent->absoluteOrientation();
+		bodyTrans.setRotation(btQuaternion(q.x(), q.y(), q.z(), q.w()));
+
+		Vector3 pos = parent->absolutePosition();
+		bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+		mRigidBody->setWorldTransform(bodyTrans);
+	}
+
+	void sgRigidBodyComponent::syncTransformToSkeleton( void )
+	{
+		sgSceneObject *parent = getParent();
+		if(!parent)
+			return ;
+
+		btTransform bodyTrans = mRigidBody->getWorldTransform();
+		btQuaternion q = bodyTrans.getRotation();
+		parent->setAbsoluteOrientation(Quaternion(q.w(), q.x(), q.y(), q.z()));
+
+		btVector3 pos = bodyTrans.getOrigin();
+		parent->setAbsolutePosition(Vector3(pos.x(), pos.y(), pos.z()));
 	}
 }

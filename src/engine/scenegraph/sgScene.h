@@ -31,6 +31,7 @@ namespace Sagitta{
         //sgRenderState mRenderState;
         
 		bool mPhysicsEnabled;
+		bool mPhysicsContinuous;
 		sgDynamicsWorld *mDynamicsWorld;
 
 	// constructors & destructor
@@ -45,8 +46,11 @@ namespace Sagitta{
         const Color &getAmbiantColor(void) const;
         void setAmbiantColor(const Color &color);
 
-		bool ismPhysicsEnabled(void) const{ return mPhysicsEnabled; }
+		bool isPhysicsEnabled(void) const{ return mPhysicsEnabled; }
 		void setPhysicsEnabled(bool enable);
+		bool isPhysicsContinuous(void) const{ return mPhysicsContinuous; }
+		void setPhysicsContinuous(bool continuous);
+		void stepPhysics(Float32 deltaTime);
 		sgDynamicsWorld *getDynamicsWorld(void) const{ return mDynamicsWorld; }
 
         //const sgRenderState &getRenderState(void) const;

@@ -132,4 +132,15 @@ namespace Sagitta{
         }
     }
 
+	sgBoneObject * sgSkeleton::getBoneNode( const std::string &bonename ) const
+	{
+		BoneNodeMap::const_iterator it = mBoneNodeMap.find(bonename);
+		if(it == mBoneNodeMap.end())
+		{
+			return 0;
+		}
+
+		return it->second;
+	}
+
 } // namespace Sagitta

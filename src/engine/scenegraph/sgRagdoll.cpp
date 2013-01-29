@@ -16,6 +16,8 @@
 #include "LinearMath/btDefaultMotionState.h"
 #include "sgScene.h"
 #include "sgDynamicsWorld.h"
+#include "sgSkeleton.h"
+#include "sgNode.h"
 
 namespace Sagitta{
     
@@ -33,7 +35,7 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgRagdoll::~sgRagdoll(void)
     {
-        
+        release();
 	}
 
 	void sgRagdoll::setParent( sgSceneObject *parent )
@@ -96,7 +98,7 @@ namespace Sagitta{
 			meshComp->setMeshFile(meshCube->getFilename());
 
 			// rigidbody
-			btCollisionShape* colShape = new btBoxShape(btVector3(bi.width, bi.height, bi.thick));
+			btCollisionShape* colShape = new btBoxShape(btVector3(bi.width*0.5f, bi.height*0.5f, bi.thick*0.5f));
 			
 			btTransform startTransform;
 			startTransform.setIdentity();
@@ -122,6 +124,7 @@ namespace Sagitta{
 			mybody.object = obj;
 
 			mBodyMap.insert(std::make_pair(bi.bodyName, mybody));
+			mBodyMapByJointName.insert(std::make_pair(bi.jointName, mybody));
 		}
 
 		resetTransform();
@@ -155,10 +158,55 @@ namespace Sagitta{
 
 			const sgRagdollConfig::BodyInfo &bi = biIt->second;
 
-			// todo
-			
-			// constrain
+			sgBoneObject *boneNode = skeleton->getBoneNode(bi.jointName);
+			if(!boneNode)
+				continue;
 
+			btTransform bodyTrans = b.body->getWorldTransform();
+
+			if(bi.posOnJoint)
+			{
+				const Vector3 &pos = boneNode->absolutePosition();
+				b.object->setAbsolutePosition(pos);
+				bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+				
+				
+			}
+			else
+			{
+				sgBoneObject *boneNode2 = 0;
+				if( ! (bi.joint2Name.empty()) )
+					boneNode2 = skeleton->getBoneNode(bi.joint2Name);
+				if(!boneNode2)
+				{
+					sgNode::ConstChildIterator cit = boneNode->getConstChildIterator();
+					while(cit.hasMoreElements())
+					{
+						boneNode2 = dynamic_cast<sgBoneObject*>(cit.value());
+						if(boneNode2)
+							break;
+						++cit;
+					}
+				}
+				if(!boneNode2)
+				{
+					const Vector3 &pos = boneNode->absolutePosition();
+					b.object->setAbsolutePosition(pos);
+					bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+				}
+				else
+				{
+					Vector3 pos = (boneNode->absolutePosition() + boneNode2->absolutePosition()) * 0.5f;
+					b.object->setAbsolutePosition(pos);
+					bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+				}
+			}
+
+			const Quaternion &q = boneNode->absoluteOrientation();
+			b.object->setAbsoluteOrientation(boneNode->absoluteOrientation());
+			bodyTrans.setRotation(btQuaternion(q.x(), q.y(), q.z(), q.w()));
+			b.body->setWorldTransform(bodyTrans);
+			// constrain
 		}
 	}
 
@@ -227,7 +275,83 @@ namespace Sagitta{
 		}
 
 		mBodyMap.clear();
+		mBodyMapByJointName.clear();
 	}
 
-	
+	void sgRagdoll::update( Float32 deltaTime )
+	{
+		sgScene *scene = 0;
+		if(mParentObject)
+		{
+			scene = mParentObject->getScene();
+		}
+		if(!scene)
+			return ;
+
+		if(scene->isPhysicsEnabled())
+		{
+			syncTransformToSkeleton();
+		}
+		else
+		{
+			resetTransform();
+		}
+
+	}
+
+	void sgRagdoll::syncTransformToSkeleton( void )
+	{
+		if(!mParentObject)
+		{
+			return ;
+		}
+
+		sgSkeleton *skeleton = mParentObject->getSkeleton();
+		if(!skeleton)
+			return ;
+
+		sgRagdollConfig *conf = (sgRagdollConfig*)sgResourceCenter::instance()->findResource(mRagdollConfig);
+		if(!conf)
+			return ;
+		const sgRagdollConfig::BodyInfoMap &bodyset = conf->getBodyInfoSet();
+
+		StringHandleSet boneFilter;
+		boneFilter.insert(sgBoneObject::GetClassTypeName());
+		sgNode::NodeList boneList;
+		skeleton->getRoot()->getInheritsNodes(boneList, skeleton->getBoneNum(), boneFilter);
+		for(size_t i=0; i<boneList.size(); ++i)
+		{
+			sgBoneObject *boneNode = dynamic_cast<sgBoneObject*>(boneList[i]);
+			if(!boneNode)
+				continue;
+
+			BodyMap::iterator it = mBodyMapByJointName.find(boneNode->getName());
+			if(it == mBodyMapByJointName.end())
+				continue;
+			Body &b = it->second;
+
+			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
+			if(biIt == bodyset.end())
+				continue;
+			const sgRagdollConfig::BodyInfo &bi = biIt->second;
+
+			btTransform bodyTrans = b.body->getWorldTransform();
+
+			btQuaternion q = bodyTrans.getRotation();
+			Quaternion myq(q.w(), q.x(), q.y(), q.z());
+			b.object->setAbsoluteOrientation(myq);
+			boneNode->setAbsoluteOrientation(myq);
+
+			btVector3 pos = bodyTrans.getOrigin();
+			Vector3 mypos(pos.x(), pos.y(), pos.z());
+			b.object->setAbsolutePosition(mypos);
+			if(bi.ifSyncPos)
+			{
+				boneNode->setAbsolutePosition(mypos);
+			}
+			
+			// constrain
+		}
+	}
+
 } // namespace Sagitta

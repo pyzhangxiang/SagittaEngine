@@ -14,6 +14,7 @@ namespace Sagitta{
 
 	class sgScene;
     class sgSkeleton;
+	class sgRagdoll;
 
 	class _SG_KernelExport sgSceneObject : public sgNode
     {
@@ -40,6 +41,7 @@ namespace Sagitta{
 		bool mbSceneChanged;
         
         sgSkeleton *mpSkeleton;
+		sgRagdoll *mpRagdoll;
         
         bool mCastShadow;
 	// constructors & destructor
@@ -58,6 +60,9 @@ namespace Sagitta{
         sgSkeleton *getSkeleton(void) const;
         /// the skeleton's root will become a child of the oject
         sgSkeleton *setSkeleton(sgSkeleton *pSkeleton);
+
+		sgRagdoll *getRagdoll(void) const{ return mpRagdoll; }
+		sgRagdoll *setRagdoll(sgRagdoll *ragdoll);
 
 		/// create a component by its type(class name)
 		sgComponent *createComponent(const sgStrHandle &type);

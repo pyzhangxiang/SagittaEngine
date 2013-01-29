@@ -36,6 +36,7 @@ namespace Sagitta{
 		};
 		typedef sg_map(std::string, Body) BodyMap;
 		BodyMap mBodyMap;
+		BodyMap mBodyMapByJointName;
 		
 	public:
 		sgRagdoll(void);
@@ -46,6 +47,9 @@ namespace Sagitta{
 		void removeFromScene(void);
 
 		void resetTransform(void);
+		void syncTransformToSkeleton(void);
+
+		void update(Float32 deltaTime);
 
 		sgSceneObject *parent(void) const{ return mParentObject; }
 

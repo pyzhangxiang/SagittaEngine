@@ -5,6 +5,7 @@
 #include "sgScene.h"
 #include "sgSkeleton.h"
 #include "engine/common/sgException.h"
+#include "sgRagdoll.h"
 
 namespace Sagitta{
 
@@ -15,6 +16,7 @@ namespace Sagitta{
 	sgSceneObject::sgSceneObject(void) 
 	: sgNode(), mpScene(0)
     , mbSceneChanged(true), mpSkeleton(0)
+	, mpRagdoll(0)
     , mCastShadow(true)
     , mIsDebugObj(false)//, mDebugObjectToShow(0)
     {
@@ -95,6 +97,9 @@ namespace Sagitta{
         
         if(mpSkeleton)
             mpSkeleton->update(deltaTime);
+
+		if(mpRagdoll)
+			mpRagdoll->update(deltaTime);
 
 		sgNode::update(deltaTime);
 	}
@@ -278,5 +283,18 @@ namespace Sagitta{
 		}
 
     }
+
+	sgRagdoll * sgSceneObject::setRagdoll( sgRagdoll *ragdoll )
+	{
+		sgRagdoll *original = mpRagdoll;
+		if(original == ragdoll)
+			return original;
+		if(original)
+			original->setParent(0);
+
+		mpRagdoll = ragdoll;
+		mpRagdoll->setParent(this);
+		return original;
+	}
 
 } // namespace Sagitta

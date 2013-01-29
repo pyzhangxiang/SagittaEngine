@@ -11,6 +11,9 @@ public:
 
 protected:
     virtual void prepare(void);
+
+public:
+	virtual void keyPressEvent(sgKeyEvent &event);
 };
 
 #endif // __DEMOSHADOWMAP_H__
