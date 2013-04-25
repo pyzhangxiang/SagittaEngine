@@ -505,7 +505,8 @@ namespace Sagitta{
 
 	void sgNode::update( Float32 deltaTime )
 	{
-		_updateFromParent();
+		if(m_bNeedUpdateFromParent)
+			_updateFromParent();
 
 		// update children
 		ChildNodeMap::iterator it = m_Children.begin();

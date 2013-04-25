@@ -33,6 +33,8 @@ namespace Sagitta{
 		for(size_t i=0; i<bis.mBodyInfo.size(); ++i)
 		{
 			BodyInfo &bi = bis.mBodyInfo[i];
+			bi.angleLowerLimit *= Math::DEG_TO_RAD;
+			bi.angleUpperLimit *= Math::DEG_TO_RAD;
 
 			mBodyInfoSet.insert(std::make_pair(bi.bodyName, bi));
 		}

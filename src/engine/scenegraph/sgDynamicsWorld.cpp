@@ -63,6 +63,7 @@ namespace Sagitta{
 
 		mRigidBodySet.erase(body);
 		m_dynamicsWorld->removeRigidBody(body);
+
 	}
 
 	int sgDynamicsWorld::stepSimulation( Float32 timeStep, int maxSubSteps/*=1*/, Float32 fixedTimeStep/*=1.0f/60.0f*/ )
@@ -70,4 +71,30 @@ namespace Sagitta{
 		return m_dynamicsWorld->stepSimulation(timeStep, maxSubSteps, fixedTimeStep);
 	}
 
+	void sgDynamicsWorld::addConstraint( btTypedConstraint* constraint, bool disableCollisionsBetweenLinkedBodies/*=false*/ )
+	{
+		if(!constraint)
+			return ;
+
+		ConstraintSet::iterator it = mConstraintSet.find(constraint);
+		if(it != mConstraintSet.end())
+			return ;
+
+		mConstraintSet.insert(constraint);
+		m_dynamicsWorld->addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
+
+	}
+
+	void sgDynamicsWorld::removeConstraint( btTypedConstraint* constraint )
+	{
+		if(!constraint)
+			return ;
+
+		ConstraintSet::iterator it = mConstraintSet.find(constraint);
+		if(it == mConstraintSet.end())
+			return ;
+
+		mConstraintSet.erase(constraint);
+		m_dynamicsWorld->removeConstraint(constraint);
+	}
 } // namespace Sagitta

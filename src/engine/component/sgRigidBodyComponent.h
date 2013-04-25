@@ -6,6 +6,7 @@
 
 #include "sgComponent.h"
 #include "engine/common/sgStrHandle.h"
+#include "math/sgVector3.h"
 
 class btRigidBody;
 
@@ -22,6 +23,8 @@ namespace Sagitta{
 		btRigidBody *mRigidBody;
 		id_type mCurrentDynamicsWorld;
 
+		Vector3 mOffset;
+
 	public:
 		sgRigidBodyComponent(void);
 		virtual ~sgRigidBodyComponent(void);
@@ -37,6 +40,9 @@ namespace Sagitta{
 
 		void resetTransform(void);
 		void syncTransformToSkeleton(void);
+
+		const Vector3 &getOffset(void) const{ return mOffset; }
+		void setOffset(const Vector3 &offset){ mOffset = offset; }
 
 	private:
 		void release(void);

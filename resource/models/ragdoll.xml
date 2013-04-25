@@ -26,7 +26,7 @@
       <angleUpperLimit x="90" y="0" z="0"/>
       <inertia x="220.765" y="218.578" z="23.462"/>
     </4>
-    <5 jointName="RightKnee" joint2Name="" bodyName="RightCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="LeftThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
+    <5 jointName="RightKnee" joint2Name="" bodyName="RightCrus" shapeType="1" width="4.001" height="45.6547" thick="4.001" posOnJoint="0" constraintTo="RightThigh" mass="3.358" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="0" y="0" z="0"/>
       <angleUpperLimit x="90" y="0" z="0"/>
       <inertia x="220.765" y="218.578" z="23.462"/>

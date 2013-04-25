@@ -13,6 +13,7 @@ class btCollisionDispatcher;
 class btConstraintSolver;
 class btDefaultCollisionConfiguration;
 class btRigidBody;
+class btTypedConstraint;
 
 namespace Sagitta{
 
@@ -30,6 +31,9 @@ namespace Sagitta{
 		typedef sg_set(btRigidBody*) RigidBodySet;
 		RigidBodySet mRigidBodySet;
 
+		typedef sg_set(btTypedConstraint*) ConstraintSet;
+		ConstraintSet mConstraintSet;
+
 	public:
 		sgDynamicsWorld(void);
 		virtual ~sgDynamicsWorld(void);
@@ -40,7 +44,9 @@ namespace Sagitta{
 
 		void addRigidBody(btRigidBody *body);
 		void removeRigidBody(btRigidBody *body);
-		
+
+		void addConstraint(btTypedConstraint* constraint, bool disableCollisionsBetweenLinkedBodies=false);
+		void removeConstraint(btTypedConstraint* constraint);
 	}; 
 
 } // namespace Sagitta

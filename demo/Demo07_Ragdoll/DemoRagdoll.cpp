@@ -35,6 +35,7 @@ using namespace Sagitta;
 
 DemoRagdoll::DemoRagdoll() 
 : sgDemo("Sagitta Demo Ragdoll", "../resource/")
+, ragdoll(0)
 {
 
 }
@@ -42,6 +43,15 @@ DemoRagdoll::DemoRagdoll()
 DemoRagdoll::~DemoRagdoll()
 {
 
+}
+
+
+void AA()
+{
+	int i = 10;
+	i++;
+	int c = 20;
+	c++;
 }
 
 void DemoRagdoll::prepare(void)
@@ -124,7 +134,7 @@ void DemoRagdoll::prepare(void)
 		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		light1->setParent(mScene->getRoot());
 		//light1->translate(Vector3(3.0f, 4.0f, 0.0f));
-        light1->translate(Vector3(4.0f, 200.0f, 10.0f));
+        light1->translate(Vector3(4.0f, 120.0f, 10.0f));
 		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassTypeName());
 		//lightComp1->setDiffuseColor(Color(0, 125, 11));
 		lightComp1->setIntensity(1008.0f);
@@ -152,6 +162,7 @@ void DemoRagdoll::prepare(void)
 		// plane
 		sgSceneObject *plane = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		plane->setParent(mScene->getRoot());
+		//plane->scale(Vector3(2500.0f, 20.0f, 2500.0f));
 		sgMeshComponent *planeComp = (sgMeshComponent*)plane->createComponent(sgMeshComponent::GetClassTypeName());
 		planeComp->setMeshFile(meshPlane->getFilename());
 		sgRenderStateComponent *planeRsComp = (sgRenderStateComponent*)plane->createComponent(sgRenderStateComponent::GetClassTypeName());
@@ -163,19 +174,20 @@ void DemoRagdoll::prepare(void)
         {
             planeRsComp->addTexture(textureChess->getFilename());
         }
-
+		
 		{
 			sgRigidBodyComponent *planeRigidBody = (sgRigidBodyComponent*)plane->createComponent(sgRigidBodyComponent::GetClassTypeName());
-			btCollisionShape* planeShape = new btBoxShape(btVector3(1250, 1250, 10));
+			btCollisionShape* planeShape = new btBoxShape(btVector3(1250.0f, 10.0f, 1250.0f));
 			btTransform startTransform;
 			startTransform.setIdentity();
-			startTransform.setOrigin(btVector3(0,-10,0));
+	//		startTransform.setOrigin(btVector3(0,-10,0));
 			btVector3 localInertia(0,0,0);
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			btDefaultMotionState* planeMotionState = new btDefaultMotionState(startTransform);
-			btRigidBody::btRigidBodyConstructionInfo rbInfo(0, planeMotionState, planeShape, localInertia);
+			btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, planeMotionState, planeShape, localInertia);
 			btRigidBody* planeBody = new btRigidBody(rbInfo);
 
+			planeRigidBody->setOffset(Vector3(0.0f, -10.0f, 0.0f));
 			planeRigidBody->setRigidBody(planeBody);
 		}
 		
@@ -185,8 +197,8 @@ void DemoRagdoll::prepare(void)
                         sgLoader::load_obj("models/cube.obj");
         objRoot->setParent(mTargetRoot);
 		mTargetRoot->translate(Vector3(20.0f, 100.0f, -2.5f));
-		objRoot->scale(Vector3(10.0f));
-		objRoot->yaw(Radian(Math::PI_DIV_4));
+		mTargetRoot->scale(Vector3(10.0f));
+		mTargetRoot->yaw(Radian(Math::PI_DIV_4));
 		//objRoot->pitch(Radian(-Math::PI_DIV_3));
 		sgSceneObject *objCube = (sgSceneObject*)objRoot->getFirstChild();
 		sgRenderStateComponent *cubeRsComp = (sgRenderStateComponent*)objCube->createComponent(sgRenderStateComponent::GetClassTypeName());
@@ -197,9 +209,9 @@ void DemoRagdoll::prepare(void)
 		{
 			cubeRsComp->addTexture(texture->getFilename());
 		}
-
+		
 		{
-			sgRigidBodyComponent *planeRigidBody = (sgRigidBodyComponent*)objCube->createComponent(sgRigidBodyComponent::GetClassTypeName());
+			sgRigidBodyComponent *planeRigidBody = (sgRigidBodyComponent*)mTargetRoot->createComponent(sgRigidBodyComponent::GetClassTypeName());
 			btCollisionShape* planeShape = new btBoxShape(btVector3(5.0f, 5.0f, 5.0f));
 			btTransform startTransform;
 			startTransform.setIdentity();
@@ -216,24 +228,63 @@ void DemoRagdoll::prepare(void)
 		
 		sgSceneObject *player = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		player->setParent(mScene->getRoot());
+	//	player->translate(Vector3(0.0f, 10.0f, 0.0f));
+
 		// load .bvh
 		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
 		player->setSkeleton(pSkeleton);
 
 		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
-		sgRagdoll *ragdoll = (sgRagdoll*)sgObject::createObject(sgRagdoll::GetClassTypeName());
+		ragdoll = (sgRagdoll*)sgObject::createObject(sgRagdoll::GetClassTypeName());
 		ragdoll->setRagdollConfig(ragdollConfig->getFilename());
 		player->setRagdoll(ragdoll);
+		
 
 		sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");
 		sgAnimationComponent *animComp = (sgAnimationComponent*)player->createComponent(sgAnimationComponent::GetClassTypeName());
 		animComp->setAnimationFile(pAnimation->getFilename());
 		animComp->setPlayMode(sgAnimationComponent::PM_LOOP);
 		//animComp->play();
+		
 
 		mScene->setPhysicsEnabled(true);
 		mScene->setPhysicsContinuous(false);
+
+/*		std::vector<std::string> aa;
 		
+		for(int i=0; i<100; ++i)
+		{
+			aa.push_back("nice");
+
+		}
+
+		for(int i=0; i<100; ++i)
+		{
+			std::cout << i;
+			std::cout << aa[i];
+			
+			aa[i] = "xx";
+		}
+
+		AA();
+
+		int a = 11;
+		int b = 12;
+		int *val = new int[5];
+		for(int i=0; i<5; ++i)
+		{
+			val[i] = i;
+		}
+
+
+		//_asm INT 3; //调用断点中断
+		//std::cout << "Hello world!";
+		_asm INT 3; //调用断点中断
+
+		int i = 0;
+
+		_asm INT 3; //调用断点中断
+		*/
 	}
 }
 
@@ -245,7 +296,14 @@ void DemoRagdoll::keyPressEvent( sgKeyEvent &event )
 		{
 		case 'n':
 		case 'N':
-			mScene->stepPhysics(0.003);
+			mScene->stepPhysics(0.103);
+			return ;
+		case 'v':
+		case 'V':
+			if(ragdoll)
+			{
+				ragdoll->setVisible(!(ragdoll->isVisible()));
+			}
 			return ;
 		}
 	}

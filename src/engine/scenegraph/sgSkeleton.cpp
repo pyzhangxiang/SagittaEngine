@@ -2,6 +2,7 @@
 #include "sgSkeleton.h"
 #include "sgSceneObject.h"
 #include "sgBoneObject.h"
+#include "sgScene.h"
 #include "engine/component/sgAnimationComponent.h"
 #include "engine/resource/sgAnimation.h"
 #include "engine/resource/sgAnimationJoint.h"
@@ -58,6 +59,11 @@ namespace Sagitta{
         sgSceneObject *parent = this->parent();
         if(!parent)
             return ;
+
+		if(parent->getRagdoll() && parent->getScene() && parent->getScene()->isPhysicsEnabled())
+		{
+			return ;
+		}
         
         sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassTypeName());
         if(!comp)

@@ -3,8 +3,15 @@
 
 #include "../DemoCore/sgDemo.h"
 
+namespace Sagitta{
+	class sgRagdoll;
+}
+
 class DemoRagdoll : public sgDemo
 {
+private:
+	Sagitta::sgRagdoll *ragdoll;
+
 public:
 	DemoRagdoll();
 	~DemoRagdoll();

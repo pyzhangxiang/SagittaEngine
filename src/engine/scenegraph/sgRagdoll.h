@@ -10,11 +10,13 @@
 // DECLARES //////////////////////////////////////////
 
 class btRigidBody;
+class btTypedConstraint;
 
 namespace Sagitta{
     
 	class sgBoneObject;
     class sgSceneObject;
+	class sgScene;
     
 
 	class _SG_KernelExport sgRagdoll : public sgObject
@@ -32,12 +34,15 @@ namespace Sagitta{
 		{
 			std::string jointName;
 			btRigidBody *body;
+			btTypedConstraint *constraint;
 			sgSceneObject *object;
 		};
 		typedef sg_map(std::string, Body) BodyMap;
 		BodyMap mBodyMap;
 		BodyMap mBodyMapByJointName;
 		
+		bool mVisible;
+
 	public:
 		sgRagdoll(void);
 		virtual ~sgRagdoll(void);
@@ -52,6 +57,11 @@ namespace Sagitta{
 		void update(Float32 deltaTime);
 
 		sgSceneObject *parent(void) const{ return mParentObject; }
+
+		sgScene *getScene(void) const;
+
+		bool isVisible(void) const{ return mVisible; }
+		void setVisible(bool visible);
 
 	protected:
 		void setParent(sgSceneObject *parent);

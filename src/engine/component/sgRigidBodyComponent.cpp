@@ -134,7 +134,7 @@ namespace Sagitta
 		bodyTrans.setRotation(btQuaternion(q.x(), q.y(), q.z(), q.w()));
 
 		Vector3 pos = parent->absolutePosition();
-		bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+		bodyTrans.setOrigin(btVector3(pos.x()+mOffset.x(), pos.y()+mOffset.y(), pos.z()+mOffset.z()));
 		mRigidBody->setWorldTransform(bodyTrans);
 	}
 
@@ -149,6 +149,7 @@ namespace Sagitta
 		parent->setAbsoluteOrientation(Quaternion(q.w(), q.x(), q.y(), q.z()));
 
 		btVector3 pos = bodyTrans.getOrigin();
-		parent->setAbsolutePosition(Vector3(pos.x(), pos.y(), pos.z()));
+		parent->setAbsolutePosition(Vector3(pos.x()-mOffset.x(), pos.y()-mOffset.y(), pos.z()-mOffset.z()));
+
 	}
 }
