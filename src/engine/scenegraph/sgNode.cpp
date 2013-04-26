@@ -451,14 +451,14 @@ namespace Sagitta{
 			m_DerivedPosition += m_pParent->_getDerivedPosition();
 
 		}
-		/*else{
+		else{
 			// Root node, no parent
 			m_DerivedOrientation = m_RelativeOrientation;
 			m_DerivedPosition = m_RelativePosition;
 			m_DerivedScale = m_RelativeScale;
 		
 		}
-		*/
+		
 		
 
 		m_bCachedTransformOutOfDate = true;

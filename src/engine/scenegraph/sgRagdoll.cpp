@@ -56,10 +56,11 @@ namespace Sagitta{
 			removeFromScene();
 
 		mSkeleton = parent;
-		_resetTransform();
 		
 		if(sceneChanged)
 			addToScene();
+
+		_resetTransform();
 		
 	}
 
@@ -94,7 +95,7 @@ namespace Sagitta{
 			sgSceneObject *obj = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 			obj->setName(bi.bodyName);
 			obj->scale(Vector3(bi.width, bi.height, bi.thick));
-			obj->setIsDebugObj(true);
+			obj->setIsDebugObj(false);
 
 			sgMeshComponent *meshComp = (sgMeshComponent*)obj->createComponent(sgMeshComponent::GetClassTypeName());
 			meshComp->setMeshFile(meshCube->getFilename());
@@ -169,8 +170,9 @@ namespace Sagitta{
 			b.constraint = dof6cons;
 		}
 		
-		_resetTransform();
 		addToScene();
+
+		_resetTransform();
 	}
 
 	void sgRagdoll::_resetTransform(void)
@@ -299,11 +301,11 @@ namespace Sagitta{
 			
 			// the constraint should be located to the position of parent
 			Vector3 constraintPos;
-			if(bi.posOnJoint)
+			/*if(bi.posOnJoint)
 			{
 				constraintPos = boneNodeB->parent()->absolutePosition();
 			}
-			else
+			else*/
 			{
 				constraintPos = boneNodeB->absolutePosition();
 			}

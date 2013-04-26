@@ -233,6 +233,7 @@ void DemoRagdoll::prepare(void)
 		// load .bvh
 		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
 		player->setSkeleton(pSkeleton);
+		player->translate(Vector3(0, 10, 0));
 
 		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
 		ragdoll = (sgRagdoll*)sgObject::createObject(sgRagdoll::GetClassTypeName());
@@ -248,7 +249,7 @@ void DemoRagdoll::prepare(void)
 		
 
 		mScene->setPhysicsEnabled(true);
-		mScene->setPhysicsContinuous(false);
+		mScene->setPhysicsContinuous(true);
 
 /*		std::vector<std::string> aa;
 		

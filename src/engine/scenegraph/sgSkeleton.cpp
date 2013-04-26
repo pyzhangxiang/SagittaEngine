@@ -96,6 +96,11 @@ namespace Sagitta{
 					node->setRelativeScale(joint->getScale(animTime));
 			}
         }
+
+		if(mpRagdoll && !scene->isPhysicsEnabled())
+		{
+			mpRagdoll->update(deltaTime);
+		}
 	}
     
     void sgSkeleton::setBelongTo(sgSceneObject *parent)
