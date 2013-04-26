@@ -236,7 +236,8 @@ namespace Sagitta{
 		if(!rt)
 			return ;
         
-        acceptRenderTarget(rt);
+		if(isShaderInited())
+			acceptRenderTarget(rt);
 
 		sgViewport *viewport = rt->getViewport();
 		if(!viewport)

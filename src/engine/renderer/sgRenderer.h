@@ -306,6 +306,7 @@ namespace Sagitta{
         
         bool initShaderEnvironment(void);
 		virtual bool initShaderEnvironmentImpl(void){ return false; }
+		bool isShaderInited(void) const{ return mShaderEnvironmentPrepared; }
         
         bool setUniformForShader(int type, int location, int extra, const void* data);
         
