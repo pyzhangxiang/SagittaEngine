@@ -16,7 +16,6 @@ namespace Sagitta{
 	sgSceneObject::sgSceneObject(void) 
 	: sgNode(), mpScene(0)
     , mbSceneChanged(true), mpSkeleton(0)
-	, mpRagdoll(0)
     , mCastShadow(true)
     , mIsDebugObj(false)//, mDebugObjectToShow(0)
     {
@@ -98,8 +97,6 @@ namespace Sagitta{
         if(mpSkeleton)
             mpSkeleton->update(deltaTime);
 
-		if(mpRagdoll)
-			mpRagdoll->update(deltaTime);
 
 		sgNode::update(deltaTime);
 	}
@@ -151,8 +148,25 @@ namespace Sagitta{
 	{
 		if(mpScene == pScene)
 			return ;
+
+		// reset ragdoll
+		sgRagdoll *ragdoll = 0;
+		if(mpSkeleton)
+		{
+			ragdoll = mpSkeleton->getRagdoll();
+		}
+		if(ragdoll)
+		{
+			ragdoll->removeFromScene();
+		}
+
 		mpScene = pScene;
 		mbSceneChanged = true;
+
+		if(ragdoll)
+		{
+			ragdoll->addToScene();
+		}
 
 		sgRigidBodyComponent *rigidComp = (sgRigidBodyComponent*)getComponent(sgRigidBodyComponent::GetClassTypeName());
 		if(rigidComp)
@@ -284,17 +298,5 @@ namespace Sagitta{
 
     }
 
-	sgRagdoll * sgSceneObject::setRagdoll( sgRagdoll *ragdoll )
-	{
-		sgRagdoll *original = mpRagdoll;
-		if(original == ragdoll)
-			return original;
-		if(original)
-			original->setParent(0);
-
-		mpRagdoll = ragdoll;
-		mpRagdoll->setParent(this);
-		return original;
-	}
 
 } // namespace Sagitta

@@ -32,7 +32,8 @@ namespace Sagitta{
 			float width;			// for capsule, it's radius
 			float height;
 			float thick;
-			bool posOnJoint;		// 0 - self, 1 - parent
+			// if true, pos on the joint2
+			bool posOnJoint;		
 
 			std::string constraintTo;
 			Vector3 angleLowerLimit;

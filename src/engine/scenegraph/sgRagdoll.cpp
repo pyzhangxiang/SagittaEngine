@@ -27,7 +27,7 @@ namespace Sagitta{
     
 	//  [1/1/2009 zhangxiang]
 	sgRagdoll::sgRagdoll(void)
-	: sgObject(), mParentObject(0), mRagdollConfig(sgStrHandle::EmptyString), mVisible(true)
+	: sgObject(), mSkeleton(0), mRagdollConfig(sgStrHandle::EmptyString), mVisible(true)
     {
 		
 	}
@@ -39,14 +39,14 @@ namespace Sagitta{
         release();
 	}
 
-	void sgRagdoll::setParent( sgSceneObject *parent )
+	void sgRagdoll::setSkeleton( sgSkeleton *parent )
 	{
-		if(mParentObject == parent)
+		if(mSkeleton == parent)
 			return ;
 		bool sceneChanged = true;
-		if(mParentObject && parent)
+		if(mSkeleton && parent)
 		{
-			if(mParentObject->getScene() == parent->getScene())
+			if(mSkeleton->getRoot()->getScene() == parent->getRoot()->getScene())
 			{
 				sceneChanged = false;
 			}
@@ -55,14 +55,11 @@ namespace Sagitta{
 		if(sceneChanged)
 			removeFromScene();
 
-		mParentObject = parent;
+		mSkeleton = parent;
+		_resetTransform();
 		
 		if(sceneChanged)
 			addToScene();
-
-		if(getScene())
-			resetTransform();
-
 		
 	}
 
@@ -123,36 +120,72 @@ namespace Sagitta{
 			btRigidBody* body = new btRigidBody(rbInfo);
 
 
-			Body mybody;
-			mybody.jointName = bi.jointName;
-			mybody.body = body;
-			mybody.object = obj;
-			mybody.constraint = 0;
+			Body *mybody = new Body;
+			mybody->jointName = bi.jointName;
+			mybody->body = body;
+			mybody->object = obj;
+			mybody->constraint = 0;
+			mybody->ifCollideWithParent = bi.ifCollideWithParent;
 
 			mBodyMap.insert(std::make_pair(bi.bodyName, mybody));
 			mBodyMapByJointName.insert(std::make_pair(bi.jointName, mybody));
 		}
-
-		addToScene();
-		if(getScene())
+		// create constraints
+		BodyMap::iterator bodyit = mBodyMap.begin();
+		for(; bodyit!=mBodyMap.end(); ++bodyit)
 		{
-			resetTransform();
-		}		
+			Body &b = *(bodyit->second);
+			if(b.constraint)
+				continue;
+
+			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
+			if(biIt == bodyset.end())
+				continue;
+
+			const sgRagdollConfig::BodyInfo &bi = biIt->second;
+			if(bi.constraintTo == "null")
+				continue;
+
+			BodyMap::iterator constrainIt = mBodyMap.find(bi.constraintTo);
+			if(constrainIt == mBodyMap.end())
+				continue;
+
+			const Body &consToBody = *(constrainIt->second);
+
+			btRigidBody *bodyA = consToBody.body;	// parent body
+			btRigidBody *bodyB = b.body;
+			bodyB->setDamping(btScalar(0.5f), btScalar(0.85f));
+
+
+			btTransform frameInA, frameInB;
+			frameInA.setIdentity(); frameInB.setIdentity();
+
+			btGeneric6DofConstraint *dof6cons = new btGeneric6DofConstraint(*bodyA, *bodyB, frameInA, frameInB, true);
+			btVector3 lower(-bi.angleUpperLimit.x(), -bi.angleUpperLimit.y(), -bi.angleUpperLimit.z());
+			btVector3 upper(-bi.angleLowerLimit.x(), -bi.angleLowerLimit.y(), -bi.angleLowerLimit.z());
+			dof6cons->setAngularLowerLimit(lower);
+			dof6cons->setAngularUpperLimit(upper);
+
+			b.constraint = dof6cons;
+		}
+		
+		_resetTransform();
+		addToScene();
 	}
 
-	void sgRagdoll::resetTransform( void )
+	void sgRagdoll::_resetTransform(void)
 	{
-		if(!mParentObject)
+		if(!mSkeleton)
 		{
 			return ;
 		}
 
-		sgScene *scene = mParentObject->getScene();
+		sgScene *scene = mSkeleton->getRoot()->getScene();
 		sgDynamicsWorld *dynamicsWorld = 0;
 		if(scene)
 			dynamicsWorld = scene->getDynamicsWorld();
 
-		sgSkeleton *skeleton = mParentObject->getSkeleton();
+		sgSkeleton *skeleton = mSkeleton;
 		if(!skeleton)
 			return ;
 
@@ -164,7 +197,7 @@ namespace Sagitta{
 		BodyMap::iterator it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			Body &b = it->second;
+			Body &b = *(it->second);
 
 			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
 			if(biIt == bodyset.end())
@@ -179,7 +212,7 @@ namespace Sagitta{
 			btTransform bodyTrans = b.body->getWorldTransform();
 
 			Vector3 pos;
-			if(bi.posOnJoint)
+			/*if(bi.posOnJoint)
 			{
 				pos = boneNode->absolutePosition();
 				b.object->setAbsolutePosition(pos);
@@ -187,7 +220,7 @@ namespace Sagitta{
 				
 				
 			}
-			else
+			else*/
 			{
 				sgBoneObject *boneNode2 = 0;
 				if( ! (bi.joint2Name.empty()) )
@@ -206,15 +239,22 @@ namespace Sagitta{
 				if(!boneNode2)
 				{
 					pos = boneNode->absolutePosition();
-					b.object->setAbsolutePosition(pos);
-					bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
 				}
 				else
 				{
-					pos = (boneNode->absolutePosition() + boneNode2->absolutePosition()) * 0.5f;
-					b.object->setAbsolutePosition(pos);
-					bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+					if(bi.posOnJoint)
+					{
+						// on joint2
+						pos = boneNode2->absolutePosition();
+					}
+					else
+					{
+						pos = (boneNode->absolutePosition() + boneNode2->absolutePosition()) * 0.5f;
+					}
 				}
+				b.object->setAbsolutePosition(pos);
+				bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+				b.offset = pos - boneNode->absolutePosition();
 			}
 
 			const Quaternion &q = boneNode->absoluteOrientation();
@@ -224,15 +264,12 @@ namespace Sagitta{
 			  
 		}
 
-		if(!dynamicsWorld)
-			return ;
-
 		// for constraint
-	/*	it = mBodyMap.begin();
+		it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			Body &b = it->second;
-			if(b.constraint)
+			Body &b = *(it->second);
+			if(!b.constraint)
 				continue;
 
 			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
@@ -251,11 +288,10 @@ namespace Sagitta{
 			if(constrainIt == mBodyMap.end())
 				continue;
 
-			const Body &consToBody = constrainIt->second;
+			const Body &consToBody = *(constrainIt->second);
 
 			btRigidBody *bodyA = consToBody.body;	// parent body
 			btRigidBody *bodyB = b.body;
-			bodyB->setDamping(btScalar(0.5f), btScalar(0.85f));
 
 
 			btTransform frameInA, frameInB;
@@ -275,55 +311,100 @@ namespace Sagitta{
 			Vector3 transB = constraintPos - b.object->absolutePosition();
 			frameInA.setOrigin(btVector3(transA.x(), transA.y(), transA.z()));	// bullet may be left-hand system
 			frameInB.setOrigin(btVector3(transB.x(), transB.y(), transB.z()));
-			btGeneric6DofConstraint *dof6cons = new btGeneric6DofConstraint(*bodyA, *bodyB, frameInA, frameInB, true);
-			btVector3 lower(-bi.angleUpperLimit.x(), -bi.angleUpperLimit.y(), -bi.angleUpperLimit.z());
-			btVector3 upper(-bi.angleLowerLimit.x(), -bi.angleLowerLimit.y(), -bi.angleLowerLimit.z());
-			dof6cons->setAngularLowerLimit(lower);
-			dof6cons->setAngularUpperLimit(upper);
 
-			b.constraint = dof6cons;
+			b.constraint->setFrames(frameInA, frameInB);
 
-			if(bi.ifCollideWithParent)
-				dynamicsWorld->addConstraint(dof6cons, false);
-			else
-				dynamicsWorld->addConstraint(dof6cons, true);
-					  
 		}
-		*/
+		
 	}
 
-	void sgRagdoll::addToScene( void )
+	void sgRagdoll::resetTransform( void )
 	{
-		if(!mParentObject || !(mParentObject->getScene()))
+		if(!mSkeleton)
+		{
+			return ;
+		}
+
+		sgSkeleton *skeleton = mSkeleton;
+		if(!skeleton)
 			return ;
 
-		sgScene *scene = mParentObject->getScene();
-		sgDynamicsWorld *dynamicsWorld = scene->getDynamicsWorld();
+		sgRagdollConfig *conf = (sgRagdollConfig*)sgResourceCenter::instance()->findResource(mRagdollConfig);
+		if(!conf)
+			return ;
+		const sgRagdollConfig::BodyInfoMap &bodyset = conf->getBodyInfoSet();
 
 		BodyMap::iterator it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			Body &b = it->second;
+			Body &b = *(it->second);
+
+			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
+			if(biIt == bodyset.end())
+				continue;
+
+			const sgRagdollConfig::BodyInfo &bi = biIt->second;
+
+			sgBoneObject *boneNode = skeleton->getBoneNode(bi.jointName);
+			if(!boneNode)
+				continue;
+
+			btTransform bodyTrans = b.body->getWorldTransform();
+
+			Vector3 pos = boneNode->absolutePosition() + b.offset;
+			b.object->setAbsolutePosition(pos);
+			bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
+				
+			const Quaternion &q = boneNode->absoluteOrientation();
+			b.object->setAbsoluteOrientation(boneNode->absoluteOrientation());
+			bodyTrans.setRotation(btQuaternion(q.x(), q.y(), q.z(), q.w()));
+			b.body->setWorldTransform(bodyTrans);
+			  
+		}
+
+	}
+
+	void sgRagdoll::addToScene( void )
+	{
+		if(!mSkeleton || !(mSkeleton->getRoot()->getScene()))
+			return ;
+
+		sgScene *scene = mSkeleton->getRoot()->getScene();
+		sgDynamicsWorld *dynamicsWorld = scene->getDynamicsWorld();
+		assert(dynamicsWorld);
+
+		BodyMap::iterator it = mBodyMap.begin();
+		for(; it!=mBodyMap.end(); ++it)
+		{
+			Body &b = *(it->second);
 
 			b.object->setParent(scene->getRoot());
 			dynamicsWorld->addRigidBody(b.body);
 			// constrain
-
+			if(b.constraint)
+			{
+				if(b.ifCollideWithParent)
+					dynamicsWorld->addConstraint(b.constraint, false);
+				else
+					dynamicsWorld->addConstraint(b.constraint, true);
+			}
+			
 		}
 	}
 
 	void sgRagdoll::removeFromScene( void )
 	{
-		if(!mParentObject || !(mParentObject->getScene()))
+		if(!mSkeleton || !(mSkeleton->getRoot()->getScene()))
 			return ;
 
-		sgScene *scene = mParentObject->getScene();
+		sgScene *scene = mSkeleton->getRoot()->getScene();
 		sgDynamicsWorld *dynamicsWorld = scene->getDynamicsWorld();
+		assert(dynamicsWorld);
 
 		BodyMap::iterator it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			Body &b = it->second;
+			Body &b = *(it->second);
 
 			b.object->setParent(0);
 			dynamicsWorld->removeRigidBody(b.body);
@@ -340,7 +421,7 @@ namespace Sagitta{
 		BodyMap::iterator it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			Body &b = it->second;
+			Body &b = *(it->second);
 
 			if(b.constraint)
 				delete b.constraint;
@@ -359,6 +440,8 @@ namespace Sagitta{
 
 			delete b.body;
 			sgObject::destroyObject(b.object);
+
+			delete it->second;
 		}
 
 		mBodyMap.clear();
@@ -367,13 +450,7 @@ namespace Sagitta{
 
 	void sgRagdoll::update( Float32 deltaTime )
 	{
-		sgScene *scene = 0;
-		if(mParentObject)
-		{
-			scene = mParentObject->getScene();
-		}
-		if(!scene)
-			return ;
+		sgScene *scene = getScene();
 
 		if(scene->isPhysicsEnabled())
 		{
@@ -388,12 +465,12 @@ namespace Sagitta{
 
 	void sgRagdoll::syncTransformToSkeleton( void )
 	{
-		if(!mParentObject)
+		if(!mSkeleton)
 		{
 			return ;
 		}
 
-		sgSkeleton *skeleton = mParentObject->getSkeleton();
+		sgSkeleton *skeleton = mSkeleton;
 		if(!skeleton)
 			return ;
 
@@ -415,7 +492,7 @@ namespace Sagitta{
 			BodyMap::iterator it = mBodyMapByJointName.find(boneNode->getName());
 			if(it == mBodyMapByJointName.end())
 				continue;
-			Body &b = it->second;
+			Body &b = *(it->second);
 
 			sgRagdollConfig::BodyInfoMap::const_iterator biIt = bodyset.find(b.object->getName());
 			if(biIt == bodyset.end())
@@ -434,7 +511,7 @@ namespace Sagitta{
 			b.object->setAbsolutePosition(mypos);
 			if(bi.ifSyncPos)
 			{
-				boneNode->setAbsolutePosition(mypos);
+				boneNode->setAbsolutePosition(mypos - b.offset);
 			}
 			
 			// constrain
@@ -444,9 +521,9 @@ namespace Sagitta{
 	sgScene * sgRagdoll::getScene( void ) const
 	{
 		sgScene *scene = 0;
-		if(mParentObject)
+		if(mSkeleton)
 		{
-			scene = mParentObject->getScene();
+			scene = mSkeleton->getRoot()->getScene();
 		}
 		return scene;
 	}
@@ -460,8 +537,8 @@ namespace Sagitta{
 		BodyMap::iterator it = mBodyMap.begin();
 		for(; it!=mBodyMap.end(); ++it)
 		{
-			if(it->second.object)
-				it->second.object->setActive(mVisible);
+			if(it->second->object)
+				it->second->object->setActive(mVisible);
 		}
 	}
 

@@ -3,6 +3,7 @@
 #include "sgSceneObject.h"
 #include "sgBoneObject.h"
 #include "sgScene.h"
+#include "sgRagdoll.h"
 #include "engine/component/sgAnimationComponent.h"
 #include "engine/resource/sgAnimation.h"
 #include "engine/resource/sgAnimationJoint.h"
@@ -15,6 +16,7 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgSkeleton::sgSkeleton(void)
 	: sgObject(), mpRoot(0)
+	, mpRagdoll(0)
     {
 		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
         mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassTypeName());
@@ -60,8 +62,13 @@ namespace Sagitta{
         if(!parent)
             return ;
 
-		if(parent->getRagdoll() && parent->getScene() && parent->getScene()->isPhysicsEnabled())
+		sgScene *scene = parent->getScene();
+		if(!scene)
+			return ;
+
+		if(mpRagdoll && scene->isPhysicsEnabled())
 		{
+			mpRagdoll->update(deltaTime);
 			return ;
 		}
         
@@ -147,6 +154,19 @@ namespace Sagitta{
 		}
 
 		return it->second;
+	}
+
+	sgRagdoll * sgSkeleton::setRagdoll( sgRagdoll *ragdoll )
+	{
+		sgRagdoll *original = mpRagdoll;
+		if(original == ragdoll)
+			return original;
+		if(original)
+			original->setSkeleton(0);
+
+		mpRagdoll = ragdoll;
+		mpRagdoll->setSkeleton(this);
+		return original;
 	}
 
 } // namespace Sagitta

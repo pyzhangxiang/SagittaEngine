@@ -5,18 +5,20 @@
 #include "engine/common/sgObject.h"
 #include "engine/common/sgStlAllocator.h"
 #include "engine/common/sgStrHandle.h"
+#include "math/sgVector3.h"
 #include <map>
 
 // DECLARES //////////////////////////////////////////
 
 class btRigidBody;
-class btTypedConstraint;
+class btGeneric6DofConstraint;
 
 namespace Sagitta{
     
 	class sgBoneObject;
     class sgSceneObject;
 	class sgScene;
+	class sgSkeleton;
     
 
 	class _SG_KernelExport sgRagdoll : public sgObject
@@ -24,24 +26,31 @@ namespace Sagitta{
 		SG_META_DECLARE(sgRagdoll)
 		
 		// for setParent in sgSceneObject::setRagdoll
-		friend class sgSceneObject;
+		friend class sgSkeleton;
 
 	private:
-		sgSceneObject *mParentObject;
+		sgSkeleton *mSkeleton;
 		sgStrHandle mRagdollConfig;
 
 		struct Body
 		{
 			std::string jointName;
 			btRigidBody *body;
-			btTypedConstraint *constraint;
+			btGeneric6DofConstraint *constraint;
 			sgSceneObject *object;
+			Vector3 offset;
+			bool ifCollideWithParent;
 		};
-		typedef sg_map(std::string, Body) BodyMap;
+		typedef sg_map(std::string, Body*) BodyMap;
 		BodyMap mBodyMap;
 		BodyMap mBodyMapByJointName;
 		
 		bool mVisible;
+
+	private:
+		// on skeleton changed
+		void _resetTransform(void);
+		//void _onSceneChanged(void);
 
 	public:
 		sgRagdoll(void);
@@ -50,13 +59,16 @@ namespace Sagitta{
 		void setRagdollConfig(const sgStrHandle &config);
 		void addToScene(void);
 		void removeFromScene(void);
+		
+		
 
 		void resetTransform(void);
 		void syncTransformToSkeleton(void);
 
 		void update(Float32 deltaTime);
 
-		sgSceneObject *parent(void) const{ return mParentObject; }
+		//sgSceneObject *parent(void) const{ return mParentObject; }
+		sgSkeleton *getSkeleton(void) const{ return mSkeleton; }
 
 		sgScene *getScene(void) const;
 
@@ -64,7 +76,7 @@ namespace Sagitta{
 		void setVisible(bool visible);
 
 	protected:
-		void setParent(sgSceneObject *parent);
+		void setSkeleton(sgSkeleton *parent);
     
 	private:
 		void release(void);

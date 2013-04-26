@@ -237,7 +237,7 @@ void DemoRagdoll::prepare(void)
 		sgRagdollConfig *ragdollConfig = (sgRagdollConfig*)sgResourceCenter::instance()->createResource(sgRagdollConfig::GetClassTypeName(), "models/ragdoll.xml");
 		ragdoll = (sgRagdoll*)sgObject::createObject(sgRagdoll::GetClassTypeName());
 		ragdoll->setRagdollConfig(ragdollConfig->getFilename());
-		player->setRagdoll(ragdoll);
+		pSkeleton->setRagdoll(ragdoll);
 		
 
 		sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");

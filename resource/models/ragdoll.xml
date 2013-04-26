@@ -6,7 +6,7 @@
 			<angleUpperLimit x="0" y="0" z="0"/>
 			<inertia x="3062.028" y="2768.13" z="1179.14"/>
 		</0>
-		<1 jointName="Chest2" joint2Name="" bodyName="Trunk" shapeType="1" width="30.826" height="33.4208" thick="10.001" posOnJoint="1" constraintTo="Pelvis" mass="10.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
+		<1 jointName="Chest" joint2Name="Neck" bodyName="Trunk" shapeType="1" width="30.826" height="33.4208" thick="10.001" posOnJoint="0" constraintTo="Pelvis" mass="10.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
 			<angleLowerLimit x="-45" y="-55" z="-50"/>
 			<angleUpperLimit x="90" y="55" z="50"/>
 			<inertia x="1200.033" y="695.179" z="1076.374"/>
@@ -31,7 +31,7 @@
       <angleUpperLimit x="90" y="0" z="0"/>
       <inertia x="220.765" y="218.578" z="23.462"/>
     </5>
-    <6 jointName="Head" joint2Name="" bodyName="Head" shapeType="1" width="5.001" height="20.6018" thick="5.001" posOnJoint="1" constraintTo="Trunk" mass="5.482" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
+    <6 jointName="Neck" joint2Name="Head" bodyName="Head" shapeType="1" width="5.001" height="20.6018" thick="5.001" posOnJoint="1" constraintTo="Trunk" mass="5.482" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
       <angleLowerLimit x="-60" y="-80" z="-70"/>
       <angleUpperLimit x="90" y="80" z="70"/>
       <inertia x="326.657" y="343.593" z="191.414"/>
