@@ -15,7 +15,7 @@ namespace Sagitta
     public: \
         static sgObject *Constructor(void); \
 		static sgClassMeta *GetMetaInfo(void); \
-		static sgStrHandle GetClassName(void); \
+		static sgStrHandle GetClassTypeName(void); \
 		static sgStrHandle GetSuperName(void); \
 		virtual sgClassMeta *GetMyMetaInfo(void) const; \
         virtual sgStrHandle GetMyClassName(void) const; \
@@ -34,10 +34,10 @@ namespace Sagitta
         return obj; \
     } \
 	sgClassMeta *classname::GetMetaInfo(void){ return &(classname##Meta); } \
-	sgStrHandle classname::GetClassName(void) { return classname##Meta.getName(); } \
+	sgStrHandle classname::GetClassTypeName(void) { return classname##Meta.getName(); } \
 	sgStrHandle classname::GetSuperName(void) { return classname##Meta.getSuperName(); } \
 	sgClassMeta *classname::GetMyMetaInfo(void) const{ return classname::GetMetaInfo(); } \
-    sgStrHandle classname::GetMyClassName(void) const{ return classname::GetClassName(); }
+    sgStrHandle classname::GetMyClassName(void) const{ return classname::GetClassTypeName(); }
     
 #endif
     
@@ -46,7 +46,7 @@ namespace Sagitta
 #define SG_META_DECLARE_ABSTRACT(classname) \
     public: \
         static sgClassMeta *GetMetaInfo(void); \
-        static sgStrHandle GetClassName(void); \
+        static sgStrHandle GetClassTypeName(void); \
         static sgStrHandle GetSuperName(void); \
         virtual sgClassMeta *GetMyMetaInfo(void) const; \
         virtual sgStrHandle GetMyClassName(void) const; \
@@ -59,10 +59,10 @@ namespace Sagitta
     sgClassMeta classname##Meta(#classname, #supername, 0);\
     \
     sgClassMeta *classname::GetMetaInfo(void){ return &(classname##Meta); } \
-    sgStrHandle classname::GetClassName(void) { return classname##Meta.getName(); } \
+    sgStrHandle classname::GetClassTypeName(void) { return classname##Meta.getName(); } \
     sgStrHandle classname::GetSuperName(void) { return classname##Meta.getSuperName(); } \
     sgClassMeta *classname::GetMyMetaInfo(void) const{ return classname::GetMetaInfo(); } \
-    sgStrHandle classname::GetMyClassName(void) const{ return classname::GetClassName(); }
+    sgStrHandle classname::GetMyClassName(void) const{ return classname::GetClassTypeName(); }
     
 #endif
     

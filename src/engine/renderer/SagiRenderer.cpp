@@ -104,8 +104,8 @@ namespace Sagitta{
 		m_bLighting = true;
 
 		sgLightComponent *light;
-		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
-		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
+		sg_render::LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		sg_render::LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
 
 		int lightNum = static_cast<int>(m_CurRenderParam.lightlist.size());
 		m_CurSagiLightList.reserve(lightNum);
@@ -124,14 +124,14 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	void SagiRenderer::render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const{
-		sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassName()));
+		sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassTypeName()));
         if(!meshComp)
             return ;
         sgMesh *mesh = meshComp->getMesh();
         if(!mesh)
             return ;
         
-        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
+        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassTypeName()));
         sgMaterial *material = 0;
         if(renderState)
             material = (sgMaterial*)(renderState->getMaterial());
@@ -143,9 +143,10 @@ namespace Sagitta{
         m_CurVertexBuffers.mesh = mesh;
         m_CurVertexBuffers.material = material;
 
-		sgVertexData *pvb = new sgVertexData();
-		sgVertexIndexBuffer *pvib = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-		mesh->getVertexBuffer(pvb, pvib);
+		sgVertexData *pvb = NULL;// = new sgVertexData();
+		sgVertexIndexBuffer *pvib = NULL;// = new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		if(!mesh->getVertexBuffer(&pvb, &pvib))
+			return ;
 
 		// vertex buffers
 		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
@@ -234,7 +235,7 @@ namespace Sagitta{
 		
 		// cull faces, only for triangles
 		if(pvib->polyType() == 3 &&
-			m_CurRenderParam.pscene->getRenderState().isFaceCullingEnable()){
+			m_CurRenderParam.scene_render_state->isFaceCullingEnable()){
 			cullFaces();
 		}
 
@@ -256,14 +257,11 @@ namespace Sagitta{
 
 		// release current vertex buffers for next renderable object
 		m_CurVertexBuffers.release();
-
-		delete pvb;
-		delete pvib;
 	}
 
 	//  [1/17/2009 zhangxiang]
 	void SagiRenderer::cullFaces(void) const{
-		if(m_CurRenderParam.pscene->getRenderState().faceToCull() == sgRenderState::FTC_BACK){
+		if(m_CurRenderParam.scene_render_state->faceToCull() == sgRenderState::FTC_BACK){
 			cullBackFacesImpl();
 		}else{
 			cullFrontFacesImpl();
@@ -1158,7 +1156,7 @@ namespace Sagitta{
 		size_t v1, v2;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
+			if(m_CurRenderParam.scene_render_state->isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 2 * i
@@ -2845,7 +2843,7 @@ namespace Sagitta{
 		size_t v1, v2, v3;
 		IndexList::iterator iit = m_CurVertexBuffers.pindices.begin();
 		if(!m_CurVertexBuffers.pcolors.empty()){
-			if(m_CurRenderParam.pscene->getRenderState().isDepthTestEnable()){
+			if(m_CurRenderParam.scene_render_state->isDepthTestEnable()){
 				ColorList &colors = m_CurVertexBuffers.pcolors;
 				for(size_t i=0; i<m_CurVertexBuffers.facenum; ++i){
 					v1 = (*iit); ++iit;	// 3 * i

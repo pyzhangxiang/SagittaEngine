@@ -1,7 +1,7 @@
 
 #include "sgScene.h"
 #include "sgSceneObject.h"
-#include "engine/renderer/sgRenderEffect.h"
+#include "sgDynamicsWorld.h"
 
 namespace Sagitta{
 
@@ -11,23 +11,26 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgScene::sgScene(void) 
 	: sgObject(), mpRoot(NULL)
-    , mRenderEffect(NULL)
+	, mPhysicsEnabled(false)
+	, mPhysicsContinuous(true)
+	, mDynamicsWorld(NULL)
     {
-		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+        mAmbiantColor = Color(Color::GLColor(0.1, 0.1, 0.1, 1.0));
+        
+		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
         mpRoot->setScene(this);
+
+		mDynamicsWorld = (sgDynamicsWorld*)sgObject::createObject(sgDynamicsWorld::GetClassTypeName());
+
 	}
 
 
 	//  [1/1/2009 zhangxiang]
 	sgScene::~sgScene(void)
     {
-        if(mRenderEffect)
-        {
-            destroyRenderEffect();
-        }
-        
         // destroy all scene objects belong to me
 		sgObject::destroyObject(mpRoot);
+		sgObject::destroyObject(mDynamicsWorld);
 	}
 
 	sgSceneObject * sgScene::getRoot( void ) const
@@ -37,8 +40,12 @@ namespace Sagitta{
 
 	void sgScene::update( Float32 deltaTime )
 	{
-		// physics step
-
+		if(mPhysicsEnabled && mPhysicsContinuous)
+		{
+			// physics step
+			mDynamicsWorld->stepSimulation(deltaTime);
+		}
+		
 		mpRoot->update(deltaTime);
 	}
     
@@ -51,7 +58,25 @@ namespace Sagitta{
     {
         mAmbiantColor = color;
     }
-    
+
+	void sgScene::setPhysicsEnabled( bool enable )
+	{
+		mPhysicsEnabled = enable;
+	}
+
+	void sgScene::setPhysicsContinuous( bool continuous )
+	{
+		mPhysicsContinuous = continuous;
+	}
+
+	void sgScene::stepPhysics( Float32 deltaTime )
+	{
+		if(mPhysicsEnabled && !mPhysicsContinuous)
+		{
+			mDynamicsWorld->stepSimulation(deltaTime);
+		}
+	}
+	/*
     const sgRenderState &sgScene::getRenderState(void) const
     {
         return mRenderState;
@@ -61,33 +86,6 @@ namespace Sagitta{
     {
         mRenderState = state;
     }
-    
-    sgRenderEffect *sgScene::createRenderEffect(const sgStrHandle &effectType)
-    {
-        sgClassMeta *meta = sgMetaCenter::instance().findMeta(effectType);
-        if(!meta)
-            return mRenderEffect;
-        if(!meta->isClass(sgRenderEffect::GetClassName()))
-            return mRenderEffect;
-        
-        if(mRenderEffect)
-        {
-            // warning: the original one will be destroyed
-            destroyRenderEffect();
-        }
-        mRenderEffect = (sgRenderEffect*)sgObject::createObject(effectType);
-        
-        return mRenderEffect;
-    }
-    
-    void sgScene::destroyRenderEffect(void)
-    {
-        if(mRenderEffect)
-        {
-            sgObject::destroyObject(mRenderEffect);
-            mRenderEffect = NULL;
-        }
-    }
-
+*/
 	
 } // namespace Sagitta

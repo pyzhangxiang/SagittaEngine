@@ -1,19 +1,15 @@
 //////////////////////////////////////////////////////
 // file: sgResourceCenter.cpp 
 // created by zhangxiang on 09-01-11
-// define of the class sgResourceCenter
-// sgResourceCenter is a class ...
 //////////////////////////////////////////////////////
 
-// INCLUDES //////////////////////////////////////////
 #include "sgResourceCenter.h"
 #include "sgResource.h"
+#include "sgImageLoader.h"
+#include "engine/common/sgClassMeta.h"
 #include "engine/common/sgStringUtil.h"
 #include "engine/common/sgException.h"
 
-// DECLARES //////////////////////////////////////////
-
-// DEFINES ///////////////////////////////////////////
 namespace Sagitta{
 
 	//SG_META_DEFINE(sgResourceCenter, sgObject)
@@ -21,7 +17,9 @@ namespace Sagitta{
     sgResourceCenter::sgResourceCenter(void)
     : mRootDir("./")
     {
-        
+        registerImageLoader(".png", sgImageLoader_stb::GetClassTypeName());
+		registerImageLoader(".tga", sgImageLoader_stb::GetClassTypeName());
+		registerImageLoader(".bmp", sgImageLoader_stb::GetClassTypeName());
     }
 
 	//  [1/11/2009 zhangxiang]
@@ -33,6 +31,27 @@ namespace Sagitta{
 			delete it->second;
 		}
 		m_ResourceMap.clear();
+
+		/*
+		ResourceMap todel = m_ResourceMap;
+		int count = todel.size();
+		while(count > 0)
+		{
+			ResourceMap::iterator it = todel.begin();
+			ResourceMap::iterator eit = todel.end();
+			for(; it!=eit; ++it)
+			{
+				delete it->second;
+				--count;
+				if(count != m_ResourceMap.size())
+				{
+					todel = m_ResourceMap;
+					count = todel.size();
+					break;
+				}
+			}
+		}
+		m_ResourceMap.clear();	*/
 	}
 
 	//  [1/11/2009 zhangxiang]
@@ -86,7 +105,7 @@ namespace Sagitta{
             return res;
         
         sgClassMeta *meta = sgMetaCenter::instance().findMeta(type);
-        if(!meta || !meta->isClass(sgResource::GetClassName()))
+        if(!meta || !meta->isClass(sgResource::GetClassTypeName()))
             return 0;
         
         res = (sgResource*)(sgObject::createObject(type));
@@ -137,5 +156,35 @@ namespace Sagitta{
             mRootDir += "/";
         }
     }
+    
+    std::string sgResourceCenter::getResourcePath(const std::string &subname)
+    {
+        if(subname.find(mRootDir) == 0)
+            return subname;
+        return mRootDir + subname;
+    }
+
+	bool sgResourceCenter::registerImageLoader( const std::string &imageFileExt, const sgStrHandle &imageLoaderType )
+	{
+		sgClassMeta *meta = sgMetaCenter::instance().findMeta(imageLoaderType);
+		if(meta == NULL)
+			return false;
+
+		if(! (meta->isClass(sgImageLoader::GetClassTypeName())) )
+			return false;
+
+		mImageLoaderTypeMap[imageFileExt] = imageLoaderType.getStr();
+		return true;
+	}
+
+	sgImageLoader * sgResourceCenter::getImageLoader( const std::string &imageFileExt ) const
+	{
+		ImageLoaderTypeMap::const_iterator it = mImageLoaderTypeMap.find(imageFileExt);
+		if(it == mImageLoaderTypeMap.end())
+			return NULL;
+
+		sgImageLoader *imgLoader = (sgImageLoader*)sgObject::createObject(sgStrHandle(it->second.c_str()));
+		return imgLoader;
+	}
 
 } // namespace Sagitta

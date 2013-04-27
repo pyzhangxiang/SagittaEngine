@@ -42,8 +42,8 @@ namespace Sagitta{
 	const Real Math::RAD_TO_DEG = 180.0f / Math::PI;
 
 	// defines for Color convert(d3d to gl || gl to d3d)
-	const Real Math::COLOR_D3D_TO_GL = 1.0 / 255.0;
-	const Real Math::COLOR_GL_TO_D3D = 255;
+	const Real Math::COLOR_D3D_TO_GL = 1.0f / 255.0f;
+	const Real Math::COLOR_GL_TO_D3D = 255.0f;
 
 	bool Math::RealEqual(Real a, Real b, Real tolerance/* = EPSILON_E6 */){
 		if(fabs(b-a) <= tolerance)

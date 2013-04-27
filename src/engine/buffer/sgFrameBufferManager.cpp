@@ -29,10 +29,10 @@ namespace Sagitta{
 	m_pColorBuffer(0),
 	m_pDepthBuffer(0),
 	m_pStencilBuffer(0){
-		m_pColorBuffer = new SColorBuffer(aTWidth, aTHeight);
-		m_pDepthBuffer = new SDepthBuffer(aTWidth, aTHeight);
+		m_pColorBuffer = new sgColorBuffer(aTWidth, aTHeight);
+		m_pDepthBuffer = new sgDepthBuffer(aTWidth, aTHeight);
 		if(aEnableSetencil){
-			m_pStencilBuffer = new SStencilBuffer(aTWidth, aTHeight);
+			m_pStencilBuffer = new sgStencilBuffer(aTWidth, aTHeight);
 		}
 	}
 
@@ -44,12 +44,12 @@ namespace Sagitta{
 	m_pColorBuffer(0),
 	m_pDepthBuffer(0),
 	m_pStencilBuffer(0){
-		m_pColorBuffer = new SColorBuffer(*(aParentBuffers.m_pColorBuffer),
+		m_pColorBuffer = new sgColorBuffer(*(aParentBuffers.m_pColorBuffer),
 										aLeft, aTop, aWidth, aHeight);
-		m_pDepthBuffer = new SDepthBuffer(*(aParentBuffers.m_pDepthBuffer),
+		m_pDepthBuffer = new sgDepthBuffer(*(aParentBuffers.m_pDepthBuffer),
 										aLeft, aTop, aWidth, aHeight);
 		if(aParentBuffers.m_pStencilBuffer){
-			m_pStencilBuffer = new SStencilBuffer(*(aParentBuffers.m_pStencilBuffer),
+			m_pStencilBuffer = new sgStencilBuffer(*(aParentBuffers.m_pStencilBuffer),
 												aLeft, aTop, aWidth, aHeight);
 		}
 	}
@@ -81,32 +81,32 @@ namespace Sagitta{
 												size_t aWidth, size_t aHeight){
 		_release();
 		if(aParentBuffers.getColorBuffer()){
-			m_pColorBuffer = new SColorBuffer(*(aParentBuffers.getColorBuffer()),
+			m_pColorBuffer = new sgColorBuffer(*(aParentBuffers.getColorBuffer()),
 											aLeft, aTop, aWidth, aHeight);
 		}
 		if(aParentBuffers.getDepthBuffer()){
-			m_pDepthBuffer = new SDepthBuffer(*(aParentBuffers.getDepthBuffer()),
+			m_pDepthBuffer = new sgDepthBuffer(*(aParentBuffers.getDepthBuffer()),
 											aLeft, aTop, aWidth, aHeight);
 		}
 		if(aParentBuffers.getStencilBuffer()){
-			m_pStencilBuffer = new SStencilBuffer(*(aParentBuffers.getStencilBuffer()),
+			m_pStencilBuffer = new sgStencilBuffer(*(aParentBuffers.getStencilBuffer()),
 												aLeft, aTop, aWidth, aHeight);
 		}
 	}
 
 
 	//  [1/15/2009 zhangxiang]
-	SColorBuffer *sgFrameBufferManager::getColorBuffer(void) const{
+	sgColorBuffer *sgFrameBufferManager::getColorBuffer(void) const{
 		return m_pColorBuffer;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SDepthBuffer *sgFrameBufferManager::getDepthBuffer(void) const{
+	sgDepthBuffer *sgFrameBufferManager::getDepthBuffer(void) const{
 		return m_pDepthBuffer;
 	}
 
 	//  [1/15/2009 zhangxiang]
-	SStencilBuffer *sgFrameBufferManager::getStencilBuffer(void) const{
+	sgStencilBuffer *sgFrameBufferManager::getStencilBuffer(void) const{
 		return m_pStencilBuffer;
 	}
 

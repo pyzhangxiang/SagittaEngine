@@ -40,6 +40,13 @@ namespace Sagitta
             return false;
     }
 
+	std::string sgStringUtil::getFileExtention( const std::string &filename )
+	{
+		size_t dotIndex = filename.find_last_of(".");
+		if(dotIndex == std::string::npos)
+			return "";
+		return filename.substr(dotIndex);
+	}
 
 } // namespace Sagitta
 

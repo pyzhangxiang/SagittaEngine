@@ -9,9 +9,9 @@
 // INCLUDES //////////////////////////////////////////
 #include "math/SagittaPlatform.h"
 #include "math/sgMath.h"
-#include "engine/serialization/sg_serialization_nvp.h"
-#include "engine/serialization/sgInXmlArchive.h"
-#include "engine/serialization/sgOutXmlArchive.h"
+//#include "engine/serialization/sg_serialization_nvp.h"
+//#include "engine/serialization/sgBaseArchive.h"
+//#include "engine/serialization/sgOutXmlArchive.h"
 #include "sgMemObject.h"
 #include "sgStrHandle.h"
 #include "sgClassMeta.h"
@@ -33,6 +33,9 @@ namespace Sagitta{
         SERIALIZE_BEGIN(sgObject)
         std::string mName;
         SERIALIZE_END
+
+		bool __destroying;
+
     public:
         sgClassMeta *mMeta;
 	
@@ -51,6 +54,8 @@ namespace Sagitta{
 	// member functions
 
 	public:
+		void __markDestroying(void);
+		bool _isDestroying(void) const{ return __destroying; }
 
 		/** Gets this object id. */
 		id_type getId(void) const;
@@ -62,23 +67,21 @@ namespace Sagitta{
 		/** Sets my name. */
 		void setName(const std::string &aName);
         
-        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
-        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
+//        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
+//        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
         
         static sgObject *createObject(const sgStrHandle &classname);
-        static void destroyObject(sgObject *obj);
+        static void destroyObject(sgObject *obj, bool check=true);
         static sgObject *getObject(id_type oid);
-        
-        virtual void setShowDebug(bool show){}
 
 	};
-    
+    /*
     template<class Archive>
     Archive &operator & (Archive &archive, sgObject &obj)
     {
         archive & SG_MAKE_NVP("mName", obj.mName);
         return archive;
-    }
+    }*/
 
 } // namespace Sagitta
 

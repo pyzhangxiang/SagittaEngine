@@ -15,6 +15,7 @@ namespace Sagitta{
     
 	class sgBoneObject;
     class sgSceneObject;
+	class sgRagdoll;
     
 	class _SG_KernelExport sgSkeleton : public sgObject
     {
@@ -37,6 +38,9 @@ namespace Sagitta{
 		sgSceneObject *mpRoot;
         sgBoneObject *mpBoneRoot;
         BoneNodeMap mBoneNodeMap;
+
+		sgRagdoll *mpRagdoll;
+
         // constructors & destructor
 	public:
 		sgSkeleton(void);
@@ -46,8 +50,14 @@ namespace Sagitta{
 		sgSceneObject *getRoot(void) const;
         sgBoneObject *getBoneRoot(void) const;
 		virtual void update(Float32 deltaTime);
+
+		sgBoneObject *getBoneNode(const std::string &bonename) const;
+		size_t getBoneNum(void) const{ return mBoneNodeMap.size(); }
         
-        sgSceneObject *parent(void);
+        sgSceneObject *parent(void) const;
+
+		sgRagdoll *getRagdoll(void) const{ return mpRagdoll; }
+		sgRagdoll *setRagdoll(sgRagdoll *ragdoll);
 
     protected:
         // for sgBoneObject

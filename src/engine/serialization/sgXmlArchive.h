@@ -16,7 +16,7 @@ namespace Sagitta
 {   
     namespace serialization
     {
-        class sgXmlArchive : public sgBaseArchive
+        class _SG_KernelExport sgXmlArchive : public sgBaseArchive
 	    {
         protected:
             typedef std::map<void*, void*> PtrMap;

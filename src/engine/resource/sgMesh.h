@@ -244,6 +244,11 @@ namespace Sagitta{
 		/// face normal list
 		sgBuffer *m_pFaceNormalBuffer;
 		
+		// if the number of vertics and normals and texture coordinates are defferent
+		// we will prepare a flat vertion data
+		sgVertexData *mpVertexDataFlat;
+		sgVertexIndexBuffer *mpIndexDataFlat;
+		//sgBuffer *mpFaceNormalFlat;
 		
 		/// edge normal list, the size is equal to the number index data
         //	sgBuffer *m_pEdgeNormalList;	// no need now, for ray tracing
@@ -276,22 +281,23 @@ namespace Sagitta{
          
          */
 		void calCenterAndRadius(void);
-        
+        bool prepareFlatData(void);
+
         void release(void);
+
+		void _setDirty(void){ m_bGeometryPrepared = false; }
 	public:
 
 		void reset(uInt aPolyType,
 			size_t aVertexNum,
-			size_t aPolyNum,
-			bool aSmooth = true,
-			bool aCounterClockWise = true);
+			size_t aPolyNum);
 		
 		/** Gets if geometry prepared. */
 		bool geometryPrepared(void) const;
 		/** Prepare center and radius. */
-		void prepareGeometry(void);
+		bool prepareGeometry(void);
         
-		/** Locates this object to it's center. Overrides from sgRenderable. */
+		/** Locates this object to it's center. */
 		void locateToCenter(void);
         
 		/** Gets polygon type. */
@@ -303,7 +309,7 @@ namespace Sagitta{
 		/** If I'm smooth. */
 		bool isSmooth(void) const;
 		/** Sets smooth property. */
-		void setSmooth(bool aSmooth);
+		bool setSmooth(bool aSmooth);
         
 		/** If my normals radiate out. */
 		bool normalOuter(void) const;
@@ -350,7 +356,9 @@ namespace Sagitta{
          @param
          outIBuffer Where copied indices data stored, should has been malloced.
          */
-		void getVertexBuffer(sgVertexData *outVBuffer, sgVertexIndexBuffer *outIBuffer) const;
+		//void getVertexBuffer(sgVertexData *outVBuffer, sgVertexIndexBuffer *outIBuffer) const;
+
+		bool getVertexBuffer(sgVertexData **outVBuffer, sgVertexIndexBuffer **outIBuffer);
         
 		/** Gets face normal buffer 
          */
@@ -390,8 +398,8 @@ namespace Sagitta{
 		/** Gets my max radius. */
 		Real maxRadius(void) const;
         
-        virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
-        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
+        //virtual void load(SERIALIZE_LOAD_ARCHIVE &archive);
+        //virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
         
 		/** Gets full model transform matrix for this renderable object. */
 		//Matrix4 getModelMatrix(void) const;

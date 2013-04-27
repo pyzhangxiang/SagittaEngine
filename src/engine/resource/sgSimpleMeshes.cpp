@@ -13,6 +13,7 @@
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
 #include "engine/common/sgStringUtil.h"
+#include "engine/common/sgUtil.h"
 #include "math/sgVector2.h"
 #include "math/sgVector3.h"
 #include "math/sgPlane.h"
@@ -29,17 +30,18 @@ namespace Sagitta{
     sgStrHandle sgMeshSphere::InternalFileName = "__sagitta.internal.sgmeshsphere.mesh";
     sgStrHandle sgMeshCone::InternalFileName = "__sagitta.internal.sgmeshcone.mesh";
 	sgStrHandle sgMeshGrid::InternalFileName = "__sagitta.internal.sgmeshgrid.mesh";
+	sgStrHandle sgMeshPlane::InternalFileName = "__sagitta.internal.sgmeshplane.mesh";
     
     void sgLoadInternalMeshes(void)
     {
         sgResourceCenter *rm = sgResourceCenter::instance();
         if(rm)
         {
-            rm->createResource(sgMeshLine::GetClassName(), sgMeshLine::InternalFileName);
-            rm->createResource(sgMeshTriangle::GetClassName(), sgMeshTriangle::InternalFileName);
-            rm->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
-            rm->createResource(sgMeshSphere::GetClassName(), sgMeshSphere::InternalFileName);
-            rm->createResource(sgMeshCone::GetClassName(), sgMeshCone::InternalFileName);
+            rm->createResource(sgMeshLine::GetClassTypeName(), sgMeshLine::InternalFileName);
+            rm->createResource(sgMeshTriangle::GetClassTypeName(), sgMeshTriangle::InternalFileName);
+            rm->createResource(sgMeshCube::GetClassTypeName(), sgMeshCube::InternalFileName);
+            rm->createResource(sgMeshSphere::GetClassTypeName(), sgMeshSphere::InternalFileName);
+            rm->createResource(sgMeshCone::GetClassTypeName(), sgMeshCone::InternalFileName);
         }
     }
     
@@ -52,12 +54,15 @@ namespace Sagitta{
     {
         reset(1, 1, 1);
         
-		m_pPosition = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		m_pPosition = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         
-		m_pColor = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColor = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
+		// juse is this variable
 		*pIndex = 0;
+
+		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -92,12 +97,12 @@ namespace Sagitta{
     {
         reset(2, 2, 1);
         
-        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         m_pPosData[0] = Vector3(0.0f, 0.0f, 0.0f);
 		m_pPosData[1] = Vector3(1.0f, 1.0f, 1.0f);
         
         
-		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         m_pColorData[0] = Color::WHITE;
 		m_pColorData[1] = Color::WHITE;
         
@@ -105,7 +110,7 @@ namespace Sagitta{
 		pIndex[0] = 0;
 		pIndex[1] = 1;
         
-		calCenterAndRadius();
+		prepareGeometry();
 	}
     
 	//  [1/5/2009 zhangxiang]
@@ -126,13 +131,16 @@ namespace Sagitta{
     void sgMeshLine::setVertecies(const Vector3 &p1, const Color &c1,
                                   const Vector3 &p2, const Color &c2)
     {
+		_setDirty();
+
         m_pPosData[0] = p1;
 		m_pPosData[1] = p2;
         
         m_pColorData[0] = c1;
 		m_pColorData[1] = c2;
         
-        calCenterAndRadius();
+        prepareGeometry();
+
     }
     
 	// sgLine //////////////////////////////////////////////////////////////////////////
@@ -147,12 +155,12 @@ namespace Sagitta{
         
         m_bCounterClockWise = true;
         
-        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+        m_pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
         m_pPosData[0] = Vector3(-1.0f, 0.0f, 0.0f);
 		m_pPosData[1] = Vector3(1.0f, 0.0f, 0.0f);
         m_pPosData[2] = Vector3(0.0f, 1.0f, 0.0f);
         
-		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		m_pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ColorAttributeName, RDT_UBYTE, 4, m_iVertexNum)->data());
         m_pColorData[0] = Color::WHITE;
         m_pColorData[1] = Color::WHITE;
         m_pColorData[2] = Color::WHITE;
@@ -162,9 +170,8 @@ namespace Sagitta{
 		pIndex[1] = 1;
 		pIndex[2] = 2;
         
-		calCenterAndRadius();
-		setupNormals();
-        
+		//setupNormals();
+        prepareGeometry();
 		m_pFaceNormal = static_cast<Vector3*>(m_pFaceNormalBuffer->data());
 	}
     
@@ -206,6 +213,9 @@ namespace Sagitta{
                                       const Vector3 &p2, const Color &c2,
                                       const Vector3 &p3, const Color &c3)
     {
+
+		_setDirty();
+
         m_pPosData[0] = p1;
 		m_pPosData[1] = p2;
         m_pPosData[2] = p3;
@@ -214,8 +224,8 @@ namespace Sagitta{
 		m_pColorData[1] = c2;
         m_pColorData[2] = c3;
         
-        calCenterAndRadius();
-		setupNormals();
+		//setupNormals();
+		prepareGeometry();
         
     }
     
@@ -244,9 +254,9 @@ namespace Sagitta{
 	//  [1/5/2009 zhangxiang]
 	void sgMeshCube::init(void){
 
-		Real halfLength = m_fEdgeLength * 0.5;
+		Real halfLength = m_fEdgeLength * 0.5f;
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		// setup vertecies
@@ -309,9 +319,10 @@ namespace Sagitta{
 		pIndexData[34] = 5;
 		pIndexData[35] = 2;
 
-		calCenterAndRadius();
-		setupNormals();
+        setSmooth(false);
+		//setupNormals();
 		//	computeEdgeNormal(); for future ...
+		prepareGeometry();
 	}
 
 	// sgMeshCube //////////////////////////////////////////////////////////////////////////
@@ -341,7 +352,7 @@ namespace Sagitta{
 		}
          */
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		Real RX2 = m_fRadius + m_fRadius;
@@ -406,10 +417,10 @@ namespace Sagitta{
 
 		m_Center = Vector3::ZERO;
 		m_fAverageRadius = m_fMaxRadius = m_fRadius;
-		m_bGeometryPrepared = true;
 
 		// will calculate normals 
-		trianglate();
+		//trianglate();
+		prepareGeometry();
 	}
 
 	//  [8/18/2008 zhangxiang]
@@ -459,7 +470,7 @@ namespace Sagitta{
 							"sgMeshCone::init");
 		}
 */
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		size_t *pIndexData = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
 		// setup vertices
@@ -500,9 +511,9 @@ namespace Sagitta{
 			++slice;
 		}
 
-		calCenterAndRadius();
-		setupNormals();
+		//setupNormals();
 	//	setupEdgeNormal(); // for future ...
+		prepareGeometry();
 	}
 
 	// sgMeshCone //////////////////////////////////////////////////////////////////////////
@@ -529,7 +540,7 @@ namespace Sagitta{
 		int hHalfTotalLength = hTotalLength * 0.5;
 		int vHalfTotalLength = vTotalLength * 0.5;
 
-		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::ET_VERTEX, 3, m_iVertexNum)->data());
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
 		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
 		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
 
@@ -578,13 +589,90 @@ namespace Sagitta{
 			z += aiLengthPerUnit;
 		}
 
-		m_bNormalOuter = false;
+		m_bNormalOuter = true;
 
-		calCenterAndRadius();
+		prepareGeometry();
 	}
 
 	//  [8/18/2008 zhangxiang]
 	sgMeshGrid::~sgMeshGrid(void){
+
+	}
+
+
+	// sgMeshPlane //////////////////////////////////////////////////////////////////////////
+
+	SG_META_DEFINE(sgMeshPlane, sgMesh)
+
+		//  [8/18/2008 zhangxiang]
+		sgMeshPlane::sgMeshPlane()
+		: sgMesh()
+	{
+		UInt32 aiLengthPerUnit = 50;
+		UInt32 aiHUnitNum = 50;
+		UInt32 aiVUnitNum = 50;
+		//reset(2, 2 * (aiHUnitNum + aiVUnitNum), aiHUnitNum + aiVUnitNum + 2);
+		reset(4, aiHUnitNum * aiVUnitNum * 4, aiHUnitNum * aiVUnitNum);
+
+		int hTotalLength = aiLengthPerUnit * aiHUnitNum;
+		int vTotalLength = aiLengthPerUnit * aiVUnitNum;
+		int hHalfTotalLength = hTotalLength * 0.5;
+		int vHalfTotalLength = vTotalLength * 0.5;
+
+		Vector3 *pPosData = static_cast<Vector3*>(m_pVertexData->createElement(sgVertexBufferElement::VertexAttributeName, RDT_F, 3, m_iVertexNum)->data());
+		Vector2 *pUV0Data = static_cast<Vector2*>(m_pVertexData->createElement(sgVertexBufferElement::UV0AttributeName, RDT_F, 2, m_iVertexNum)->data());
+		//Color *pColorData = static_cast<Color*>(m_pVertexData->createElement(sgVertexBufferElement::ET_COLOR, 4, m_iVertexNum)->data());
+		size_t *pIndex = static_cast<size_t*>(m_pIndexData->createElement(sgVertexBufferElement::ET_VERTEX)->data());
+        
+        Int32 xLeft = -hHalfTotalLength;
+        Int32 zTop = -vHalfTotalLength;
+        UInt32 iVertex = 0;
+        for(UInt32 row=0; row<aiVUnitNum; ++row, zTop+=aiLengthPerUnit)
+        {
+            xLeft = -hHalfTotalLength;
+            for(UInt32 col=0; col<aiHUnitNum; ++col, xLeft+=aiLengthPerUnit, iVertex+=4)
+            {
+                pPosData[iVertex] = Vector3(xLeft, 0.0f, zTop);
+                pPosData[iVertex+1] = Vector3(xLeft, 0.0f, zTop+(Int32)aiLengthPerUnit);
+                pPosData[iVertex+2] = Vector3(xLeft+(Int32)aiLengthPerUnit, 0.0f, zTop+(Int32)aiLengthPerUnit);
+                pPosData[iVertex+3] = Vector3(xLeft+(Int32)aiLengthPerUnit, 0.0f, zTop);
+                
+                pUV0Data[iVertex] = Vector2(0.0f, 0.0f);
+                pUV0Data[iVertex+1] = Vector2(0.0f, 1.0f);
+                pUV0Data[iVertex+2] = Vector2(1.0f, 1.0f);
+                pUV0Data[iVertex+3] = Vector2(1.0f, 0.0f);
+                
+                pIndex[iVertex] = iVertex;
+                pIndex[iVertex+1] = iVertex+1;
+                pIndex[iVertex+2] = iVertex+2;
+                pIndex[iVertex+3] = iVertex+3;
+            }
+        }
+		/*
+		pPosData[0] = Vector3(-hHalfTotalLength, 0.0f, -vHalfTotalLength);
+		pPosData[1] = Vector3(-hHalfTotalLength, 0.0f, vHalfTotalLength);
+		pPosData[2] = Vector3(hHalfTotalLength, 0.0f, vHalfTotalLength);
+		pPosData[3] = Vector3(hHalfTotalLength, 0.0f, -vHalfTotalLength);
+
+		pUV0Data[0] = Vector2(0.0f, 0.0f);
+		pUV0Data[1] = Vector2(0.0f, 1.0f);
+		pUV0Data[2] = Vector2(1.0f, 1.0f);
+		pUV0Data[3] = Vector2(0.0f, 0.0f);
+
+		pIndex[0] = 0;
+		pIndex[1] = 1;
+		pIndex[2] = 2;
+		pIndex[3] = 3;
+         */
+
+		m_bNormalOuter = true;
+        setSmooth(false);
+
+		prepareGeometry();
+	}
+
+	//  [8/18/2008 zhangxiang]
+	sgMeshPlane::~sgMeshPlane(void){
 
 	}
 

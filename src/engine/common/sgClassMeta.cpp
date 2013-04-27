@@ -65,7 +65,7 @@ namespace Sagitta
     {
         MetaMap::const_iterator it = mMetaMap.find(name);
         if(it == mMetaMap.end())
-            return 0;
+            return NULL;
         return it->second;
     }
 }

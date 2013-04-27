@@ -7,17 +7,25 @@
 // INCLUDES //////////////////////////////////////////
 #include "sgGLRenderer.h"
 #include "sgViewport.h"
+#include "sgRenderEffect.h"
+#include "sgRenderTarget.h"
+#include "sgRenderTargetTexture.h"
+#include "engine/buffer/sgFrameBuffer.h"
 #include "engine/buffer/sgVertexData.h"
 #include "engine/buffer/sgVertexIndexBuffer.h"
 #include "engine/buffer/sgVertexBufferElement.h"
+#include "engine/common/sgUtil.h"
 #include "engine/common/sgException.h"
+#include "engine/common/sgLogSystem.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "engine/component/sgLightComponent.h"
 #include "engine/component/sgRenderStateComponent.h"
 #include "engine/component/sgMeshComponent.h"
 #include "engine/resource/sgMaterial.h"
 #include "engine/resource/sgMesh.h"
+#include "engine/resource/sgTexture.h"
 #include "sgGLInclude.h"
+#include "sgGLUtil.h"
 
 // DECLARES //////////////////////////////////////////
 
@@ -27,9 +35,37 @@ namespace Sagitta{
     SG_META_DEFINE(sgGLRenderer, sgRenderer)
 
 	//  [8/1/2008 zhangxiang]
-	sgGLRenderer::sgGLRenderer() :
-	sgRenderer(){
-		
+	sgGLRenderer::sgGLRenderer()
+	: sgRenderer()
+    {
+		// init uniform func map
+        mUniformFuncMap[RDT_F] = sgSetUniform1f;
+        mUniformFuncMap[RDT_FV2] = sgSetUniform2fv;
+        mUniformFuncMap[RDT_FV3] = sgSetUniform3fv;
+        mUniformFuncMap[RDT_FV4] = sgSetUniform4fv;
+        
+        mUniformFuncMap[RDT_I] = sgSetUniform1i;
+        mUniformFuncMap[RDT_IV2] = sgSetUniform2iv;
+        mUniformFuncMap[RDT_IV3] = sgSetUniform3iv;
+        mUniformFuncMap[RDT_IV4] = sgSetUniform4iv;
+        
+        mUniformFuncMap[RDT_TEXTURE] = sgSetUniform1i;
+        /*
+        mUniformFuncMap[RDT_UI] = sgSetUniform1ui;
+        mUniformFuncMap[RDT_UIV2] = sgSetUniform2uiv;
+        mUniformFuncMap[RDT_UIV3] = sgSetUniform3uiv;
+        mUniformFuncMap[RDT_UIV4] = sgSetUniform4uiv;
+        */
+        /*
+        mUniformFuncMap[RDT_B] = sgSetUniform1b;
+        mUniformFuncMap[RDT_BV2] = sgSetUniform2bv;
+        mUniformFuncMap[RDT_BV3] = sgSetUniform3bv;
+        mUniformFuncMap[RDT_BV4] = sgSetUniform4bv;
+        */
+        
+        mUniformFuncMap[RDT_FM22] = sgSetUniformMatrixf22;
+        mUniformFuncMap[RDT_FM33] = sgSetUniformMatrixf33;
+        mUniformFuncMap[RDT_FM44] = sgSetUniformMatrixf44;
 	}
 
 	//  [8/1/2008 zhangxiang]
@@ -67,8 +103,13 @@ namespace Sagitta{
 	//	gluPerspective(90.0f,(GLfloat)width/(GLfloat)height,0.1f,10000.0f);
 	//	glMatrixMode(GL_MODELVIEW);                            
 	//	glLoadIdentity();
-	}
+	} 
 */
+    void sgGLRenderer::acceptRenderTarget(sgRenderTarget *rt)
+    {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rt->getRtId());
+    }
+    
 	//  [1/15/2009 zhangxiang]
 	void sgGLRenderer::setViewport(sgViewport *aViewport) const{
 		glViewport(aViewport->actleft(), aViewport->acttop(), aViewport->actwidth(), aViewport->actheight());
@@ -126,8 +167,8 @@ namespace Sagitta{
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, aGlobalAmbiantColor.toGLColor().data());
 
 		sgLightComponent *light;
-		LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
-		LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
+		sg_render::LightList::const_iterator lit = m_CurRenderParam.lightlist.begin();
+		sg_render::LightList::const_iterator leit = m_CurRenderParam.lightlist.end();
 		// OpenGL only support 8 light at most
 		int lightNum = 0;
 		for(; lightNum<9 && leit!=lit; ++lightNum, ++lit){
@@ -146,18 +187,24 @@ namespace Sagitta{
 
 	//  [1/15/2009 zhangxiang]
 	void sgGLRenderer::render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const{
-        sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassName()));
+        sgMeshComponent *meshComp = (sgMeshComponent*)(aRenderable->getComponent(sgMeshComponent::GetClassTypeName()));
         if(!meshComp)
             return ;
         sgMesh *mesh = meshComp->getMesh();
         if(!mesh)
             return ;
         
-        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassName()));
+        sgRenderStateComponent *renderState = (sgRenderStateComponent*)(aRenderable->getComponent(sgRenderStateComponent::GetClassTypeName()));
         sgMaterial *material = 0;
         if(renderState)
-            material = (sgMaterial*)(renderState->getMaterial());
+            material = renderState->getMaterial();
         
+		sgVertexData *pvb = NULL;// = mesh->getVertexData(); //new sgVertexData();
+		sgVertexIndexBuffer *pvib = NULL; // = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
+		if(!mesh->getVertexBuffer(&pvb, &pvib))
+			return ;
+		const Matrix4 &modelMatrix = aRenderable->getFullTransform();
+
 		// setup material
 		if( (renderState && material) && (aGlobalRop.isLightEnable() || 
            (renderState->getRenderState().isLightEnable())) )
@@ -169,20 +216,9 @@ namespace Sagitta{
 			glMaterialfv(GL_FRONT, GL_EMISSION, material->emissionColor().toGLColor().data());
 		}
 
-        sgVertexData *pvb = mesh->getVertexData(); //new sgVertexData();
-		sgVertexIndexBuffer *pvib = mesh->getVertexIndexBuffer(); //new sgVertexIndexBuffer(sgVertexBufferElement::ET_VERTEX);
-        //	mesh->getVertexBuffer(pvb, pvib);
-        Matrix4 modelMatrix = aRenderable->getFullTransform();
-        int polyType = retMapping(mesh->polyType());
-		if(m_CurRenderParam.scene_gpu_program && m_CurRenderParam.current_gpu_program)
-        {
-            //renderProgramPipeline(pvb, pvib, modelMatrix, polyType);
-            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
-        }
-        else
-        {
-            renderTraditionalPipeline(pvb, pvib, modelMatrix, polyType);
-        }
+        
+		
+		renderTraditionalPipeline(pvb, pvib, modelMatrix, mesh->polyType());
 
 	//	delete pvb;
 	//	delete pvib;
@@ -201,6 +237,26 @@ namespace Sagitta{
 		}
 		glDisable(GL_LIGHTING);
 	}
+    
+    void sgGLRenderer::setRenderState(const sgRenderState &rs)
+    {
+        if(rs.isFaceCullingEnable())
+        {
+            glEnable(GL_CULL_FACE);
+            if(rs.faceToCull() == sgRenderState::FTC_BACK)
+            {
+                glCullFace(GL_BACK);
+            }
+            else
+            {
+                glCullFace(GL_FRONT);
+            }
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+    }
 
 	//  [8/1/2008 zhangxiang]
 	int sgGLRenderer::retMapping(int aRet) const{
@@ -237,10 +293,10 @@ namespace Sagitta{
 		}
 	}
     
-    bool sgGLRenderer::initShaderEnvironment(void)
+    bool sgGLRenderer::initShaderEnvironmentImpl(void)
     {
         glewInit();
-        bool gl2_0 = glewIsSupported("GL_VERSION_2_0");
+        bool gl2_0 = glewIsSupported("GL_VERSION_2_0") != 0;
         if(!gl2_0)
         {
             std::string log = "OpenGL 2.0 not supported\n";
@@ -307,7 +363,7 @@ namespace Sagitta{
 		glPushMatrix();
 		glMultMatrixf(modelMatrix.transpose().arr());
         
-		glDrawElements(polyType, pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
+		glDrawElements(retMapping(polyType), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
 		
 		glPopMatrix();
         
@@ -323,6 +379,233 @@ namespace Sagitta{
     {
         if(!pvb || !pvib)
             return ;
-    }
+        
+        // enable texture
+        size_t texture_num = m_CurRenderParam.textures.size();
+        if(texture_num > 0)
+        {
+            for(size_t i=0; i<texture_num && i<sgRenderEffect::Texture_Max; ++i)
+            {
+                glActiveTexture(GL_TEXTURE0 + i);
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, m_CurRenderParam.textures[i]);
+            }
+            
+        }
+        
+		// render
+		sg_vector(int) vertexAttrEnabledList;
+		vertexAttrEnabledList.reserve(pvb->getElementNum());
 
+		const sgGpuProgram::AttributeList &attrList = m_CurRenderParam.current_gpu_program->getAttributeList();
+        
+        int count = 0;
+		sgVertexData::ConstIterator elemIt = pvb->getConstIterator();
+		for(; elemIt.hasMoreElements(); elemIt++, ++count)
+        {
+			sgVertexBufferElement *element = elemIt.value();
+
+			sgGpuProgram::AttributeList::const_iterator it = attrList.find(element->getName());
+			if(it == attrList.end())
+				continue ;
+
+			const sgGpuAttribute &attr = it->second;
+			glVertexAttribPointer(attr.location, element->coordNum(), sgGetGLDataType(element->getDataType()),
+							element->shouldNormalize(), 0, element->data());
+			glEnableVertexAttribArray(attr.location);
+
+			vertexAttrEnabledList.push_back(attr.location);
+		}
+        
+		// model transform
+		//glPushMatrix();
+		//glMultMatrixf(modelMatrix.transpose().arr());
+        
+		glDrawElements(retMapping(polyType), pvib->dataNum(), GL_UNSIGNED_INT, pvib->data());
+		
+		//glPopMatrix();
+        
+		for(size_t i=0; i<vertexAttrEnabledList.size(); ++i)
+		{
+			glDisableVertexAttribArray(vertexAttrEnabledList[i]);
+		}
+    //    glDisable(GL_TEXTURE_2D);
+    }
+    
+    int sgGLRenderer::createTexture(sgTexture *pTexture)
+    {
+        if(pTexture == NULL ||
+           ! (pTexture->hasData()) )
+        {
+            return -1;
+        }
+        sgFrameBuffer *buffer = pTexture->getBuffer();
+		if(buffer == NULL)
+		{
+			return -1;
+		}
+
+        GLint pixelFormat = GL_RGBA;
+        if(buffer->getDataSizeInBytes() == 4)
+        {
+            pixelFormat = GL_RGBA;
+        }
+        else if(buffer->getDataSizeInBytes() == 3)
+        {
+            pixelFormat = GL_RGB;
+        }
+        else
+        {
+            return -1;
+        }
+        GLuint textureId = 0;
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glTexImage2D( GL_TEXTURE_2D, 0, buffer->getDataSizeInBytes(), buffer->width(), buffer->height(), 0, pixelFormat, GL_UNSIGNED_BYTE, (GLvoid*)buffer->data() );
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+        
+        return (int)textureId;
+    }
+    
+    bool sgGLRenderer::deleteTexture(int textureId)
+    {
+		if(textureId < 0)
+			return false;
+		GLuint tid = (GLuint)textureId;
+        glDeleteTextures(1, &tid);
+        return true;
+    }
+    
+    sgRenderTargetTexture *sgGLRenderer::_createRenderTarget(UInt32 width, UInt32 height
+                                                     , UInt32 components
+                                                     , PixelFormat pixelFormat
+                                                     , RenderDataType dataType)
+    {
+        if(width == 0
+           || height == 0
+           || components == 0)
+        {
+            return NULL;
+        }
+        
+        GLuint rtId;
+        glGenFramebuffersEXT(1, &rtId);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rtId);
+        
+        
+        GLenum pf = sgGetGLPixelFormat(pixelFormat);
+        GLenum rdt = sgGetGLDataType(dataType);
+        
+        GLuint textureId;
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, pf, rdt, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+        /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);*/
+        
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
+        
+        // temp
+        // No color output in the bound framebuffer, only depth.
+        //glDrawBuffer(GL_NONE);
+        //glReadBuffer(GL_NONE);
+        
+        bool ok = false;
+        // Always check that our framebuffer is ok
+        GLenum fbostatus = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+        switch (fbostatus) {
+            case GL_FRAMEBUFFER_COMPLETE_EXT:
+                ok = true;
+                break;
+            case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_UNSUPPORTED_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT");
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT");
+                break;
+            case GL_MAX_COLOR_ATTACHMENTS_EXT:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, GL_MAX_COLOR_ATTACHMENTS_EXT");
+                break;
+            default:
+                sgLogSystem::instance()->error("sgGLRenderer::createRenderTarget, Unknown");
+                break;
+        }
+        
+        if(!ok && rtId > 0)
+        {
+            glDeleteFramebuffersEXT(1, &rtId);
+            rtId = 0;
+            glDeleteTextures(1, &textureId);
+            return NULL;
+        }
+        
+        sgRenderTargetTexture *pRT = new sgRenderTargetTexture(rtId, textureId, width, height, components);
+        return pRT;
+    }
+    
+    bool sgGLRenderer::_deleteRenderTarget(sgRenderTargetTexture *rt)
+    {
+        if(rt == NULL)
+            return false;
+        
+        GLuint rtId = rt->getRtId();
+        if(rtId > 0)
+            glDeleteFramebuffersEXT(1, &rtId);
+        GLuint textureId = rt->getRtTextureId();
+        if(textureId > 0)
+            glDeleteTextures(1, &textureId);
+        
+        return true;
+    }
+    /*
+    void sgGLRenderer::beginRenderTarget(sgRenderTarget *rt)
+    {
+        if(rt == NULL || !(rt->isActive()) )
+            return ;
+        
+        // Render to our framebuffer
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, rt->getRtId());
+		glViewport(0, 0, rt->getWidth(), rt->getHeight()); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+        
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+    
+    void sgGLRenderer::endRenderTarget(void)
+    {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        setViewport(m_CurRenderParam.pviewport);
+        // clear frame buffers
+        clearFrameBuffers(m_CurRenderParam.pviewport->getClearBuffers(),
+                          m_CurRenderParam.pviewport->getBackColor(),
+                          m_CurRenderParam.pviewport->getBackDepth(),
+                          m_CurRenderParam.pviewport->getBackStencil());
+    }
+	*/
 } // namespace Sagitta

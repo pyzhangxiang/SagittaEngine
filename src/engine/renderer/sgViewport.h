@@ -1,23 +1,22 @@
 //////////////////////////////////////////////////////
 // file: sgViewport.h @ 2008-1-31 by Zhang Xiang
-// declares of the class sgViewport
-// sgViewport is a class ...
 //////////////////////////////////////////////////////
 #ifndef __SGVIEWPORT_H__
 #define __SGVIEWPORT_H__
 
-// INCLUDES //////////////////////////////////////////
+
 #include "engine/common/sgObject.h"
 #include "math/sgColor.h"
-
-// DECLARES //////////////////////////////////////////
 
 namespace Sagitta{
 
 	class sgCameraComponent;
+	class sgRenderTarget;
 
 	class _SG_KernelExport sgViewport : public sgMemObject
 	{
+		friend class sgRenderTarget;
+
 	// enum declares
 	public:
 		enum ClearBuffers{
@@ -185,15 +184,10 @@ namespace Sagitta{
 		/** Check if I'm active. */
 		bool isActive(void) const;
 
-	// friend declare
-	public:
-		friend class sgRenderer;
-
 	}; //#### end class sgViewport
 
 } // namespace Sagitta
 
-// DEFINES ///////////////////////////////////////////
 
 #endif // __SGVIEWPORT_H__
 

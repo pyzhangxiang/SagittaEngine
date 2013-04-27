@@ -37,6 +37,7 @@ private:
 protected:
 	// scene members
 	Sagitta::sgScene *mScene;
+	Sagitta::sgSceneObject *mTargetRoot;
 	Sagitta::sgSceneObject *mCamera;
 	Sagitta::sgSceneObject *mLight;
 
@@ -45,6 +46,9 @@ protected:
 	Sagitta::Vector3 mStartRotRayX;
 	Sagitta::Vector3 mStartRotRayY;
 	Sagitta::Quaternion mStartRotOrientation;
+
+	Sagitta::Vector3 mStartRotRayTarget;
+	Sagitta::Quaternion mStartRotOrientationTarget;
 
 public:
     sgDemo(const std::string &winTitle,

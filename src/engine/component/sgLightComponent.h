@@ -20,6 +20,7 @@ namespace Sagitta{
 		Color m_Ambient;
 		Color m_Diffuse;
 		Color m_Specular;
+		Real mIntensity;
 
 	public:
 		sgLightComponent(void);
@@ -42,6 +43,9 @@ namespace Sagitta{
 
 		/** Sets the specular color of this light. */
 		void setSpecularColor(const Color &aColor);
+
+		Real getIntensity(void) const{ return mIntensity; }
+		void setIntensity(Real i){ mIntensity = i; }
 
 	}; 
 

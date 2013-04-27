@@ -126,6 +126,9 @@ int sgDemo::run(int argc, char *argv[])
 
 				curr = clock();
 				float dt = (float)(curr - last) / (float)CLK_TCK;
+				//if(dt > mFrameRate)
+				//	dt = mFrameRate;
+
 				if(dt > mFrameRate)
 				{
 					last = curr;

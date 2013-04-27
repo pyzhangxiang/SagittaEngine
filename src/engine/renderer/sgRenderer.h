@@ -5,6 +5,7 @@
 
 #include "engine/common/sgObject.h"
 #include "engine/common/sgStlAllocator.h"
+#include "engine/common/sgUtil.h"
 #include "engine/scenegraph/sgSceneObject.h"
 #include "sgRenderState.h"
 #include "math/sgColor.h"
@@ -19,6 +20,9 @@ namespace Sagitta{
     void sgDestroyRenderer(void);
     _SG_KernelExport sgRenderer *sgGetRenderer(void);
     
+    class sgBuffer;
+    // params, location, extra(matrix: if transpose; fv: count), data
+    typedef void(*SetShaderUniformFunc)(int, int, const void*);
 
 	class sgCameraComponent;
 	class sgLightComponent;
@@ -29,6 +33,56 @@ namespace Sagitta{
 	class Matrix4;
     class sgRenderQueue;
     class sgGpuProgram;
+	class sgSceneRenderEffect;
+    class sgTexture;
+    class sgRenderTarget;
+    class sgRenderTargetTexture;
+	class sgRenderTechnique;
+	class sgRenderPass;
+
+	namespace sg_render
+	{
+		typedef sg_vector(sgLightComponent*) LightList;
+		typedef sgSceneObject::SceneObjectVec ObjectList;
+
+		struct CurrentRenderParam{
+			sgViewport *pviewport;
+			sgCameraComponent *pcamera;
+			sgScene *pscene;
+			sgScene *plastscene;
+			ObjectList objlist;
+			LightList lightlist;
+			sgRenderQueue *renderqueue;
+			sgGpuProgram *scene_gpu_program;
+			sgGpuProgram *current_gpu_program;
+			sgGpuProgram *last_gpu_program;
+            
+            sgRenderState *scene_render_state;
+            
+            bool scene_program_only;
+
+			// own by the param
+			sgRenderQueue *mDefaultRenderQueue;
+            
+            Matrix4 view_matrix;
+            Matrix4 projection_matrix;
+            Matrix4 vp_matrix;
+            
+            sg_vector(Int32) textures;
+
+			CurrentRenderParam(void);
+			~CurrentRenderParam(void);
+
+			void resetRenderQueue(sgRenderQueue *rq);
+
+			/** Checks if the specified renderable object is in the forum of camera, if true, 
+				add it to the render queque of scene manager. 
+				also sort the render queue
+			 */
+			void cullObjects(sgCameraComponent *aCamera) const;
+		};
+	};
+	
 
 	/** class representation
 	@remarks
@@ -42,51 +96,21 @@ namespace Sagitta{
     {
         SG_META_DECLARE_ABSTRACT(sgRenderer)
         
+		friend class sgRenderEffect;
+        friend class sgRenderTarget;
+        friend class sgTexture;
 //        friend sgRenderer *sgCreateRenderer(const sgStrHandle &type, bool useshader);
         
     public:
-        enum DataType
-        {
-            DT_F,
-            DT_FV2,
-            DT_FV3,
-            DT_FV4,
-            DT_I,
-            DT_IV2,
-            DT_IV3,
-            DT_IV4,
-            DT_UI,
-            DT_UIV2,
-            DT_UIV3,
-            DT_UIV4,
-            DT_B,
-            DT_BV2,
-            DT_BV3,
-            DT_BV4,
-            DT_FM22,
-            DT_FM33,
-            DT_FM44,
-            DT_TEXTURE,
-            DT_NIL,
-        };
 
 	protected:
 		// key_value is z-order value
-		typedef sg_multimap(int, sgViewport*) ViewportList;
-		typedef sg_vector(sgLightComponent*) LightList;
-		typedef sgSceneObject::SceneObjectVec ObjectList;
+		//typedef sg_multimap(int, sgViewport*) ViewportList;
+        
+        typedef sg_map(int, SetShaderUniformFunc) UniformFuncMap;
+        UniformFuncMap mUniformFuncMap;
 
-		struct CurrentRenderParam{
-			sgViewport *pviewport;
-			sgCameraComponent *pcamera;
-			sgScene *pscene;
-			ObjectList objlist;
-			//ObjectList renderqueue;
-            sgRenderQueue *renderqueue;
-            sgGpuProgram *scene_gpu_program;
-            sgGpuProgram *current_gpu_program;
-			LightList lightlist;
-		};
+		
 
 	// type defines
 	
@@ -94,17 +118,19 @@ namespace Sagitta{
 	// member variables
 	protected:
 
+		sgRenderTechnique *mRenderTechnique;
+
 		/// viewport list ordered by z-order, higher = further to the front
-		ViewportList m_ViewportList;
+		//ViewportList m_ViewportList;
 
 		/// current render param for very viewport
-		mutable CurrentRenderParam m_CurRenderParam;
+		mutable sg_render::CurrentRenderParam m_CurRenderParam;
 
 		/** Whether swap buffer by renderer self, if false, let os do it. */
-		bool m_bSwapBufferSelf;
+		//bool m_bSwapBufferSelf;
 
 		/// whole render target size
-		int m_iTargetWidth, m_iTargetHeight;
+		UInt32 m_iTargetWidth, m_iTargetHeight;
 
 		/** stores whether the target's size is changed.
 			@remarks
@@ -112,15 +138,15 @@ namespace Sagitta{
 				And will be reseted after a render process.
 		*/
 	//	bool m_bResized;
-        
-        sgRenderQueue *mDefaultRenderQueue;
-        
+               
     private:
         // if the scene has an effect, then we use
         // its shader to render
         // otherwise, use the traditional pipe line
 //        bool mUseShader;
 //        void setUseShader(bool use){ mUseShader = use; }
+		bool mShaderEnvironmentPrepared;
+		//bool isShaderEnvironmentPrepared(void) const{ return mShaderEnvironmentPrepared; }
     public:
         //bool isUseShader(void) const{ return mUseShader; }
 
@@ -139,6 +165,8 @@ namespace Sagitta{
 		*/
 		virtual void doSthWhenResized(void);
 
+        virtual void acceptRenderTarget(sgRenderTarget *rt){}
+        
 		/** Sets viewport. */
 		virtual void setViewport(sgViewport *aViewport) const = 0;
 
@@ -162,13 +190,12 @@ namespace Sagitta{
 		/** Collects and setups lights.
 			@return Actually enabled lights num.
 		*/
-		int setupLights() const;
+		//int setupLights() const;
+		//  [11/6/2012 fabiozhang]
+		void collectLights(void) const;
 
 		/** Internal hook. Calls 3D API to setup lights. */
 		virtual int setupLightsImpl(const Color &aGlobalAmbiantColor) const = 0;
-
-		/** Checks if the specified renderable object is in the forum of camera, if true, add it to the render queque of scene manager. */
-		void cullObjects(sgCameraComponent *aCamera) const;
 
 		/** Renders a specific renderable object. */
 		virtual void render(const sgRenderState &aGlobalRop, sgSceneObject *aRenderable) const = 0;
@@ -178,13 +205,19 @@ namespace Sagitta{
 
 		/** Resets light state. */
 		virtual void resetLights(int aLightNum) const = 0;
+        
+        virtual void setRenderState(const sgRenderState &rs){}
 
 		/** Renders specified viewport. */
-		void render(sgViewport *aViewport) const;
+		//void render(sgViewport *aViewport) const;
 
 	protected:
 		/** Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
 		virtual int retMapping(int aRet) const = 0;
+        
+    //public:
+        virtual void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+                                           , const Matrix4 &modelMatrix, int polyType) const{};
 
 		/** Checks if target was resized.
 			@remarks Internal method.
@@ -193,79 +226,102 @@ namespace Sagitta{
 
 	public:
 		/** Gets target width. */
-		int tgtWidth(void) const;
+		UInt32 tgtWidth(void) const;
 
 		/** Gets target height. */
-		int tgtHeight(void) const;
+		UInt32 tgtHeight(void) const;
 
-		/** Creates a viewport.
-			@remarks Add the new viewport to list.
-			@param
-				aRTWidth Render target's total width.
-			@param
-				aRTHeight Render target's total height.
-			@param
-				aLeft
-			@param
-				aTop
-			@param
-				aWidth
-			@param
-				aHeight
-				Dimensions of the viewport expressed as a value between
-				0 and 1.This allows the dimensions to apply irrespective of
-				changes in the target's size: e.g. to fill the whole area,
-				values of 0,0,1,1 are appropriate.
-			@param
-				aZOrder Relative z-order in the render target. Height = further to the front.
-			@param
-				aCamera Camera this viewport to combine, could be 0.
-		*/
-		sgViewport *createViewport(int aRTWidth, int aRTHeight,
-								Real aLeft, Real aTop, 
-								Real aWidth, Real aHeight, 
-								int aZOrder, sgCameraComponent *aCamera = 0);
+		///** Creates a viewport.
+		//	@remarks Add the new viewport to list.
+		//	@param
+		//		aRTWidth Render target's total width.
+		//	@param
+		//		aRTHeight Render target's total height.
+		//	@param
+		//		aLeft
+		//	@param
+		//		aTop
+		//	@param
+		//		aWidth
+		//	@param
+		//		aHeight
+		//		Dimensions of the viewport expressed as a value between
+		//		0 and 1.This allows the dimensions to apply irrespective of
+		//		changes in the target's size: e.g. to fill the whole area,
+		//		values of 0,0,1,1 are appropriate.
+		//	@param
+		//		aZOrder Relative z-order in the render target. Height = further to the front.
+		//	@param
+		//		aCamera Camera this viewport to combine, could be 0.
+		//*/
+		//sgViewport *createViewport(int aRTWidth, int aRTHeight,
+		//						Real aLeft, Real aTop, 
+		//						Real aWidth, Real aHeight, 
+		//						int aZOrder, sgCameraComponent *aCamera = 0);
 
-		/** Remove a viewport from this renderer.
-			@remarks Destroy the specified viewport too.
-		*/
-		void removeViewport(sgViewport *aViewport);
+		///** Remove a viewport from this renderer.
+		//	@remarks Destroy the specified viewport too.
+		//*/
+		//void removeViewport(sgViewport *aViewport);
 
-		/** Remove a viewport from this renderer by index.
-			@remarks Destroy the specified viewport too.
-		*/
-		void removeViewport(uInt aIndex);
+		///** Remove a viewport from this renderer by index.
+		//	@remarks Destroy the specified viewport too.
+		//*/
+		//void removeViewport(uInt aIndex);
 
-		/** Remove all viewports.
-			@remarks Destroy all viewports too.
-		*/
-		void removeAllViewport(void);
+		///** Remove all viewports.
+		//	@remarks Destroy all viewports too.
+		//*/
+		//void removeAllViewport(void);
 
-		/** Gets the top viewport. */
-		sgViewport *topViewport(void) const;
+		///** Gets the top viewport. */
+		//sgViewport *topViewport(void) const;
 
-		/** Gets a viewport by index. */
-		sgViewport *getViewport(uInt aIndex) const;
+		///** Gets a viewport by index. */
+		//sgViewport *getViewport(uInt aIndex) const;
 
-		/** Gets viewports num. */
-		uInt getViewportNum(void) const;
+		///** Gets viewports num. */
+		//uInt getViewportNum(void) const;
 
-		/** Sets the specified viewport's z-order value. */
-		void setViewportZOrder(sgViewport *aViewport, int aZOrder);
+		///** Sets the specified viewport's z-order value. */
+		//void setViewportZOrder(sgViewport *aViewport, int aZOrder);
 
 		/** Gets Whether swap buffer by renderer self. */
-		bool swapBufferSelf(void) const;
+		//bool swapBufferSelf(void) const;
 
 		/** Initialize the environment of graphics device. */
 		virtual void init(void) = 0;
 		
+		void update(Float32 deltaTime);
+
 		/** Reset graphics attributes when the window's size changed. */
-		void resize(int aWidth, int aHeight);
+		void resize(UInt32 width, UInt32 height);
 
 		/** Renders viewports */
 		void render(void) const;
+		void render(sgRenderPass *pass);
+
+		sgRenderTechnique *getRenderTechnique(void) const{ return mRenderTechnique; }
+		sgRenderTechnique *useRenderTechnique(const sgStrHandle &techniqueName);
         
-        virtual bool initShaderEnvironment(void){ return false; };
+        bool initShaderEnvironment(void);
+		virtual bool initShaderEnvironmentImpl(void){ return false; }
+		bool isShaderInited(void) const{ return mShaderEnvironmentPrepared; }
+        
+        bool setUniformForShader(int type, int location, int extra, const void* data);
+        
+    protected:
+        /// create a texture for api
+        virtual int createTexture(sgTexture *pTexture){ return -1; }
+        virtual bool deleteTexture(int textureId){ return false; }
+        
+    public:
+        // render target
+        virtual bool _deleteRenderTarget(sgRenderTargetTexture *rt){ return false; }
+        virtual sgRenderTargetTexture *_createRenderTarget(UInt32 width, UInt32 height
+                                                   , UInt32 components
+                                                   , PixelFormat pixelFormat
+                                                   , RenderDataType dataType){ return NULL; }
 
 	}; //#### end class sgRenderer
 

@@ -32,40 +32,38 @@ void DemoSkeletonAnimation::prepare(void)
 		//mCamera->pitch(Radian(-Math::PI / 6.0f));
 
 		// set lights
-		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassName());
+		sgSceneObject *light1 = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+		sgLightComponent *lightComp1 = (sgLightComponent*)light1->createComponent(sgLightComponent::GetClassTypeName());
 		light1->setParent(mScene->getRoot());
 		light1->translate(Vector3(3.0f, 100.0f, 105.0f));
 		mLight = light1;
 
-		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassName(), sgMeshCube::InternalFileName);
-		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-		light1Debug->setIsDebugObj(true);
-		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassName());
+		sgMeshCube *meshCube = (sgMeshCube*)sgResourceCenter::instance()->createResource(sgMeshCube::GetClassTypeName(), sgMeshCube::InternalFileName);
+		sgSceneObject *light1Debug = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+		sgMeshComponent *light1DebugMeshComp = (sgMeshComponent*)light1Debug->createComponent(sgMeshComponent::GetClassTypeName());
 		light1DebugMeshComp->setMeshFile(meshCube->getFilename());
 
-		light1->setDebugObjectToShow(light1Debug);
-		light1->setShowDebug(true);
+		light1Debug->setIsDebugObj(true);
+		light1Debug->setParent(light1);
 
 
 		// grid
-		sgSceneObject *grid = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		sgSceneObject *grid = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		grid->setParent(mScene->getRoot());
-		sgMeshGrid *meshGrid = (sgMeshGrid*)sgResourceCenter::instance()->createResource(sgMeshGrid::GetClassName(), sgMeshGrid::InternalFileName);
-		sgMeshComponent *gridComp = (sgMeshComponent*)grid->createComponent(sgMeshComponent::GetClassName());
+		sgMeshGrid *meshGrid = (sgMeshGrid*)sgResourceCenter::instance()->createResource(sgMeshGrid::GetClassTypeName(), sgMeshGrid::InternalFileName);
+		sgMeshComponent *gridComp = (sgMeshComponent*)grid->createComponent(sgMeshComponent::GetClassTypeName());
 		gridComp->setMeshFile(meshGrid->getFilename());
 
 
-		sgSceneObject *player = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+		sgSceneObject *player = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 		player->setParent(mScene->getRoot());
 		// load .bvh
 		sgSkeleton *pSkeleton = sgLoader::load_bvh_skeleton("animations/GHBW_0001.bvh");
-		pSkeleton->setShowDebug(true);
 		player->setSkeleton(pSkeleton);
 		//pSkeleton->setParent(mScene->getRoot());
 
 		sgAnimation *pAnimation = sgLoader::load_bvh_animation("animations/GHBW_0001.bvh");
-		sgAnimationComponent *animComp = (sgAnimationComponent*)player->createComponent(sgAnimationComponent::GetClassName());
+		sgAnimationComponent *animComp = (sgAnimationComponent*)player->createComponent(sgAnimationComponent::GetClassTypeName());
 		animComp->setAnimationFile(pAnimation->getFilename());
 		animComp->setPlayMode(sgAnimationComponent::PM_LOOP);
 		animComp->play();

@@ -31,9 +31,11 @@ namespace Sagitta{
 
 	// member functions
 	private:
+        virtual void acceptRenderTarget(sgRenderTarget *rt);
+        
 		/** Sets viewport. Overrides from sgRenderer. */
 		void setViewport(sgViewport *aViewport) const;
-
+        
 		/** clear frame buffers. Overrides from sgRenderer. */
 		void clearFrameBuffers(uInt aFlags,
 							const Color &aBkColor,
@@ -62,6 +64,8 @@ namespace Sagitta{
 
 		/** Resets light state. Overrides from sgRenderer. */
 		void resetLights(int aLightNum) const;
+        
+        virtual void setRenderState(const sgRenderState &rs);
 
 	protected:
 		/** Overridden from sgRenderer. Does conversion between Sagitta element type to graphics api's element type (e.g. ET_POINTS to GL_POINTS). */
@@ -74,12 +78,24 @@ namespace Sagitta{
 		/** Overridden from sgRenderer. Reset graphics attributes when the window's size changed. */
 	//	void resize(int aWidth, int aHeight);
         
-        virtual bool initShaderEnvironment(void);
+        virtual bool initShaderEnvironmentImpl(void);
+    
+    protected:
+        virtual int createTexture(sgTexture *pTexture);
+        virtual bool deleteTexture(int textureId);
+        
+    public:
+		virtual bool _deleteRenderTarget(sgRenderTargetTexture *rt);
+        virtual sgRenderTargetTexture *_createRenderTarget(UInt32 width, UInt32 height
+                                                   , UInt32 components
+                                                   , PixelFormat pixelFormat
+                                                   , RenderDataType dataType);
         
     private:
         void renderTraditionalPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                        , const Matrix4 &modelMatrix, int polyType) const;
-        void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
+
+        virtual void renderProgramPipeline(sgVertexData *pvb, sgVertexIndexBuffer *pvib
                                    , const Matrix4 &modelMatrix, int polyType) const;
 
 	}; //#### end class sgGLRenderer

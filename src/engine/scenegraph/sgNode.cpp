@@ -30,7 +30,6 @@ namespace Sagitta{
 	m_DerivedPosition(Vector3::ZERO),
 	m_DerivedScale(Vector3::UNIT_SCALE),
 	m_bCachedTransformOutOfDate(true){
-		
 		needUpdate();
 	}
 
@@ -38,6 +37,7 @@ namespace Sagitta{
 	//  [7/30/2008 zhangxiang]
     //  [10/26/2012 zhangxiang]
 	sgNode::~sgNode(){
+
         if(m_pParent)
         {
             // detached me from my parent
@@ -56,7 +56,13 @@ namespace Sagitta{
 		ChildNodeMap::iterator eit = to_rm.end();
 		for(; it!=eit; ++it)
 		{
-            sgObject::destroyObject(it->second);
+			it->second->__markDestroying();
+		}
+
+		it = to_rm.begin();
+		for(; it!=eit; ++it)
+		{
+            sgObject::destroyObject(it->second, false);
 		}
 		
 	}
@@ -89,6 +95,7 @@ namespace Sagitta{
 
 	//  [7/30/2008 zhangxiang]
 	void sgNode::setParent(sgNode *apParent){
+
         if(m_pParent)
         {
             m_pParent->removeChild(this);
@@ -451,14 +458,14 @@ namespace Sagitta{
 			m_DerivedPosition += m_pParent->_getDerivedPosition();
 
 		}
-		/*else{
+		else{
 			// Root node, no parent
 			m_DerivedOrientation = m_RelativeOrientation;
 			m_DerivedPosition = m_RelativePosition;
 			m_DerivedScale = m_RelativeScale;
 		
 		}
-		*/
+		
 		
 
 		m_bCachedTransformOutOfDate = true;
@@ -471,8 +478,15 @@ namespace Sagitta{
     {
         ChildNodeMap::const_iterator it = m_Children.find(aId);
         if(it == m_Children.end())
-            return 0;
+            return NULL;
         return it->second;
+    }
+    
+    sgNode *sgNode::getFirstChild(void) const
+    {
+        if(m_Children.empty())
+            return NULL;
+        return m_Children.begin()->second;
     }
 
 	//  [1/6/2009 zhangxiang]
@@ -498,7 +512,8 @@ namespace Sagitta{
 
 	void sgNode::update( Float32 deltaTime )
 	{
-		_updateFromParent();
+		if(m_bNeedUpdateFromParent)
+			_updateFromParent();
 
 		// update children
 		ChildNodeMap::iterator it = m_Children.begin();
@@ -514,5 +529,63 @@ namespace Sagitta{
     {
         
     }
+
+	void sgNode::setAbsoluteOrientation( const Quaternion &aq )
+	{
+		Quaternion q = Quaternion::IDENTITY;
+		if(parent())
+		{
+			q = parent()->absoluteOrientation().inverse();
+		}
+		setRelativeOrientation(q * aq);
+	}
+
+	void sgNode::getInheritsNodes( NodeList &outlist, size_t count /*= 0*/, const StringHandleSet &classTypefilter /*= StringHandleSet()*/ )
+	{
+		outlist.clear();
+		if(count > 0)
+			outlist.reserve(count);
+		else
+			count = size_t(-1) - 1;
+
+		bool doFilter = true;
+		if(classTypefilter.empty())
+			doFilter = false;
+
+		size_t mycount = 0;
+
+		if(mycount == count)
+			return ;
+
+		sg_list(sgNode*) nodeQueue;
+		nodeQueue.push_back(this);
+
+		ChildNodeMap *childMap = &m_Children;
+		ChildNodeMap::const_iterator it = childMap->begin();
+		while(mycount < count && !nodeQueue.empty())
+		{
+			sgNode *node = nodeQueue.front();
+			nodeQueue.pop_front();
+			// do sth.
+			if(!doFilter)
+			{
+				outlist.push_back(node);
+				++mycount;
+			}
+			else if(classTypefilter.find(node->GetMyClassName()) != classTypefilter.end())
+			{
+				outlist.push_back(node);
+				++mycount;
+			}
+
+			childMap = &(node->m_Children);
+			it = childMap->begin();
+			for(; it!=childMap->end(); ++it)
+			{
+				nodeQueue.push_back(it->second);
+			}
+
+		}
+	}
 
 } // namespace Sagitta

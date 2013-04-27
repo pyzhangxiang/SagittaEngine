@@ -9,12 +9,10 @@
 #include "engine/renderer/sgRenderState.h"
 #include <map>
 
-// DECLARES //////////////////////////////////////////
-
 namespace Sagitta{
 
 	class sgSceneObject;
-    class sgRenderEffect;
+	class sgDynamicsWorld;
 
 	class _SG_KernelExport sgScene : public sgObject
     {
@@ -30,9 +28,11 @@ namespace Sagitta{
 	protected:
 		sgSceneObject *mpRoot;
         Color mAmbiantColor;
-        sgRenderState mRenderState;
+        //sgRenderState mRenderState;
         
-        sgRenderEffect *mRenderEffect;
+		bool mPhysicsEnabled;
+		bool mPhysicsContinuous;
+		sgDynamicsWorld *mDynamicsWorld;
 
 	// constructors & destructor
 	public:
@@ -46,13 +46,17 @@ namespace Sagitta{
         const Color &getAmbiantColor(void) const;
         void setAmbiantColor(const Color &color);
 
-        const sgRenderState &getRenderState(void) const;
-        void setRenderState(const sgRenderState &state);
-        
-        sgRenderEffect *createRenderEffect(const sgStrHandle &effectType);
-        void destroyRenderEffect(void);
-        sgRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
+		bool isPhysicsEnabled(void) const{ return mPhysicsEnabled; }
+		void setPhysicsEnabled(bool enable);
+		bool isPhysicsContinuous(void) const{ return mPhysicsContinuous; }
+		void setPhysicsContinuous(bool continuous);
+		void stepPhysics(Float32 deltaTime);
+		sgDynamicsWorld *getDynamicsWorld(void) const{ return mDynamicsWorld; }
 
+        //const sgRenderState &getRenderState(void) const;
+        //void setRenderState(const sgRenderState &state);
+        
+  
 	}; //#### end class sgSceneNode
 
 } // namespace Sagitta

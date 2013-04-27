@@ -1,6 +1,6 @@
 
 #include "sgOutXmlArchive.h"
-#include "strtk/strtk.hpp"
+//#include "strtk/strtk.hpp"
 #include <fstream>
 #include <string>
 #include <list>

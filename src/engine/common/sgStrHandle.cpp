@@ -9,7 +9,9 @@
 
 namespace Sagitta
 {
-    sgStrHandle sgStrHandle::EmptyString("");
+    const sgStrHandle sgStrHandle::EmptyString("");
+	const sgStrHandle sgStrHandle::UnknownString("Unknown");
+	const sgStrHandle sgStrHandle::InvalidString("Invalid");
 
 	sgStrHandle::sgStrHandle( void ) : mStr(0)
 	{

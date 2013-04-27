@@ -12,6 +12,8 @@
 namespace Sagitta{
 
 	class sgMaterial;
+    class sgRenderEffect;
+    class sgTexture;
 
 	class _SG_KernelExport sgRenderStateComponent : public sgComponent
 	{
@@ -20,7 +22,12 @@ namespace Sagitta{
 	protected:
 		sgStrHandle mMaterialFile; // material id
         
+        typedef sg_vector(sgStrHandle) TextureList;
+        TextureList mTextureList;
+        
 		sgRenderState mRenderState;
+        
+        sgRenderEffect *mRenderEffect;
 
 	public:
 		sgRenderStateComponent(void);
@@ -30,9 +37,17 @@ namespace Sagitta{
 		void setMaterialFile(sgStrHandle materialFile);
 		sgMaterial *getMaterial(void) const;
 
-		sgRenderState getRenderState(void) const;
-		void setRenderOption(const sgRenderState &ro);
+		sgRenderState &getRenderState(void);
+		void setRenderState(const sgRenderState &ro);
+        
+        void addTexture(const sgStrHandle &filename);
+        void clearTexture(void);
+        size_t getTextureNum(void) const{ return mTextureList.size(); }
+        sgTexture *getTexture(size_t index) const;
 
+        sgRenderEffect *createRenderEffect(const sgStrHandle &effectType);
+        void destroyRenderEffect(void);
+        sgRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
 	}; 
 
 } // namespace Sagitta

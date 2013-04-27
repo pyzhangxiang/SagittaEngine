@@ -1,9 +1,11 @@
 
 #include "sgSceneObject.h"
 #include "engine/component/sgComponent.h"
+#include "engine/component/sgRigidBodyComponent.h"
 #include "sgScene.h"
 #include "sgSkeleton.h"
 #include "engine/common/sgException.h"
+#include "sgRagdoll.h"
 
 namespace Sagitta{
 
@@ -14,7 +16,8 @@ namespace Sagitta{
 	sgSceneObject::sgSceneObject(void) 
 	: sgNode(), mpScene(0)
     , mbSceneChanged(true), mpSkeleton(0)
-    , mIsDebugObj(false), mDebugObjectToShow(0)
+    , mCastShadow(true)
+    , mIsDebugObj(false)//, mDebugObjectToShow(0)
     {
 
 	}
@@ -94,9 +97,29 @@ namespace Sagitta{
         if(mpSkeleton)
             mpSkeleton->update(deltaTime);
 
+
 		sgNode::update(deltaTime);
 	}
     
+    void sgSceneObject::setCastShadow(bool bCastShadow)
+    {
+        if(mCastShadow == bCastShadow)
+            return ;
+        
+        mCastShadow = bCastShadow;
+ 
+        ChildNodeMap::iterator it = m_Children.begin();
+        for(; it!=m_Children.end(); ++it)
+        {
+            sgSceneObject *child = dynamic_cast<sgSceneObject*>(it->second);
+            if(child)
+            {
+                child->setCastShadow(bCastShadow);
+            }
+        }
+  
+    }
+
     void sgSceneObject::onSetParent(sgNode *aParent)
     {
         sgNode::onSetParent(aParent);
@@ -119,15 +142,37 @@ namespace Sagitta{
         }
         
         this->setScene(obj->getScene());
-        
     }
 
 	void sgSceneObject::setScene( sgScene *pScene )
 	{
 		if(mpScene == pScene)
 			return ;
+
+		// reset ragdoll
+		sgRagdoll *ragdoll = 0;
+		if(mpSkeleton)
+		{
+			ragdoll = mpSkeleton->getRagdoll();
+		}
+		if(ragdoll)
+		{
+			ragdoll->removeFromScene();
+		}
+
 		mpScene = pScene;
 		mbSceneChanged = true;
+
+		if(ragdoll)
+		{
+			ragdoll->addToScene();
+		}
+
+		sgRigidBodyComponent *rigidComp = (sgRigidBodyComponent*)getComponent(sgRigidBodyComponent::GetClassTypeName());
+		if(rigidComp)
+		{
+			rigidComp->_addToDynamicsWorld();
+		}
 
         // let all children know which scene they belong to
         sgSceneObject *obj = 0;
@@ -186,6 +231,12 @@ namespace Sagitta{
         if(mIsDebugObj == debug)
             return ;
         
+        mIsDebugObj = debug;
+        if(mIsDebugObj)
+        {
+            setCastShadow(false);
+        }
+        
         ChildNodeMap::iterator it = m_Children.begin();
         for(; it!=m_Children.end(); ++it)
         {
@@ -196,7 +247,7 @@ namespace Sagitta{
             }
         }
     }
-    
+    /*
     sgSceneObject *sgSceneObject::getDebugObjectToShow(void) const
     {
         return mDebugObjectToShow;
@@ -215,21 +266,36 @@ namespace Sagitta{
         mDebugObjectToShow->setParent(this);
         mDebugObjectToShow->setIsDebugObj(true);
         return original;
-    }
+    }*/
     
     void sgSceneObject::showDebug(bool show)
     {
-        if(!mDebugObjectToShow)
-            return ;
-        
-        if(show)
-        {
-            mDebugObjectToShow->setActive(true);
-        }
-        else
-        {
-            mDebugObjectToShow->setActive(false);
-        }
+		ChildNodeMap::iterator it = m_Children.begin();
+		for(; it!=m_Children.end(); ++it)
+		{
+			sgSceneObject *child = dynamic_cast<sgSceneObject*>(it->second);
+			if(child)
+			{
+				if(child->isDebugObj())
+				{
+					if(show)
+					{
+						child->setActive(true);
+					}
+					else
+					{
+						child->setActive(false);
+					}
+				}
+				else
+				{
+					child->showDebug(show);
+				}
+				
+			}
+
+		}
+
     }
 
 } // namespace Sagitta

@@ -1,23 +1,21 @@
 //////////////////////////////////////////////////////
 // file: sgResourceCenter.h 
 // created by zhangxiang on 09-01-11
-// declare of the class sgResourceCenter
-// sgResourceCenter is a class ...
 //////////////////////////////////////////////////////
 #ifndef __SGRESOURCEMANAGER_H__
 #define __SGRESOURCEMANAGER_H__
 
-// INCLUDES //////////////////////////////////////////
 #include "engine/common/sgObject.h"
 #include "engine/common/Singleton.h"
+#include "engine/common/sgStlAllocator.h"
 #include <map>
 #include <string>
 
-// DECLARES //////////////////////////////////////////
 
 namespace Sagitta{
 
 	class sgResource;
+	class sgImageLoader;
 
 	/** class representation
 	@remarks
@@ -34,7 +32,8 @@ namespace Sagitta{
 	// type defines
 	protected:
 		/// key_value is resource's id
-		typedef std::map<sgStrHandle, sgResource*> ResourceMap;
+		typedef sg_map(sgStrHandle, sgResource*) ResourceMap;
+		typedef sg_map(std::string, std::string) ImageLoaderTypeMap;
 
 	// member variables
 	private:
@@ -42,6 +41,8 @@ namespace Sagitta{
 		ResourceMap m_ResourceMap;
         
         std::string mRootDir;
+
+		ImageLoaderTypeMap mImageLoaderTypeMap;
 
 	// constructors & destructor
 	public:
@@ -67,11 +68,17 @@ namespace Sagitta{
         
         const std::string &getRootDir(void) const{ return mRootDir; }
         void setRootDir(const std::string &dir);
+        std::string getResourcePath(const std::string &subname);
+
+		/// register image loader
+		/// imageFileExt e.g. .png, .tga, .bmp, .jpg ...
+		bool registerImageLoader(const std::string &imageFileExt, const sgStrHandle &imageLoaderType);
+		sgImageLoader *getImageLoader(const std::string &imageFileExt) const;
 
 	}; //#### end class sgResourceCenter
 
 } // namespace Sagitta
 
-// DEFINES ///////////////////////////////////////////
+
 
 #endif // __SGRESOURCEMANAGER_H__

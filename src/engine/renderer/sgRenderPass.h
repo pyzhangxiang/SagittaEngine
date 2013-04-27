@@ -4,32 +4,48 @@
 #define __SGRENDERPASS_H__
 
 #include "engine/common/sgObject.h"
+#include "sgRenderState.h"
 
 namespace Sagitta{
     
     class sgGpuProgram;
     class sgRenderQueue;
+	class sgRenderEffect;
+	class sgRenderTarget;
 
 	class _SG_KernelExport sgRenderPass : public sgMemObject
 	{
     //    SG_META_DECLARE(sgRenderPass)
         
 	private:
-        sgGpuProgram *mGpuProgram;
-        
         // only for scene effect, like shadow map
         sgRenderQueue *mRenderQueue;
+
+		sgRenderEffect *mRenderEffect;
+		sgRenderTarget *mRenderTarget;
+        
+        sgRenderState mRenderState;
+        
+        bool mUseSceneProgramOnly;
         
 	public:
         sgRenderPass(const sgStrHandle &queueTypeName = sgStrHandle::EmptyString);
 		virtual ~sgRenderPass(void);
         
         sgRenderQueue *getRenderQueue(void) const{ return mRenderQueue; }
+
+		sgRenderEffect *createRenderEffect(const sgStrHandle &effectType);
+		void destroyRenderEffect(void);
+		sgRenderEffect *getRenderEffect(void) const{ return mRenderEffect; }
+
+		sgRenderTarget *getRenderTarget(void) const{ return mRenderTarget; }
+		void setRenderTarget(sgRenderTarget *target);
         
-        sgGpuProgram *getGpuProgram(void) const{ return mGpuProgram; }
-        void setProgram(sgGpuProgram *program);
-
-
+        bool isUseSceneProgramOnly(void) const{ return mUseSceneProgramOnly; }
+        void setUseSceneProgramOnly(bool onlyScene);
+        
+        sgRenderState &getRenderState(void){ return mRenderState; }
+        void setRenderState(const sgRenderState &rs);
 	};
 
 } // namespace Sagitta

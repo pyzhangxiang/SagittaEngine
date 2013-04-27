@@ -1,9 +1,12 @@
 #ifndef __SGBASEARCHIVE_H__
 #define __SGBASEARCHIVE_H__
 
+#include "math/SagittaPlatform.h"
+#include "math/sgTypeDef.h"
 #include "engine/common/tmp_define.h"
 #include "sg_serialization_nvp.h"
-#include "strtk/strtk.hpp"
+//#include "strtk/strtk.hpp"
+#include "../common/sgStringUtil.h"
 #include <string>
 #include <vector>
 
@@ -11,7 +14,7 @@ namespace Sagitta
 {   
     namespace serialization
     {
-	    class sgBaseArchive
+	    class _SG_KernelExport sgBaseArchive
 	    {
         protected:
             size_t mVersion;
@@ -166,7 +169,7 @@ namespace Sagitta
                 size_t count = sizeof(arr) / sizeof(arr[0]);
                 for(size_t i=0; i<count; ++i)
                 {
-                    archive & serialization::make_nvp(strtk::type_to_string(i).c_str(), arr[i], true);
+                    archive & serialization::make_nvp(sgStringUtil::to_string(i).c_str(), arr[i], true);
                 }
                 
                 archive.end_node(v.name());
@@ -248,7 +251,7 @@ namespace Sagitta
             
             for(size_t i=0; i<count; ++i)
             {
-                archive & serialization::make_nvp(strtk::type_to_string(i).c_str(), arr[i], true);
+                archive & serialization::make_nvp(sgStringUtil::to_string(i).c_str(), arr[i], true);
             }
             
             archive.end_node(v.name());

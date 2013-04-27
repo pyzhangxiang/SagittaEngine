@@ -14,6 +14,7 @@ namespace Sagitta{
 
 	class sgScene;
     class sgSkeleton;
+	class sgRagdoll;
 
 	class _SG_KernelExport sgSceneObject : public sgNode
     {
@@ -41,6 +42,7 @@ namespace Sagitta{
         
         sgSkeleton *mpSkeleton;
         
+        bool mCastShadow;
 	// constructors & destructor
 	public:
 		sgSceneObject(void);
@@ -67,6 +69,9 @@ namespace Sagitta{
 
 		virtual void update(Float32 deltaTime);
         
+        bool isCastShadow(void) const{ return mCastShadow; }
+        void setCastShadow(bool bCastShadow);
+        
     private:
         /// if this instance is a debug object
         bool mIsDebugObj;
@@ -76,12 +81,12 @@ namespace Sagitta{
         
     protected:
         /// the debug object attach to this instance
-        sgSceneObject *mDebugObjectToShow;
+        //sgSceneObject *mDebugObjectToShow;
     public:
-        sgSceneObject *getDebugObjectToShow(void) const;
-        sgSceneObject *setDebugObjectToShow(sgSceneObject *obj);
+        //sgSceneObject *getDebugObjectToShow(void) const;
+        //sgSceneObject *setDebugObjectToShow(sgSceneObject *obj);
         
-        virtual void showDebug(bool show);
+        void showDebug(bool show);
         
 
 

@@ -8,6 +8,7 @@
 
 // INCLUDES //////////////////////////////////////////
 #include "engine/common/sgMemObject.h"
+#include "engine/common/sgStrHandle.h"
 #include "engine/common/sgStlAllocator.h"
 #include "math/SagittaPlatform.h"
 #include "math/sgTypeDef.h"
@@ -31,7 +32,7 @@ namespace Sagitta{
 	class _SG_KernelExport sgVertexData : public sgMemObject{
 	private:
 		// mapped by element type
-		typedef sg_map(int, sgVertexBufferElement*) ElementList;
+		typedef sg_map(sgStrHandle, sgVertexBufferElement*) ElementList;
 
 	public:
 		typedef sgMapIterator<ElementList> Iterator;
@@ -77,15 +78,17 @@ namespace Sagitta{
 		void clear(void);
 
 		/** Creates an element. */
-		sgVertexBufferElement *createElement(int aType, uShort aCoordNum, size_t aVertexNum);
+		sgVertexBufferElement *createElement(const sgStrHandle &name, UInt32 aDataType, uShort aCoordNum, size_t aVertexNum);
 
 		/** Gets an element by type. */
-		sgVertexBufferElement *getElement(int aType) const;
+		sgVertexBufferElement *getElement(sgStrHandle aType) const;
 
 		/** Gets the iterator of the element list. */
 		Iterator getIterator(void);
 		/** Gets the const iterator of the element list. */
 		ConstIterator getConstIterator(void) const;
+
+		size_t getElementNum(void) const{ return m_ElementList.size(); }
 
 	}; //#### end class sgVertexData
 
@@ -165,6 +168,8 @@ namespace Sagitta{
 		Iterator getIterator(void);
 		/** Gets the const iterator of the element list. */
 		ConstIterator getConstIterator(void) const;
+
+		size_t getElementNum(void) const{ return m_ElementList.size(); }
 
 	}; //#### end class sgVertexData
 

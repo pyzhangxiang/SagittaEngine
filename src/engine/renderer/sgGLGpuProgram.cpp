@@ -5,6 +5,9 @@
 #include "engine/common/sgException.h"
 #include "engine/common/sgStringUtil.h"
 #include "engine/common/sgLogSystem.h"
+#include "engine/buffer/sgVertexBufferElement.h"
+#include "engine/buffer/sgBuffer.h"
+#include "sgRenderer.h"
 
 namespace Sagitta{
     
@@ -215,7 +218,6 @@ namespace Sagitta{
 		glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORMS, &count);
 		glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxChar);
         mParameterList.clear();
-        mParameterList.reserve(count);
 		char *name = (char*)sgMalloc(maxChar);
 		for(int i=0; i<count; ++i)
 		{
@@ -236,7 +238,8 @@ namespace Sagitta{
             param.name = strName;
 			param.type = sgGetRendererDataType(type);
             param.location = glGetUniformLocation(mProgramId, name);
-            mParameterList.push_back(param);
+
+            mParameterList.insert(std::make_pair(sgStrHandle(strName.c_str()), param));
             
 		}
 		sgFree(name);
@@ -259,7 +262,6 @@ namespace Sagitta{
 		glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxChar);
         
         mAttributeList.clear();
-        mAttributeList.reserve(count);
         
 		char *name = (char*)sgMalloc(maxChar);
 		for(int i=0; i<count; ++i)
@@ -276,7 +278,7 @@ namespace Sagitta{
             attr.name = strName;
 			attr.type = sgGetRendererDataType(type);
             attr.location = glGetAttribLocation(mProgramId, name);
-            mAttributeList.push_back(attr);
+            mAttributeList.insert(std::make_pair(sgStrHandle(strName.c_str()), attr));
 		}
         sgFree(name);
         
@@ -287,5 +289,19 @@ namespace Sagitta{
             return true;
 		
     }
-    
+
+	bool sgGLGpuProgram::setParameter( const sgStrHandle &name, int extra, const void *data )
+	{
+		if(!isActive())
+			return false;
+
+		ParameterList::iterator it = mParameterList.find(name);
+		if(it == mParameterList.end())
+			return false;
+
+		const sgGpuParameter &param = it->second;
+		sgGetRenderer()->setUniformForShader(param.type, param.location, extra, data);
+		return true;
+	}
+
 } // namespace Sagitta

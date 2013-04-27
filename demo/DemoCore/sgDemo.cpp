@@ -10,7 +10,11 @@
 #include <engine/sgEngine.h>
 #include <engine/scenegraph/sgScene.h>
 #include <engine/renderer/sgGLRenderer.h>
+#include <engine/renderer/SagiRenderer.h>
 #include <engine/renderer/sgViewport.h>
+#include <engine/renderer/sgRenderTechnique.h>
+#include <engine/renderer/sgRenderPass.h>
+#include <engine/renderer/sgRenderTarget.h>
 #include <engine/component/sgCameraComponent.h>
 #include <engine/component/sgLightComponent.h>
 #include <engine/common/sgLogSystem.h>
@@ -49,7 +53,8 @@ sgDemo::sgDemo(const std::string &winTitle,
 , mRenderWindowTitle(winTitle)
 , mDestroying(false)
 , mAssetRootDir(assetRootDir)
-, mScene(NULL), mCamera(NULL), mLight(NULL)
+, mScene(NULL), mTargetRoot(NULL)
+, mCamera(NULL), mLight(NULL)
 {
     if(gApp)
     {
@@ -70,6 +75,9 @@ sgDemo::~sgDemo(void)
     sgObject::destroyObject(mCamera);
     mCamera = 0;
     
+	sgObject::destroyObject(mTargetRoot);
+	mTargetRoot = 0;
+
     sgObject::destroyObject(mScene);
     mScene = 0;
 }
@@ -105,7 +113,7 @@ void sgDemo::setWindowPos( int x, int y )
 
 void sgDemo::OnCreate( void )
 {
-	Sagitta::sgEngineInit(sgGLRenderer::GetClassName(), mAssetRootDir);
+	Sagitta::sgEngineInit(sgGLRenderer::GetClassTypeName(), mAssetRootDir);
 	sgLogSystem::instance()->addLogHandler(demoLogHandler);
 	createEvent();
 }
@@ -122,13 +130,17 @@ void sgDemo::initialize( void )
 	std::cout << "sgDemo::initialize, initialize render and scene\n";
 
 	sgGetRenderer()->init();
-	sgViewport *viewport = sgGetRenderer()->createViewport(
+	/*sgViewport *viewport = sgGetRenderer()->createViewport(
 		getRenderWindowWidth()
 		, getRenderWindowHeight()
-		, 0.0, 0.0, 1.0, 1.0, 0, 0);
+		, 0.0, 0.0, 1.0, 1.0, 0, 0);*/
+	sgRenderTechnique *technique = sgGetRenderer()->getRenderTechnique();
+	sgRenderTarget *rt = technique->getRenderPass(0)->getRenderTarget();
+	sgViewport *viewport = rt->getViewport();
+	rt->resize(getRenderWindowWidth(), getRenderWindowHeight());
 	viewport->setBackColor(Color::DARKGRAY);
 
-	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassName());
+	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->getComponent(sgCameraComponent::GetClassTypeName());
 	viewport->setCamera(cameraComp);
 
 	this->prepare();
@@ -164,10 +176,12 @@ void sgDemo::createEvent( void )
 {
 	std::cout << "sgDemo::createEvent, create the scene\n";
 
-	mScene = (sgScene*)sgObject::createObject(sgScene::GetClassName());
-	mCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
+	mScene = (sgScene*)sgObject::createObject(sgScene::GetClassTypeName());
+	mTargetRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+	mTargetRoot->setParent(mScene->getRoot());
+	mCamera = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
 	mCamera->setParent(mScene->getRoot());
-	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassName());
+	sgCameraComponent *cameraComp = (sgCameraComponent*)mCamera->createComponent(sgCameraComponent::GetClassTypeName());
 
 	cameraComp->setUpDirection(Vector3::UNIT_Y);
 	cameraComp->setShootDirection(Vector3(0.0f, 0.0f, -1.0f));
@@ -181,6 +195,8 @@ void sgDemo::destroyEvent( void )
 	mLight = 0;
 	sgObject::destroyObject(mCamera);
 	mCamera = 0;
+	sgObject::destroyObject(mTargetRoot);
+	mTargetRoot = 0;
 	sgObject::destroyObject(mScene);
 	mScene = 0;
 }
@@ -198,22 +214,22 @@ void sgDemo::keyPressEvent( sgKeyEvent &event )
 		{
 		case 'W':
 		case 'w':
-			mCamera->translate(Vector3(0, 0, -2));
+            mCamera->translate(Vector3(0, 0, -2), sgNode::TS_LOCAL);
 			break;
 
 		case 'S':
 		case 's':
-			mCamera->translate(Vector3(0, 0, 2));
+			mCamera->translate(Vector3(0, 0, 2), sgNode::TS_LOCAL);
 			break;
 
 		case 'A':
 		case 'a':
-			mCamera->translate(Vector3(-2, 0, 0));
+			mCamera->translate(Vector3(-2, 0, 0), sgNode::TS_LOCAL);
 			break;
 
 		case 'D':
 		case 'd':
-			mCamera->translate(Vector3(2, 0, 0));
+			mCamera->translate(Vector3(2, 0, 0), sgNode::TS_LOCAL);
 			break;
 
 		case Sagitta::Key_Up:
@@ -280,13 +296,18 @@ void sgDemo::keyPressEvent( sgKeyEvent &event )
 
 void sgDemo::mousePressEvent( sgMouseEvent &event )
 {
-	if(mScene && mCamera)
+	if(mScene && mCamera && mTargetRoot)
 	{
-		if(event.buttons == Sagitta::MBT_Left)
+		if(event.buttons == Sagitta::MBT_Right)
 		{
 			mStartRotRayX = Vector3(event.x, mRotationSphereCenter.y(), 0.0f) - mRotationSphereCenter;
 			mStartRotRayY = Vector3(mRotationSphereCenter.x(), event.y, 0.0f) - mRotationSphereCenter;
 			mStartRotOrientation = mCamera->relativeOrentation();
+		}
+		else if(event.buttons == Sagitta::MBT_Left)
+		{
+			mStartRotRayTarget = Vector3(event.x, event.y, 0.0f) - mRotationSphereCenter;
+			mStartRotOrientationTarget = mTargetRoot->relativeOrentation();
 		}
 	}
 	
@@ -294,9 +315,9 @@ void sgDemo::mousePressEvent( sgMouseEvent &event )
 
 void sgDemo::mouseMoveEvent( sgMouseEvent &event )
 {
-	if(mScene && mCamera)
+	if(mScene && mCamera && mTargetRoot)
 	{
-		if(event.buttons == Sagitta::MBT_Left)
+		if(event.buttons == Sagitta::MBT_Right)
 		{
 			Vector3 currentRayX = Vector3(event.x, mRotationSphereCenter.y(), 0.0f) - mRotationSphereCenter;
 			Vector3 currentRayY = Vector3(mRotationSphereCenter.x(), event.y, 0.0f) - mRotationSphereCenter;
@@ -307,6 +328,12 @@ void sgDemo::mouseMoveEvent( sgMouseEvent &event )
 
 			//mCamera->rotationX(Radian(-event.deltaY / 100.0f));
 			//mCamera->rotationY(Radian(-event.deltaX / 100.0f));
+		}
+		else if(event.buttons == Sagitta::MBT_Left)
+		{
+			Vector3 currentRay = Vector3(event.x, event.y, 0.0f) - mRotationSphereCenter;
+			Quaternion q = currentRay.getRotationTo(mStartRotRayTarget);
+			mTargetRoot->setRelativeOrientation(q * q * mStartRotOrientationTarget);
 		}
 	}
 }

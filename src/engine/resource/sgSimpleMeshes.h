@@ -309,6 +309,21 @@ namespace Sagitta{
 
 	}; //#### end class sgGrid
 
+
+	class _SG_KernelExport sgMeshPlane : public sgMesh
+	{
+		SG_META_DECLARE(sgMeshPlane)
+
+	public:
+		static sgStrHandle InternalFileName;
+
+	public:
+		sgMeshPlane(void);
+		virtual ~sgMeshPlane(void);
+
+
+	}; //#### end class sgGrid
+
 } // namespace Sagitta
 
 // DEFINES ///////////////////////////////////////////

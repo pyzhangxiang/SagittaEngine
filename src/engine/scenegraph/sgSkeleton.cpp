@@ -2,6 +2,8 @@
 #include "sgSkeleton.h"
 #include "sgSceneObject.h"
 #include "sgBoneObject.h"
+#include "sgScene.h"
+#include "sgRagdoll.h"
 #include "engine/component/sgAnimationComponent.h"
 #include "engine/resource/sgAnimation.h"
 #include "engine/resource/sgAnimationJoint.h"
@@ -14,9 +16,10 @@ namespace Sagitta{
 	//  [1/1/2009 zhangxiang]
 	sgSkeleton::sgSkeleton(void)
 	: sgObject(), mpRoot(0)
+	, mpRagdoll(0)
     {
-		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassName());
-        mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassName());
+		mpRoot = (sgSceneObject*)sgObject::createObject(sgSceneObject::GetClassTypeName());
+        mpBoneRoot = (sgBoneObject*)sgObject::createObject(sgBoneObject::GetClassTypeName());
         mpBoneRoot->setParent(mpRoot);
         // let bone root belong to me
         mpBoneRoot->mpSkeletonBelongTo = this;
@@ -38,6 +41,12 @@ namespace Sagitta{
         //parent and scene will be set to zero in the destruction of sgNode and sgSceneObject
         // so we don't need to set root's separent as zero manually
         
+		// destruct the ragdoll
+		if(mpRagdoll)
+		{
+			sgObject::destroyObject(mpRagdoll);
+		}
+
         // destruct all objects belong to me
 		sgObject::destroyObject(mpRoot);
 	}
@@ -58,8 +67,18 @@ namespace Sagitta{
         sgSceneObject *parent = this->parent();
         if(!parent)
             return ;
+
+		sgScene *scene = parent->getScene();
+		if(!scene)
+			return ;
+
+		if(mpRagdoll && scene->isPhysicsEnabled())
+		{
+			mpRagdoll->update(deltaTime);
+			return ;
+		}
         
-        sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassName());
+        sgAnimationComponent *comp = (sgAnimationComponent*)parent->getComponent(sgAnimationComponent::GetClassTypeName());
         if(!comp)
             return ;
         
@@ -83,6 +102,11 @@ namespace Sagitta{
 					node->setRelativeScale(joint->getScale(animTime));
 			}
         }
+
+		if(mpRagdoll && !scene->isPhysicsEnabled())
+		{
+			mpRagdoll->update(deltaTime);
+		}
 	}
     
     void sgSkeleton::setBelongTo(sgSceneObject *parent)
@@ -90,7 +114,7 @@ namespace Sagitta{
         mpRoot->setParent(parent);
     }
     
-    sgSceneObject *sgSkeleton::parent(void)
+    sgSceneObject *sgSkeleton::parent(void) const
     {
         return dynamic_cast<sgSceneObject*>(mpRoot->parent());
     }
@@ -131,5 +155,29 @@ namespace Sagitta{
             mBoneNodeMap.erase(it);
         }
     }
+
+	sgBoneObject * sgSkeleton::getBoneNode( const std::string &bonename ) const
+	{
+		BoneNodeMap::const_iterator it = mBoneNodeMap.find(bonename);
+		if(it == mBoneNodeMap.end())
+		{
+			return 0;
+		}
+
+		return it->second;
+	}
+
+	sgRagdoll * sgSkeleton::setRagdoll( sgRagdoll *ragdoll )
+	{
+		sgRagdoll *original = mpRagdoll;
+		if(original == ragdoll)
+			return original;
+		if(original)
+			original->setSkeleton(0);
+
+		mpRagdoll = ragdoll;
+		mpRagdoll->setSkeleton(this);
+		return original;
+	}
 
 } // namespace Sagitta
