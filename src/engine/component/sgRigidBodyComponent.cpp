@@ -29,7 +29,6 @@ namespace Sagitta
 			return ;
 		}
 		
-		_removeFromDynamicsWorld();
 		release();
 		mRigidBody = body;
 		resetTransform();
@@ -84,6 +83,8 @@ namespace Sagitta
 
 	void sgRigidBodyComponent::release( void )
 	{
+		_removeFromDynamicsWorld();
+
 		if(mRigidBody)
 		{
 			btMotionState *ms = mRigidBody->getMotionState();

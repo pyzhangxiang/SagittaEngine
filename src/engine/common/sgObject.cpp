@@ -21,12 +21,14 @@ namespace Sagitta{
 
 	sgObject::sgObject(void) 
     : m_iOId(++ms_oid)
-    , mMeta(0){
+    , mMeta(0)
+	, __destroying(false){
         mName = "Object" + sgStringUtil::to_string(m_iOId);
         sgObjectCenter::instance()->addObject(this);
 	}
 
 	sgObject::~sgObject(void){
+		__markDestroying();
         sgObjectCenter::instance()->removeObject(this->getId());
 	}
 
@@ -60,11 +62,14 @@ namespace Sagitta{
         return obj;
     }
     
-    void sgObject::destroyObject(sgObject *obj)
+    void sgObject::destroyObject(sgObject *obj, bool check/*=true*/)
     {
         if(!obj)
             return ;
-        delete obj;
+		if(!check || !(obj->_isDestroying()))
+		{
+			delete obj;
+		}		
     }
     
     sgObject *sgObject::getObject(id_type oid)
@@ -77,7 +82,12 @@ namespace Sagitta{
         sgClassMeta *meta = this->GetMyMetaInfo();
         return meta->isClass(classtype);
     } 
-    
+
+	void sgObject::__markDestroying( void )
+	{
+		__destroying = true;
+	}
+
 	/*
     void sgObject::load(SERIALIZE_LOAD_ARCHIVE &archive)
     {

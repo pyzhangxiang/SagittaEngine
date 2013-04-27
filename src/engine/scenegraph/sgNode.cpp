@@ -30,7 +30,6 @@ namespace Sagitta{
 	m_DerivedPosition(Vector3::ZERO),
 	m_DerivedScale(Vector3::UNIT_SCALE),
 	m_bCachedTransformOutOfDate(true){
-		
 		needUpdate();
 	}
 
@@ -38,6 +37,7 @@ namespace Sagitta{
 	//  [7/30/2008 zhangxiang]
     //  [10/26/2012 zhangxiang]
 	sgNode::~sgNode(){
+
         if(m_pParent)
         {
             // detached me from my parent
@@ -56,7 +56,13 @@ namespace Sagitta{
 		ChildNodeMap::iterator eit = to_rm.end();
 		for(; it!=eit; ++it)
 		{
-            sgObject::destroyObject(it->second);
+			it->second->__markDestroying();
+		}
+
+		it = to_rm.begin();
+		for(; it!=eit; ++it)
+		{
+            sgObject::destroyObject(it->second, false);
 		}
 		
 	}
@@ -89,6 +95,7 @@ namespace Sagitta{
 
 	//  [7/30/2008 zhangxiang]
 	void sgNode::setParent(sgNode *apParent){
+
         if(m_pParent)
         {
             m_pParent->removeChild(this);

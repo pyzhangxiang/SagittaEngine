@@ -41,6 +41,12 @@ namespace Sagitta{
         //parent and scene will be set to zero in the destruction of sgNode and sgSceneObject
         // so we don't need to set root's separent as zero manually
         
+		// destruct the ragdoll
+		if(mpRagdoll)
+		{
+			sgObject::destroyObject(mpRagdoll);
+		}
+
         // destruct all objects belong to me
 		sgObject::destroyObject(mpRoot);
 	}

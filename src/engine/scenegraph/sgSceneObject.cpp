@@ -298,5 +298,4 @@ namespace Sagitta{
 
     }
 
-
 } // namespace Sagitta

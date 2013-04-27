@@ -466,7 +466,7 @@ namespace Sagitta{
 			btMotionState *ms = b.body->getMotionState();
 			if(ms)
 			{
-				delete ms;
+			delete ms;
 			}
 
 			btCollisionShape *shape = b.body->getCollisionShape();

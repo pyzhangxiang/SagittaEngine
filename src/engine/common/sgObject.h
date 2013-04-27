@@ -33,6 +33,9 @@ namespace Sagitta{
         SERIALIZE_BEGIN(sgObject)
         std::string mName;
         SERIALIZE_END
+
+		bool __destroying;
+
     public:
         sgClassMeta *mMeta;
 	
@@ -51,6 +54,8 @@ namespace Sagitta{
 	// member functions
 
 	public:
+		void __markDestroying(void);
+		bool _isDestroying(void) const{ return __destroying; }
 
 		/** Gets this object id. */
 		id_type getId(void) const;
@@ -66,7 +71,7 @@ namespace Sagitta{
 //        virtual void save(SERIALIZE_SAVE_ARCHIVE &archive);
         
         static sgObject *createObject(const sgStrHandle &classname);
-        static void destroyObject(sgObject *obj);
+        static void destroyObject(sgObject *obj, bool check=true);
         static sgObject *getObject(id_type oid);
 
 	};
