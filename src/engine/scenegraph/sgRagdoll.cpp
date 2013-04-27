@@ -353,7 +353,42 @@ namespace Sagitta{
 
 			btTransform bodyTrans = b.body->getWorldTransform();
 
-			Vector3 pos = boneNode->absolutePosition() + b.offset;
+			//Vector3 pos = boneNode->absolutePosition() + b.offset;
+			Vector3 pos;
+			{
+				sgBoneObject *boneNode2 = 0;
+				if( ! (bi.joint2Name.empty()) )
+					boneNode2 = skeleton->getBoneNode(bi.joint2Name);
+				if(!boneNode2)
+				{
+					sgNode::ConstChildIterator cit = boneNode->getConstChildIterator();
+					while(cit.hasMoreElements())
+					{
+						boneNode2 = dynamic_cast<sgBoneObject*>(cit.value());
+						if(boneNode2)
+							break;
+						++cit;
+					}
+				}
+				if(!boneNode2)
+				{
+					pos = boneNode->absolutePosition();
+				}
+				else
+				{
+					if(bi.posOnJoint)
+					{
+						// on joint2
+						pos = boneNode2->absolutePosition();
+					}
+					else
+					{
+						pos = (boneNode->absolutePosition() + boneNode2->absolutePosition()) * 0.5f;
+					}
+				}
+				b.offset = pos - boneNode->absolutePosition();
+			}
+
 			b.object->setAbsolutePosition(pos);
 			bodyTrans.setOrigin(btVector3(pos.x(), pos.y(), pos.z()));
 				

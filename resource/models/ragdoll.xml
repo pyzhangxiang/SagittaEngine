@@ -1,14 +1,15 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <root>
-	<mBodyInfo vec_size="15">
+	<mBodyInfo vec_size="16">
 		<0 jointName="Hips" joint2Name="Chest" bodyName="Pelvis" shapeType="1" width="26.448" height="11.6235" thick="8.001" posOnJoint="0" constraintTo="" mass="15.091" haveInertia="1" ifCollideWithParent="0" ifSyncPos="1">
 			<angleLowerLimit x="0" y="0" z="0"/>
 			<angleUpperLimit x="0" y="0" z="0"/>
 			<inertia x="3062.028" y="2768.13" z="1179.14"/>
 		</0>
-		<1 jointName="Chest" joint2Name="Neck" bodyName="Trunk" shapeType="1" width="30.826" height="33.4208" thick="10.001" posOnJoint="0" constraintTo="Pelvis" mass="10.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
-			<angleLowerLimit x="-45" y="-55" z="-50"/>
-			<angleUpperLimit x="90" y="55" z="50"/>
+		
+		<1 jointName="Chest2" joint2Name="Neck" bodyName="Trunk" shapeType="1" width="30.826" height="16.3009" thick="10.001" posOnJoint="0" constraintTo="Trunk1" mass="5.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
+			<angleLowerLimit x="0" y="0" z="0"/>
+			<angleUpperLimit x="0" y="0" z="0"/>
 			<inertia x="1200.033" y="695.179" z="1076.374"/>
 		</1>
     <2 jointName="LeftHip" joint2Name="" bodyName="LeftThigh" shapeType="1" width="5.001" height="46.9773" thick="5.001" posOnJoint="0" constraintTo="Pelvis" mass="8.253" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
@@ -76,6 +77,11 @@
       <angleUpperLimit x="45" y="90" z="90"/>
       <inertia x="0" y="0" z="0"/>
     </14>
+	<15 jointName="Chest" joint2Name="Chest2" bodyName="Trunk1" shapeType="1" width="30.826" height="16.7104" thick="10.001" posOnJoint="0" constraintTo="Pelvis" mass="5.021" haveInertia="1" ifCollideWithParent="0" ifSyncPos="0">
+			<angleLowerLimit x="-45" y="-55" z="-50"/>
+			<angleUpperLimit x="90" y="55" z="50"/>
+			<inertia x="1200.033" y="695.179" z="1076.374"/>
+	</15>
 	</mBodyInfo>
 </root>
 
