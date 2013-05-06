@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
         demo.setFrameRate(1.0f / 30.0f);
         demo.setWindowPos(-1, -1);
         demo.setWindowSize(800, 600);
-        demo.setWindowTitle("Demo All In One");
+        demo.setWindowTitle("Demo02_LoaderObj");
 		result = demo.run(argc, argv);
 	}catch(std::exception &e){
 		sgMessageBox("Error", e.what());

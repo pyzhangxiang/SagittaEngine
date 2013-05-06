@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
         demo.setFrameRate(1.0f / 30.0f);
         demo.setWindowPos(-1, -1);
         demo.setWindowSize(800, 600);
-        demo.setWindowTitle("Demo_Triangle");
+        demo.setWindowTitle("Demo00_Triangle");
 		result = demo.run(argc, argv);
 	}
 	/*catch(sgException &e){

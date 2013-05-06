@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
         demo.setFrameRate(1.0f / 30.0f);
         demo.setWindowPos(-1, -1);
         demo.setWindowSize(800, 600);
-        demo.setWindowTitle("Demo_Texture");
+        demo.setWindowTitle("Demo07_Ragdoll");
 		result = demo.run(argc, argv);
         std::cout << "aa\n";
 	}catch(std::exception &e){
