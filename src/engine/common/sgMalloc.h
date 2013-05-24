@@ -15,9 +15,25 @@ namespace Sagitta
     _SG_KernelExport void *sgRealloc(void *mem, size_t size);
     _SG_KernelExport void sgFree(void *mem);
 
+	class sgMemChocBox;
+
+	class SmallMemManager
+	{
+	public:
+		typedef std::map<size_t, sgMemChocBox*> SmallObjectPool;
+		SmallObjectPool mSmallObjectPool;
+
+		void _init(void);
+		void _release(void);
+
+		sgMemChocBox *getMemChocBox(size_t size);
+	};
 
     class sgBaseAllocator
     {
+	protected:
+		SmallMemManager mSmallMemManager;
+
     public:
         sgBaseAllocator(void);
         virtual ~sgBaseAllocator(void);
@@ -48,6 +64,13 @@ namespace Sagitta
         virtual void *realloc(void *mem, size_t size);
         virtual void free(void *mem);
     };
+
+	namespace __internal
+	{
+		void *__sgMalloc(size_t size);
+		void *__sgRealloc(void *mem, size_t size);
+		void __sgFree(void *mem);
+	}
 }
 
 
