@@ -1,5 +1,6 @@
 #include "sgMalloc.h"
 #include "sgMemObject.h"
+#include "sgMemChoc.h"
 #include "nedmalloc/nedmalloc.c"
 #include <iostream>
 #include <fstream>
@@ -19,6 +20,9 @@ namespace Sagitta
 	#define _SG_REALLOC nedalloc::nedrealloc
 	#define _SG_FREE nedalloc::nedfree
 #endif
+
+namespace __internal
+{
 
 #define SG_ALIGNMENT sizeof(size_t)
 
@@ -62,6 +66,8 @@ namespace Sagitta
     }
 
 #endif
+
+}
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -148,31 +154,70 @@ inline void operator delete[](void *ptr)
 
     //////////////////////////////////////////////////////////////////////////
 
+#define ENV_8 0.125f
+#define BLOCK_SIZE_SIZE 31
+static const unsigned short BLOCK_SIZE_ARR[] = {8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 
+				112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 
+				208, 216, 224, 232, 240, 248, 256};
+
+
     sgBaseAllocator::sgBaseAllocator()
     {
         if(!gAllocator)
             gAllocator = this;
+		
+		mSmallMemManager._init();
     }
 
     sgBaseAllocator::~sgBaseAllocator( void )
     {
+		mSmallMemManager._release();
+
         if(gAllocator == this)
             gAllocator = 0;
     }
 
     void * sgBaseAllocator::malloc( size_t size )
     {
-        return __sgMalloc(size);
+		void *ret = 0;
+
+		size_t exp_size = size + sizeof(sgMemChocBox*);
+		size_t index = exp_size * ENV_8;
+		if(index > 31)
+		{
+			ret = __internal::__sgMalloc(exp_size);
+			(*(sgMemChocBox**)ret)= 0;
+		}
+		else
+		{
+			sgMemChocBox *box = mSmallMemManager.getMemChocBox(BLOCK_SIZE_ARR[index]);
+			ret = box->allocate();
+			(*(sgMemChocBox**)ret)= box;
+		}
+
+		return (sgMemChocBox**)ret + 1;
+
     }
 
     void * sgBaseAllocator::realloc( void *mem, size_t size )
     {
-        return __sgRealloc(mem, size);
+        return __internal::__sgRealloc(mem, size);
     }
 
     void sgBaseAllocator::free( void *mem )
     {
-        __sgFree(mem);
+		sgMemChocBox **flag = (sgMemChocBox**)mem - 1;
+		sgMemChocBox *box = *flag;
+		
+		if(box == 0)
+		{
+			__internal::__sgFree((void*)flag);
+		}
+		else
+		{
+			box->deallocate((void*)flag);
+		}
+        
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -259,4 +304,37 @@ inline void operator delete[](void *ptr)
             mTraceMap.erase(it);
         }
     }
+
+	///////////////////////////////////////////////
+
+	void SmallMemManager::_init( void )
+	{
+
+	}
+
+	void SmallMemManager::_release( void )
+	{
+		SmallObjectPool::iterator it = mSmallObjectPool.end();
+		for(; it!=mSmallObjectPool.end(); ++it)
+		{
+			delete it->second;
+		}
+	}
+
+	sgMemChocBox * SmallMemManager::getMemChocBox( size_t size )
+	{
+		sgMemChocBox *box = 0;
+		SmallObjectPool::iterator it = mSmallObjectPool.find(size);
+		if(it != mSmallObjectPool.end())
+		{
+			box = it->second;
+		}
+		else
+		{
+			box = new sgMemChocBox(size);
+			mSmallObjectPool.insert(std::make_pair(size, box));
+		}
+
+		return box;
+	}
 }
